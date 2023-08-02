@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2023 Kafein
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,9 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.action;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-public class MinelesLibrary extends JavaPlugin {
-
-    @Override
-    public void onEnable() {
-
-    }
-
-    @Override
-    public void onDisable() {
-
-    }
+public enum ActionResult {
+    SUCCESS,
+    FAILURE
 }

@@ -22,19 +22,16 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.node.serializer;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import dev.kafein.multiduels.node.Node;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class MinelesLibrary extends JavaPlugin {
+import java.lang.reflect.Type;
 
-    @Override
-    public void onEnable() {
+public interface NodeSerializer<T> {
+    @Nullable T deserialize(@NotNull Type type, @NotNull Node node);
 
-    }
-
-    @Override
-    public void onDisable() {
-
-    }
+    void serialize(@NotNull Node node, @Nullable T value);
 }

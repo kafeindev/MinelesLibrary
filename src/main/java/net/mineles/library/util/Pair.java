@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2022-2023 MinelesNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,26 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.util;
 
-import org.bukkit.plugin.java.JavaPlugin;
+public final class Pair<L, R> {
+    private final L left;
+    private final R right;
 
-public class MinelesLibrary extends JavaPlugin {
-
-    @Override
-    public void onEnable() {
-
+    public Pair(L left, R right) {
+        this.left = left;
+        this.right = right;
     }
 
-    @Override
-    public void onDisable() {
+    public static <L, R> Pair<L, R> of(L left, R right) {
+        return new Pair<>(left, right);
+    }
 
+    public L getLeft() {
+        return this.left;
+    }
+
+    public R getRight() {
+        return this.right;
     }
 }

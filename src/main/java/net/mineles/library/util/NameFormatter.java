@@ -22,19 +22,24 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.util;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-public class MinelesLibrary extends JavaPlugin {
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
-    @Override
-    public void onEnable() {
+public final class NameFormatter {
+    private NameFormatter() {}
 
-    }
+    @NotNull
+    public static String format(@NotNull String name) {
+        name = name.toLowerCase(Locale.ENGLISH);
+        name = name.replace(" ", "_");
 
-    @Override
-    public void onDisable() {
+        byte[] bytes = name.getBytes();
+        name = new String(bytes, StandardCharsets.UTF_8);
 
+        return name;
     }
 }

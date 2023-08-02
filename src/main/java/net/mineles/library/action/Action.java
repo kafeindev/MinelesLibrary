@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2023 Kafein
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,13 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.action;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import net.mineles.library.action.context.Context;
+import org.jetbrains.annotations.NotNull;
 
-public class MinelesLibrary extends JavaPlugin {
+import java.util.concurrent.CompletableFuture;
 
-    @Override
-    public void onEnable() {
-
-    }
-
-    @Override
-    public void onDisable() {
-
-    }
+public interface Action {
+    void invoke(@NotNull Context context, @NotNull CompletableFuture<ActionResult> future);
 }

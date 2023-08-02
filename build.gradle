@@ -4,7 +4,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-group = 'net.mineles'
+group = 'net.mineles.library'
 version = '1.0.0'
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -20,16 +20,41 @@ repositories {
     maven { url = 'https://jitpack.io' }
     maven { url = 'https://repo.papermc.io/repository/maven-public/' }
     maven { url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url = 'https://repo.codemc.org/repository/maven-public/' }
+    maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
 }
 
 dependencies {
+    implementation 'io.papermc:paperlib:1.0.8'
+    implementation 'co.aikar:acf-paper:0.5.1-SNAPSHOT'
+
+    implementation 'com.github.cryptomorin:XSeries:9.2.0'
+    implementation 'de.tr7zw:item-nbt-api-plugin:2.11.2'
+
     compileOnly 'io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT'
+    compileOnly 'com.mojang:authlib:1.5.25'
+
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.11.3'
+
     compileOnly 'org.jetbrains:annotations:24.0.0'
+    compileOnly 'org.checkerframework:checker-qual:3.12.0'
+
+    compileOnly 'com.google.guava:guava:32.1.1-jre'
+    compileOnly 'com.google.code.gson:gson:2.8.0'
 }
 
 shadowJar {
     archiveFileName = 'MinelesLibrary-' + project.version + '.jar'
 
+    relocate 'io.papermc', project.group + '.libs.papermc'
+
+    relocate 'co.aikar.commands', project.group + '.libs.commands'
+    relocate 'co.aikar.locales', project.group + '.libs.locales'
+
+    relocate 'com.cryptomorin.xseries', project.group + '.libs.xseries'
+    relocate 'de.tr7zw', project.group + '.libs.item-nbt-api'
 }
 
 artifacts {

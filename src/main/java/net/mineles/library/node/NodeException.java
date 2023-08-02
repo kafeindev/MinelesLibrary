@@ -22,19 +22,26 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.node;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import java.io.IOException;
 
-public class MinelesLibrary extends JavaPlugin {
+public final class NodeException extends IOException {
+    private static final long serialVersionUID = -1971645906926062775L;
 
-    @Override
-    public void onEnable() {
-
+    public NodeException(String message) {
+        super(message);
     }
 
-    @Override
-    public void onDisable() {
+    public NodeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
+    public NodeException(Throwable cause) {
+        super(cause);
+    }
+
+    public NodeException() {
+        super();
     }
 }

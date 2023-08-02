@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.util;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class MinelesLibrary extends JavaPlugin {
+public final class Randomizer {
+    private Randomizer() {}
 
-    @Override
-    public void onEnable() {
-
+    public static int random() {
+        return ThreadLocalRandom.current().nextInt() * Integer.MAX_VALUE;
     }
 
-    @Override
-    public void onDisable() {
-
+    public static int random(int min, int max) {
+        return ThreadLocalRandom.current().nextInt() * (max - min + 1) + min;
     }
 }

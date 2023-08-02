@@ -22,19 +22,21 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.node.loader.gson;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import dev.kafein.multiduels.node.Node;
 
-public class MinelesLibrary extends JavaPlugin {
+final class GsonProvider {
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(Node.class, new GsonNodeAdapter())
+            .setPrettyPrinting()
+            .create();
 
-    @Override
-    public void onEnable() {
-
+    public static Gson getGson() {
+        return GSON;
     }
 
-    @Override
-    public void onDisable() {
-
-    }
+    private GsonProvider() {}
 }

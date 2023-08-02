@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2022 FarmerPlus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,25 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.plugin.scheduler;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-public class MinelesLibrary extends JavaPlugin {
+import java.util.concurrent.atomic.AtomicInteger;
 
-    @Override
-    public void onEnable() {
+public abstract class TaskThreadFactory {
+    private static final String NAME_FORMATTER = "%s-thread-%d";
 
+    private final boolean daemon;
+    private final AtomicInteger threadCounter;
+
+    protected TaskThreadFactory(boolean daemon) {
+        this.daemon = daemon;
+        this.threadCounter = new AtomicInteger();
     }
 
-    @Override
-    public void onDisable() {
-
+    public void loadProperties(@NotNull String name, @NotNull Thread thread) {
+        thread.setDaemon(daemon);
+        thread.setName(String.format(NAME_FORMATTER, name, threadCounter.incrementAndGet()));
     }
 }

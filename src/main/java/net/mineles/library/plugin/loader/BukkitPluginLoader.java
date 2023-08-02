@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2023 Kafein
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,32 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.plugin.loader;
 
+import net.mineles.library.CinematicCreator;
+import net.mineles.library.plugin.BukkitPlugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-public class MinelesLibrary extends JavaPlugin {
+public final class BukkitPluginLoader extends JavaPlugin {
+    private final @NotNull BukkitPlugin plugin;
+
+    public BukkitPluginLoader() {
+        this.plugin = new CinematicCreator(this);
+    }
+
+    @Override
+    public void onLoad() {
+        this.plugin.load();
+    }
 
     @Override
     public void onEnable() {
-
+        this.plugin.enable();
     }
 
     @Override
     public void onDisable() {
-
+        this.plugin.disable();
     }
 }

@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.node.loader;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import dev.kafein.multiduels.node.Node;
+import org.jetbrains.annotations.NotNull;
 
-public class MinelesLibrary extends JavaPlugin {
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
-    @Override
-    public void onEnable() {
+public interface NodeAdapter {
+    void write(@NotNull BufferedWriter writer, @NotNull Node value) throws IOException;
 
-    }
-
-    @Override
-    public void onDisable() {
-
-    }
+    Node read(@NotNull BufferedReader reader) throws IOException;
 }

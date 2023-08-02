@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2022 FarmerPlus
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,27 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.plugin.scheduler.concurrent;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import net.mineles.library.plugin.scheduler.TaskThreadFactory;
+import org.jetbrains.annotations.NotNull;
 
-public class MinelesLibrary extends JavaPlugin {
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
-    @Override
-    public void onEnable() {
+public final class ConcurrentThreadFactory extends TaskThreadFactory implements ThreadFactory {
+    private final @NotNull String name;
 
+    public ConcurrentThreadFactory(@NotNull String name, boolean daemon) {
+        super(daemon);
+        this.name = name;
     }
 
     @Override
-    public void onDisable() {
+    public Thread newThread(@NotNull Runnable r) {
+        Thread thread = Executors.defaultThreadFactory().newThread(r);
 
+        loadProperties(this.name, thread);
+        return thread;
     }
 }

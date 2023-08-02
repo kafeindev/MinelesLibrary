@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2022-2023 MinelesNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,41 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.manager;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-public class MinelesLibrary extends JavaPlugin {
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 
-    @Override
-    public void onEnable() {
+public interface Manager<K, V> {
+    void initialize();
 
-    }
+    void shutdown();
 
-    @Override
-    public void onDisable() {
+    @NotNull Map<K, V> getMap();
 
-    }
+    @NotNull Collection<K> getKeys();
+
+    @NotNull Collection<V> getValues();
+
+    @NotNull Optional<V> find(@NotNull K key);
+
+    V get(@NotNull K key);
+
+    void putAll(@NotNull Map<K, V> map);
+
+    V put(@NotNull K key, @NotNull V value);
+
+    void remove(@NotNull K key);
+
+    boolean removeIf(@NotNull Predicate<? super V> filter);
+
+    void clear();
+
+    boolean contains(@NotNull K key);
+
+    int size();
 }

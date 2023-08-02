@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2022-2023 MinelesNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,16 @@
  * SOFTWARE.
  */
 
-package net.mineles.library;
+package net.mineles.library.serializer;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-public class MinelesLibrary extends JavaPlugin {
-
-    @Override
-    public void onEnable() {
-
+public interface Serializer<T, I> {
+    default T deserialize(@NotNull I i) {
+        throw new IllegalArgumentException("The class " + i.getClass().toString() + " doesn't support the deserialization");
     }
 
-    @Override
-    public void onDisable() {
-
+    default I serialize(@NotNull T t) {
+        throw new IllegalArgumentException("The class " + t.getClass().toString() + " doesn't support the serialization");
     }
 }
