@@ -26,8 +26,8 @@ package net.mineles.library.action;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.CompletableFuture;
-
-public interface Action<C extends Context> {
-    void invoke(@NotNull C context, @NotNull CompletableFuture<ActionResult> future);
+public interface Context {
+    default <T extends Context> @NotNull T getAs(Class<T> clazz) {
+        return clazz.cast(this);
+    }
 }

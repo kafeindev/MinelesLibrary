@@ -5,8 +5,6 @@ public enum ButtonAttributes {
     NAME,
     TYPE,
 
-    PARENT,
     SLOTS,
-
     CLICK_SOUND
 }
