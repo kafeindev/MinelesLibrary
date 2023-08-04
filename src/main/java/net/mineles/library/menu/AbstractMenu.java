@@ -1,6 +1,6 @@
 package net.mineles.library.menu;
 
-import net.mineles.library.component.PlayerComponent;
+import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.menu.button.Button;
 import net.mineles.library.plugin.BukkitPlugin;
 import net.mineles.library.property.Attribute;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class AbstractMenu implements Menu {
+abstract class AbstractMenu implements Menu {
     protected final @NotNull BukkitPlugin plugin;
     protected final @NotNull AttributeMap attributes;
 
@@ -19,11 +19,6 @@ public abstract class AbstractMenu implements Menu {
                            @NotNull String name) {
         this.plugin = plugin;
         this.attributes = AttributeMap.create(MenuAttributes.NAME, name);
-    }
-
-    @Override
-    public void initialize() {
-
     }
 
     @Override

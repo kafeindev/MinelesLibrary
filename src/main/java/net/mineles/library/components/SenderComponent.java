@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.component;
+package net.mineles.library.components;
 
 import net.mineles.library.util.text.PlaceholderParser;
 import net.kyori.adventure.text.Component;

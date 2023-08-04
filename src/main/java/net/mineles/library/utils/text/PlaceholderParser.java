@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.util.text;
+package net.mineles.library.utils.text;
 
 import com.google.common.collect.ImmutableMap;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -124,6 +124,5 @@ public final class PlaceholderParser {
         return message;
     }
 
-    private PlaceholderParser() {
-    }
+    private PlaceholderParser() {}
 }

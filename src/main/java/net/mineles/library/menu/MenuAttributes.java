@@ -1,13 +1,14 @@
 package net.mineles.library.menu;
 
 public enum MenuAttributes {
+    NODE,
     NAME,
     TYPE,
-    PARENT,
 
     TITLE,
     SIZE,
 
+    PARENT,
     BUTTONS,
 
     OPEN_SOUND,

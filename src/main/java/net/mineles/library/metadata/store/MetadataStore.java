@@ -27,7 +27,7 @@ package net.mineles.library.metadata.store;
 import static com.google.common.base.Preconditions.*;
 
 import com.google.common.collect.Maps;
-import net.mineles.library.component.PlayerComponent;
+import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.metadata.Metadata;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

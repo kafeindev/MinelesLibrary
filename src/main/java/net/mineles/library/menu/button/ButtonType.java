@@ -1,4 +1,6 @@
 package net.mineles.library.menu.button;
 
-public class ButtonType {
+public enum ButtonType {
+    DEFAULT,
+    PAGINATED
 }

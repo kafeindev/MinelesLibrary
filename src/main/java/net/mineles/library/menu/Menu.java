@@ -1,6 +1,6 @@
 package net.mineles.library.menu;
 
-import net.mineles.library.component.PlayerComponent;
+import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.menu.button.Button;
 import net.mineles.library.menu.misc.ClickResult;
 import net.mineles.library.menu.misc.contexts.ClickContext;
@@ -12,8 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public interface Menu {
-    void initialize();
-
     default boolean open(@NotNull PlayerComponent player) {
         return open(player, 0);
     }
@@ -39,16 +37,6 @@ public interface Menu {
     @Nullable <T> Attribute<T> getAttribute(@NotNull String name);
 
     @Nullable <T> Attribute<T> getAttribute(@NotNull String name, @NotNull Class<T> type);
-
-    @NotNull String getName();
-
-    @NotNull MenuType getType();
-
-    @NotNull String getParent();
-
-    @NotNull String getTitle();
-
-    int getSize();
 
     @NotNull Optional<Button> findButton(@NotNull String name);
 

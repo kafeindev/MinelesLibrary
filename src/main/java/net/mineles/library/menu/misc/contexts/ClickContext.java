@@ -1,7 +1,7 @@
 package net.mineles.library.menu.misc.contexts;
 
 import net.mineles.library.action.context.Context;
-import net.mineles.library.component.ItemComponent;
+import net.mineles.library.components.ItemComponent;
 import net.mineles.library.menu.Menu;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;

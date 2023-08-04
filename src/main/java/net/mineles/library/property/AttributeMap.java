@@ -143,26 +143,4 @@ public final class AttributeMap {
     public boolean has(@NotNull Enum<?> key) {
         return this.has(key.name());
     }
-
-    @Override
-    public int hashCode() {
-        return this.attributes.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof AttributeMap)) {
-            return false;
-        }
-
-        AttributeMap attributeMap = (AttributeMap) obj;
-        return this.attributes.equals(attributeMap.attributes);
-    }
-
-    @Override
-    public String toString() {
-        return "AttributeMap{" +
-                "attributes=" + this.attributes +
-                '}';
-    }
 }
