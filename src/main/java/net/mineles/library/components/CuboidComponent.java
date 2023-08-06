@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.component;
+package net.mineles.library.components;
 
 import org.jetbrains.annotations.NotNull;
 

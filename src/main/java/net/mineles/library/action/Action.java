@@ -24,11 +24,10 @@
 
 package net.mineles.library.action;
 
-import net.mineles.library.action.context.Context;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public interface Action {
-    void invoke(@NotNull Context context, @NotNull CompletableFuture<ActionResult> future);
+public interface Action<C extends Context> {
+    void invoke(@NotNull C context, @NotNull CompletableFuture<ActionResult> future);
 }

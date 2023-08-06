@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2023 Kafein
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,12 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.util;
+package net.mineles.library.action;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
-
-public final class NameFormatter {
-    private NameFormatter() {}
-
-    @NotNull
-    public static String format(@NotNull String name) {
-        name = name.toLowerCase(Locale.ENGLISH);
-        name = name.replace(" ", "_");
-
-        byte[] bytes = name.getBytes();
-        name = new String(bytes, StandardCharsets.UTF_8);
-
-        return name;
+public interface Context {
+    default <T extends Context> @NotNull T getAs(Class<T> clazz) {
+        return clazz.cast(this);
     }
 }

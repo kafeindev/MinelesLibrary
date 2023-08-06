@@ -1,19 +1,20 @@
 package net.mineles.library.menu;
 
-import net.mineles.library.component.PlayerComponent;
+import com.cryptomorin.xseries.XSound;
+import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.menu.button.Button;
 import net.mineles.library.menu.misc.ClickResult;
 import net.mineles.library.menu.misc.contexts.ClickContext;
+import net.mineles.library.node.Node;
 import net.mineles.library.property.Attribute;
 import net.mineles.library.property.AttributeMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.Set;
 
 public interface Menu {
-    void initialize();
-
     default boolean open(@NotNull PlayerComponent player) {
         return open(player, 0);
     }
@@ -36,19 +37,19 @@ public interface Menu {
 
     @Nullable <T> Attribute<T> getAttribute(@NotNull MenuAttributes attribute, @NotNull Class<T> type);
 
-    @Nullable <T> Attribute<T> getAttribute(@NotNull String name);
-
-    @Nullable <T> Attribute<T> getAttribute(@NotNull String name, @NotNull Class<T> type);
+    @NotNull Node getNode();
 
     @NotNull String getName();
 
     @NotNull MenuType getType();
 
-    @NotNull String getParent();
-
     @NotNull String getTitle();
 
     int getSize();
+
+    @Nullable String getParent();
+
+    @NotNull Set<Button> getButtons();
 
     @NotNull Optional<Button> findButton(@NotNull String name);
 
@@ -65,4 +66,8 @@ public interface Menu {
     void removeButtons(@NotNull Iterable<Button> buttons);
 
     void removeButton(@NotNull Button button);
+
+    @Nullable XSound getOpenSound();
+
+    @Nullable XSound getCloseSound();
 }

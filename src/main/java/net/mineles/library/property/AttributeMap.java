@@ -136,33 +136,55 @@ public final class AttributeMap {
         return this.get(key.name(), defaultValue, type);
     }
 
+    public <T> @Nullable T getValue(@NotNull String key) {
+        Attribute<T> attribute = this.get(key);
+        return attribute == null ? null : attribute.getValue();
+    }
+
+    public <T> @Nullable T getValue(@NotNull String key,
+                                    @NotNull Class<T> type) {
+        Attribute<T> attribute = this.get(key, type);
+        return attribute == null ? null : attribute.getValue();
+    }
+
+    public <T> @Nullable T getValue(@NotNull String key,
+                                    @NotNull T defaultValue) {
+        Attribute<T> attribute = this.get(key);
+        return attribute == null ? defaultValue : attribute.getValue();
+    }
+
+    public <T> @Nullable T getValue(@NotNull String key,
+                                    @NotNull T defaultValue,
+                                    @NotNull Class<T> type) {
+        Attribute<T> attribute = this.get(key, type);
+        return attribute == null ? defaultValue : attribute.getValue();
+    }
+
+    public <T> @Nullable T getValue(@NotNull Enum<?> key) {
+        return this.getValue(key.name());
+    }
+
+    public <T> @Nullable T getValue(@NotNull Enum<?> key,
+                                    @NotNull Class<T> type) {
+        return this.getValue(key.name(), type);
+    }
+
+    public <T> @Nullable T getValue(@NotNull Enum<?> key,
+                                    @NotNull T defaultValue) {
+        return this.getValue(key.name(), defaultValue);
+    }
+
+    public <T> @Nullable T getValue(@NotNull Enum<?> key,
+                                    @NotNull T defaultValue,
+                                    @NotNull Class<T> type) {
+        return this.getValue(key.name(), defaultValue, type);
+    }
+
     public boolean has(@NotNull String key) {
         return this.attributes.containsKey(key);
     }
 
     public boolean has(@NotNull Enum<?> key) {
         return this.has(key.name());
-    }
-
-    @Override
-    public int hashCode() {
-        return this.attributes.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof AttributeMap)) {
-            return false;
-        }
-
-        AttributeMap attributeMap = (AttributeMap) obj;
-        return this.attributes.equals(attributeMap.attributes);
-    }
-
-    @Override
-    public String toString() {
-        return "AttributeMap{" +
-                "attributes=" + this.attributes +
-                '}';
     }
 }

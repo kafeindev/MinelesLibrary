@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.component;
+package net.mineles.library.components;
 
 import com.cryptomorin.xseries.XSound;
 import net.mineles.library.metadata.Metadata;
