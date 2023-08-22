@@ -15,6 +15,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface Menu {
+    static @NotNull MenuBuilder newBuilder() {
+        return new MenuBuilder();
+    }
+
     default boolean open(@NotNull PlayerComponent player) {
         return open(player, 0);
     }

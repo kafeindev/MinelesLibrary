@@ -40,7 +40,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Objects.requireNonNull;
 
 public final class NodeSerializers {
     static final NodeSerializers DEFAULT = NodeSerializers.create();
@@ -99,7 +98,7 @@ public final class NodeSerializers {
     }
 
     public <T> void serialize(@NotNull Node node, @NotNull T object) {
-        TypeToken<T> type = (TypeToken<T>) TypeToken.of(requireNonNull(object, "object").getClass());
+        TypeToken<T> type = (TypeToken<T>) TypeToken.of(checkNotNull(object, "object").getClass());
         serialize(type, node, object);
     }
 

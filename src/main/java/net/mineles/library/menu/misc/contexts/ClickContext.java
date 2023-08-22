@@ -40,6 +40,18 @@ public final class ClickContext implements Context {
     }
 
     @NotNull
+    public static ClickContext create(@NotNull Menu menu,
+                                      @NotNull InventoryClickEvent event,
+                                      Button button,
+                                      ItemComponent item,
+                                      ItemComponent cursor,
+                                      ClickType clickType,
+                                      InventoryType.SlotType slotType,
+                                      int slot) {
+        return new ClickContext(menu, event, button, item, cursor, clickType, slotType, slot);
+    }
+
+    @NotNull
     public static ClickContext from(@NotNull InventoryClickEvent event,
                                     @NotNull Menu menu) {
         Button button = menu.findButton(event.getSlot()).orElse(null);
@@ -53,7 +65,7 @@ public final class ClickContext implements Context {
         InventoryType.SlotType slotType = event.getSlotType();
         int slot = event.getSlot();
 
-        return new ClickContext(menu, event, button, item, cursor, clickType, slotType, slot);
+        return create(menu, event, button, item, cursor, clickType, slotType, slot);
     }
 
     public @NotNull InventoryClickEvent getEvent() {
