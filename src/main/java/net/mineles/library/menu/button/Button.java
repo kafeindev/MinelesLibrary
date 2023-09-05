@@ -14,7 +14,7 @@ import java.util.Map;
 
 public interface Button {
     @NotNull
-    static DefaultButton.DefaultBuilder newBuilder() {
+    static DefaultButton.Builder newBuilder() {
         return DefaultButton.newBuilder();
     }
 

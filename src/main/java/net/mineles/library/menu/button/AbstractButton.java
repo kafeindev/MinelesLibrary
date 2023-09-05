@@ -1,7 +1,6 @@
 package net.mineles.library.menu.button;
 
 import com.cryptomorin.xseries.XSound;
-import net.mineles.library.components.ItemComponent;
 import net.mineles.library.menu.misc.ClickResult;
 import net.mineles.library.menu.misc.contexts.ClickContext;
 import net.mineles.library.menu.misc.contexts.OpenContext;
@@ -13,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -86,49 +84,53 @@ abstract class AbstractButton implements Button {
         return this.attributes.getValue(ButtonAttributes.CLICK_SOUND);
     }
 
-    abstract static class Builder<T extends Builder<T>> {
+    abstract static class Builder<T, B extends Builder<T, B>> {
         protected final AttributeMap attributes;
-        protected final DefaultButton.DefaultItemStackFactoryBuilder itemStackFactoryBuilder;
         protected ClickHandler clickHandler;
 
-        Builder() {
+        protected Builder() {
             this.attributes = new AttributeMap();
             this.clickHandler = context -> ClickResult.CANCELLED;
-            this.itemStackFactoryBuilder = new DefaultButton.DefaultItemStackFactoryBuilder();
         }
 
         @SuppressWarnings("unchecked")
-        public @NotNull T self() {
-            return (T) this;
+        public @NotNull B self() {
+            return (B) this;
         }
 
-        public @NotNull T node(@NotNull Node node) {
+        public @NotNull AttributeMap attributes() {
+            return this.attributes;
+        }
+
+        public @NotNull B attribute(@NotNull ButtonAttributes attribute, @Nullable Object value) {
+            this.attributes.set(attribute, value);
+            return self();
+        }
+
+        public @NotNull B node(@NotNull Node node) {
             this.attributes.set(ButtonAttributes.NODE, node);
             return self();
         }
 
-        public @NotNull T name(@NotNull String name) {
+        public @NotNull B name(@NotNull String name) {
             this.attributes.set(ButtonAttributes.NAME, name);
             return self();
         }
 
-        public @NotNull T type(@NotNull ButtonType type) {
+        public @NotNull B type(@NotNull ButtonType type) {
             this.attributes.set(ButtonAttributes.TYPE, type);
             return self();
         }
 
-        public @NotNull T whenClicked(@NotNull ClickHandler clickHandler) {
+        public @NotNull ClickHandler clickHandler() {
+            return this.clickHandler;
+        }
+
+        public @NotNull B whenClicked(@NotNull ClickHandler clickHandler) {
             this.clickHandler = clickHandler;
             return self();
         }
 
-        public @NotNull T itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
-            this.itemStackFactoryBuilder.modifier(modifier);
-            return self();
-        }
-
-        public @NotNull Button build() {
-            return new DefaultButton(this.attributes, this.clickHandler, this.itemStackFactoryBuilder.build());
-        }
+        public abstract @NotNull T build();
     }
 }

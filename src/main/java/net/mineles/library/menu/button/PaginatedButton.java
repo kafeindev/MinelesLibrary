@@ -15,18 +15,48 @@ import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-final class PaginatedButton<T> extends AbstractButton implements Button {
+final class PaginatedButton extends AbstractButton implements Button {
     PaginatedButton(@NotNull AttributeMap attributes,
                     @NotNull ClickHandler clickHandler,
                     @NotNull ItemStackFactory itemStackFactory) {
         super(attributes, clickHandler, itemStackFactory);
     }
 
-    public static final class Builder {
-
+    @NotNull
+    public static <T> PaginatedButton.Builder<T> newBuilder() {
+        return new Builder<>();
     }
 
-    final class PaginatedItemStackFactoryBuilder<T> extends ItemStackFactory.Builder<PaginatedItemStackFactoryBuilder<T>> {
+    public static final class Builder<T> extends AbstractButton.Builder<PaginatedButton, Builder<T>> {
+        private final @NotNull PaginatedItemStackFactoryBuilder<T> itemStackFactoryBuilder;
+
+        Builder() {
+            super();
+            this.itemStackFactoryBuilder = new PaginatedItemStackFactoryBuilder<>();
+        }
+
+        public @NotNull PaginatedButton.Builder<T> entries(@NotNull Function<OpenContext, List<T>> entries) {
+            this.itemStackFactoryBuilder.entries(entries);
+            return this;
+        }
+
+        public @NotNull PaginatedButton.Builder<T> placeholdersPerEntry(@NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry) {
+            this.itemStackFactoryBuilder.placeholdersPerEntry(placeholdersPerEntry);
+            return this;
+        }
+
+        public @NotNull PaginatedButton.Builder<T> itemModifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
+            this.itemStackFactoryBuilder.modifier(modifier);
+            return this;
+        }
+
+        @Override
+        public @NotNull PaginatedButton build() {
+            return new PaginatedButton(attributes(), clickHandler(), this.itemStackFactoryBuilder.build());
+        }
+    }
+
+    static final class PaginatedItemStackFactoryBuilder<T> extends ItemStackFactory.Builder<PaginatedItemStackFactoryBuilder<T>> {
         private Function<OpenContext, List<T>> entries;
         private BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry;
         private TriConsumer<OpenContext, ItemComponent, T> modifier;
@@ -68,7 +98,7 @@ final class PaginatedButton<T> extends AbstractButton implements Button {
 
             return (context, button) -> {
                 List<T> entries = this.entries.apply(context);
-                int slotCount = getSlots().length;
+                int slotCount = button.getSlots().length;
 
                 int minIndex = context.getPage() * slotCount;
                 if (minIndex >= entries.size()) {
@@ -87,12 +117,12 @@ final class PaginatedButton<T> extends AbstractButton implements Button {
                             ? this.placeholdersPerEntry.apply(context, entry)
                             : this.placeholders.apply(context);
 
-                    ItemComponent itemComponent = ItemComponent.from(getNode(), placeholders);
+                    ItemComponent itemComponent = ItemComponent.from(button.getNode(), placeholders);
                     if (this.modifier != null) {
                         this.modifier.accept(context, itemComponent, entry);
                     }
 
-                    itemStacks.put(getSlots()[i], itemComponent.getHandle());
+                    itemStacks.put(button.getSlots()[i], itemComponent.getHandle());
                 }
 
                 return itemStacks;
