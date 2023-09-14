@@ -28,10 +28,10 @@ import net.mineles.library.plugin.BukkitPlugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BukkitPluginLoader extends JavaPlugin {
+public abstract class AbstractPluginLoader extends JavaPlugin {
     private final @NotNull BukkitPlugin plugin;
 
-    protected BukkitPluginLoader(@NotNull BukkitPlugin plugin) {
+    protected AbstractPluginLoader(@NotNull BukkitPlugin plugin) {
         this.plugin = plugin;
     }
 
