@@ -1,5 +1,5 @@
 package net.mineles.library.menu;
 
-public class MenuBuilder {
+public final class MenuBuilder {
     MenuBuilder() {}
 }

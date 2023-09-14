@@ -16,15 +16,20 @@ import java.util.function.Function;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 final class PaginatedButton extends AbstractButton implements Button {
-    PaginatedButton(@NotNull AttributeMap attributes,
+    PaginatedButton(@NotNull ButtonProperties properties,
                     @NotNull ClickHandler clickHandler,
                     @NotNull ItemStackFactory itemStackFactory) {
-        super(attributes, clickHandler, itemStackFactory);
+        super(properties, clickHandler, itemStackFactory);
     }
 
     @NotNull
     public static <T> PaginatedButton.Builder<T> newBuilder() {
         return new Builder<>();
+    }
+
+    @Override
+    public @NotNull ButtonType getType() {
+        return ButtonType.PAGINATED;
     }
 
     public static final class Builder<T> extends AbstractButton.Builder<PaginatedButton, Builder<T>> {
@@ -40,19 +45,29 @@ final class PaginatedButton extends AbstractButton implements Button {
             return this;
         }
 
-        public @NotNull PaginatedButton.Builder<T> placeholdersPerEntry(@NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry) {
-            this.itemStackFactoryBuilder.placeholdersPerEntry(placeholdersPerEntry);
-            return this;
-        }
-
         public @NotNull PaginatedButton.Builder<T> itemModifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
             this.itemStackFactoryBuilder.modifier(modifier);
             return this;
         }
 
+        public @NotNull PaginatedButton.Builder<T> placeholdersPerEntry(@NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry) {
+            this.itemStackFactoryBuilder.placeholdersPerEntry(placeholdersPerEntry);
+            return this;
+        }
+
+        public @NotNull PaginatedButton.Builder<T> placeholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
+            this.itemStackFactoryBuilder.placeholders(placeholders);
+            return this;
+        }
+
+        public @NotNull PaginatedButton.Builder<T> placeholders(@NotNull Map<String, String> placeholders) {
+            return placeholders(context -> placeholders);
+        }
+
+
         @Override
         public @NotNull PaginatedButton build() {
-            return new PaginatedButton(attributes(), clickHandler(), this.itemStackFactoryBuilder.build());
+            return new PaginatedButton(properties().build(), clickHandler(), this.itemStackFactoryBuilder.build());
         }
     }
 

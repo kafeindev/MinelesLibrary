@@ -16,14 +16,14 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 abstract class AbstractButton implements Button {
-    private final @NotNull AttributeMap attributes;
+    private final @NotNull ButtonProperties properties;
     private final @NotNull ClickHandler clickHandler;
     private final @NotNull ItemStackFactory itemStackFactory;
 
-    AbstractButton(@NotNull AttributeMap attributes,
+    AbstractButton(@NotNull ButtonProperties properties,
                    @NotNull ClickHandler clickHandler,
                    @NotNull ItemStackFactory itemStackFactory) {
-        this.attributes = attributes;
+        this.properties = properties;
         this.clickHandler = clickHandler;
         this.itemStackFactory = itemStackFactory;
     }
@@ -39,38 +39,18 @@ abstract class AbstractButton implements Button {
     }
 
     @Override
-    public @NotNull AttributeMap getAttributes() {
-        return this.attributes;
-    }
-
-    @Override
-    public <T> @Nullable T getAttribute(@NotNull ButtonAttributes attribute) {
-        return this.attributes.getValue(attribute);
-    }
-
-    @Override
-    public <T> @Nullable T getAttribute(@NotNull ButtonAttributes attribute, @NotNull Class<T> type) {
-        return this.attributes.getValue(attribute, type);
-    }
-
-    @Override
-    public @NotNull Node getNode() {
-        return checkNotNull(this.attributes.getValue(ButtonAttributes.NODE));
+    public @Nullable Node getNode() {
+        return this.properties.getNode();
     }
 
     @Override
     public @NotNull String getName() {
-        return checkNotNull(this.attributes.getValue(ButtonAttributes.NAME));
-    }
-
-    @Override
-    public @NotNull ButtonType getType() {
-        return checkNotNull(this.attributes.getValue(ButtonAttributes.TYPE));
+        return this.properties.getName();
     }
 
     @Override
     public int[] getSlots() {
-        return this.attributes.getValue(ButtonAttributes.SLOTS);
+        return this.properties.getSlots();
     }
 
     @Override
@@ -81,15 +61,15 @@ abstract class AbstractButton implements Button {
 
     @Override
     public @Nullable XSound getClickSound() {
-        return this.attributes.getValue(ButtonAttributes.CLICK_SOUND);
+        return this.properties.getClickSound();
     }
 
     abstract static class Builder<T, B extends Builder<T, B>> {
-        protected final AttributeMap attributes;
+        protected final ButtonProperties.Builder properties;
         protected ClickHandler clickHandler;
 
         protected Builder() {
-            this.attributes = new AttributeMap();
+            this.properties = ButtonProperties.newBuilder();
             this.clickHandler = context -> ClickResult.CANCELLED;
         }
 
@@ -98,28 +78,18 @@ abstract class AbstractButton implements Button {
             return (B) this;
         }
 
-        public @NotNull AttributeMap attributes() {
-            return this.attributes;
-        }
-
-        public @NotNull B attribute(@NotNull ButtonAttributes attribute, @Nullable Object value) {
-            this.attributes.set(attribute, value);
-            return self();
-        }
-
         public @NotNull B node(@NotNull Node node) {
-            this.attributes.set(ButtonAttributes.NODE, node);
+            this.properties.node(node);
             return self();
         }
 
         public @NotNull B name(@NotNull String name) {
-            this.attributes.set(ButtonAttributes.NAME, name);
+            this.properties.name(name);
             return self();
         }
 
-        public @NotNull B type(@NotNull ButtonType type) {
-            this.attributes.set(ButtonAttributes.TYPE, type);
-            return self();
+        public @NotNull ButtonProperties.Builder properties() {
+            return this.properties;
         }
 
         public @NotNull ClickHandler clickHandler() {

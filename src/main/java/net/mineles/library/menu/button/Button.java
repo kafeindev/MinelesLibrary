@@ -18,17 +18,16 @@ public interface Button {
         return DefaultButton.newBuilder();
     }
 
+    @NotNull
+    static <T> PaginatedButton.Builder<T> newPaginatedBuilder() {
+        return PaginatedButton.newBuilder();
+    }
+
     @NotNull ClickResult click(@NotNull ClickContext context);
 
     @NotNull Map<Integer, ItemStack> createItemStacks(@NotNull OpenContext context);
 
-    @NotNull AttributeMap getAttributes();
-
-    @Nullable <T> T getAttribute(@NotNull ButtonAttributes attribute);
-
-    @Nullable <T> T getAttribute(@NotNull ButtonAttributes attribute, @NotNull Class<T> type);
-
-    @NotNull Node getNode();
+    @Nullable Node getNode();
 
     @NotNull String getName();
 

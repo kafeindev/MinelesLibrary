@@ -2,25 +2,31 @@ package net.mineles.library.menu.button;
 
 import com.google.common.collect.Maps;
 import net.mineles.library.components.ItemComponent;
+import net.mineles.library.menu.MenuException;
 import net.mineles.library.menu.misc.contexts.OpenContext;
-import net.mineles.library.property.AttributeMap;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 final class DefaultButton extends AbstractButton {
-    DefaultButton(@NotNull AttributeMap attributes,
+    DefaultButton(@NotNull ButtonProperties properties,
                   @NotNull ClickHandler clickHandler,
                   @NotNull ItemStackFactory itemStackFactory) {
-        super(attributes, clickHandler, itemStackFactory);
+        super(properties, clickHandler, itemStackFactory);
     }
 
     @NotNull
     public static DefaultButton.Builder newBuilder() {
         return new Builder();
+    }
+
+    @Override
+    public @NotNull ButtonType getType() {
+        return ButtonType.DEFAULT;
     }
 
     public static final class Builder extends AbstractButton.Builder<DefaultButton, Builder> {
@@ -32,42 +38,67 @@ final class DefaultButton extends AbstractButton {
         }
 
         public @NotNull DefaultButton.Builder itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
-            this.itemStackFactoryBuilder.modifier(modifier);
+            this.itemStackFactoryBuilder.itemModifier(modifier);
             return this;
+        }
+
+        public @NotNull DefaultButton.Builder placeholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
+            this.itemStackFactoryBuilder.placeholders(placeholders);
+            return this;
+        }
+
+        public @NotNull DefaultButton.Builder placeholders(@NotNull Map<String, String> placeholders) {
+            return placeholders(context -> placeholders);
         }
 
         @Override
         public @NotNull DefaultButton build() {
-            return new DefaultButton(attributes(), clickHandler(), this.itemStackFactoryBuilder.build());
+            return new DefaultButton(properties().build(), clickHandler(), this.itemStackFactoryBuilder.build());
         }
     }
 
     static final class DefaultItemStackFactoryBuilder extends ItemStackFactory.Builder<DefaultItemStackFactoryBuilder> {
-        private BiConsumer<OpenContext, ItemComponent> modifier;
+        private Function<OpenContext, ItemComponent> itemFactory;
+        private BiConsumer<OpenContext, ItemComponent> itemModifier;
 
         DefaultItemStackFactoryBuilder() {
             super();
         }
 
-        public @NotNull DefaultItemStackFactoryBuilder modifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
-            this.modifier = modifier;
+        public @NotNull DefaultItemStackFactoryBuilder itemFactory(@NotNull Function<OpenContext, ItemComponent> factory) {
+            this.itemFactory = factory;
             return this;
         }
 
-        public @Nullable BiConsumer<OpenContext, ItemComponent> modifier() {
-            return this.modifier;
+        public @Nullable Function<OpenContext, ItemComponent> itemFactory() {
+            return this.itemFactory;
+        }
+
+        public @NotNull DefaultItemStackFactoryBuilder itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
+            this.itemModifier = modifier;
+            return this;
+        }
+
+        public @Nullable BiConsumer<OpenContext, ItemComponent> itemModifier() {
+            return this.itemModifier;
         }
 
         @Override
         @NotNull ItemStackFactory build() {
             return (context, button) -> {
+                if (button.getNode() == null && this.itemFactory == null) {
+                    throw new MenuException("");
+                }
+
                 Map<String, String> placeholders = this.placeholders.apply(context);
 
                 Map<Integer, ItemStack> itemStacks = Maps.newHashMap();
                 for (int slot : button.getSlots()) {
-                    ItemComponent itemComponent = ItemComponent.from(button.getNode(), placeholders);
-                    if (this.modifier != null) {
-                        this.modifier.accept(context, itemComponent);
+                    ItemComponent itemComponent = this.itemFactory == null
+                            ? this.itemFactory.apply(context)
+                            : ItemComponent.from(button.getNode(), placeholders);
+                    if (this.itemModifier != null) {
+                        this.itemModifier.accept(context, itemComponent);
                     }
 
                     itemStacks.put(slot, itemComponent.getHandle());

@@ -8,6 +8,7 @@ import net.mineles.library.menu.misc.contexts.ClickContext;
 import net.mineles.library.node.Node;
 import net.mineles.library.property.Attribute;
 import net.mineles.library.property.AttributeMap;
+import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,23 +36,23 @@ public interface Menu {
 
     @NotNull ClickResult click(@NotNull ClickContext context);
 
-    @NotNull AttributeMap getAttributes();
+    @NotNull MenuProperties getProperties();
 
-    @Nullable <T> Attribute<T> getAttribute(@NotNull MenuAttributes attribute);
-
-    @Nullable <T> Attribute<T> getAttribute(@NotNull MenuAttributes attribute, @NotNull Class<T> type);
-
-    @NotNull Node getNode();
+    @Nullable Node getNode();
 
     @NotNull String getName();
 
     @NotNull MenuType getType();
 
+    @Nullable String getParent();
+
+    @NotNull InventoryProperties getInventoryProperties();
+
     @NotNull String getTitle();
 
-    int getSize();
+    @NotNull InventoryType getInventoryType();
 
-    @Nullable String getParent();
+    int getSize();
 
     @NotNull Set<Button> getButtons();
 
@@ -70,6 +71,8 @@ public interface Menu {
     void removeButtons(@NotNull Iterable<Button> buttons);
 
     void removeButton(@NotNull Button button);
+
+    void removeButton(@NotNull String name);
 
     @Nullable XSound getOpenSound();
 
