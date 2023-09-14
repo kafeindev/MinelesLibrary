@@ -24,10 +24,10 @@
 
 package net.mineles.library.node.loader.yaml;
 
-import dev.kafein.multiduels.node.Node;
-import dev.kafein.multiduels.node.NodeException;
-import dev.kafein.multiduels.node.loader.NodeAdapter;
-import dev.kafein.multiduels.node.loader.NodeLoader;
+import net.mineles.library.node.Node;
+import net.mineles.library.node.NodeException;
+import net.mineles.library.node.loader.NodeAdapter;
+import net.mineles.library.node.loader.NodeLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;

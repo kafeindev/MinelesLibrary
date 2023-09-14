@@ -26,7 +26,7 @@ package net.mineles.library.node.loader.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.kafein.multiduels.node.Node;
+import net.mineles.library.node.Node;
 
 final class GsonProvider {
     private static final Gson GSON = new GsonBuilder()

@@ -24,7 +24,7 @@
 
 package net.mineles.library.node.loader;
 
-import dev.kafein.multiduels.node.Node;
+import net.mineles.library.node.Node;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;

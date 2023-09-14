@@ -24,9 +24,9 @@
 
 package net.mineles.library.node.loader.yaml;
 
-import dev.kafein.multiduels.node.Node;
-import dev.kafein.multiduels.node.NodeFactory;
-import dev.kafein.multiduels.node.loader.NodeAdapter;
+import net.mineles.library.node.Node;
+import net.mineles.library.node.NodeFactory;
+import net.mineles.library.node.loader.NodeAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;

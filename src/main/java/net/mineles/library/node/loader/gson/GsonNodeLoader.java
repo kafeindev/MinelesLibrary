@@ -27,9 +27,9 @@ package net.mineles.library.node.loader.gson;
 import com.google.common.base.Strings;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import dev.kafein.multiduels.node.Node;
-import dev.kafein.multiduels.node.NodeException;
-import dev.kafein.multiduels.node.loader.NodeLoader;
+import net.mineles.library.node.Node;
+import net.mineles.library.node.NodeException;
+import net.mineles.library.node.loader.NodeLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

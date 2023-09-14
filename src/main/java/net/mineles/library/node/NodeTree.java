@@ -24,7 +24,7 @@
 
 package net.mineles.library.node;
 
-import dev.kafein.multiduels.node.serializer.NodeSerializers;
+import net.mineles.library.node.serializer.NodeSerializers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

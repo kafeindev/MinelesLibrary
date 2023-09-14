@@ -26,9 +26,9 @@ package net.mineles.library.node.loader;
 
 import static com.google.common.base.Preconditions.*;
 
-import dev.kafein.multiduels.node.Node;
-import dev.kafein.multiduels.node.NodeException;
-import dev.kafein.multiduels.node.NodeFactory;
+import net.mineles.library.node.Node;
+import net.mineles.library.node.NodeException;
+import net.mineles.library.node.NodeFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

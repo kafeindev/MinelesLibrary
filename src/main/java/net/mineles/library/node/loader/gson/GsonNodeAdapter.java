@@ -29,8 +29,8 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import dev.kafein.multiduels.node.Node;
-import dev.kafein.multiduels.node.NodeFactory;
+import net.mineles.library.node.Node;
+import net.mineles.library.node.NodeFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
