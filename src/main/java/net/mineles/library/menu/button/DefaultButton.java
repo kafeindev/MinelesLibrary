@@ -65,22 +65,22 @@ final class DefaultButton extends AbstractButton {
             super();
         }
 
+        public @Nullable Function<OpenContext, ItemComponent> itemFactory() {
+            return this.itemFactory;
+        }
+
         public @NotNull DefaultItemStackFactoryBuilder itemFactory(@NotNull Function<OpenContext, ItemComponent> factory) {
             this.itemFactory = factory;
             return this;
         }
 
-        public @Nullable Function<OpenContext, ItemComponent> itemFactory() {
-            return this.itemFactory;
+        public @Nullable BiConsumer<OpenContext, ItemComponent> itemModifier() {
+            return this.itemModifier;
         }
 
         public @NotNull DefaultItemStackFactoryBuilder itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
             this.itemModifier = modifier;
             return this;
-        }
-
-        public @Nullable BiConsumer<OpenContext, ItemComponent> itemModifier() {
-            return this.itemModifier;
         }
 
         @Override

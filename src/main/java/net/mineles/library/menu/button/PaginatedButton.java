@@ -80,17 +80,12 @@ final class PaginatedButton extends AbstractButton implements Button {
             super();
         }
 
-        public @NotNull PaginatedItemStackFactoryBuilder<T> entries(@NotNull Function<OpenContext, List<T>> entries) {
-            this.entries = entries;
-            return this;
-        }
-
         public @NotNull Function<OpenContext, List<T>> entries() {
             return this.entries;
         }
 
-        public @NotNull PaginatedItemStackFactoryBuilder<T> placeholdersPerEntry(@NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry) {
-            this.placeholdersPerEntry = placeholdersPerEntry;
+        public @NotNull PaginatedItemStackFactoryBuilder<T> entries(@NotNull Function<OpenContext, List<T>> entries) {
+            this.entries = entries;
             return this;
         }
 
@@ -98,13 +93,18 @@ final class PaginatedButton extends AbstractButton implements Button {
             return this.placeholdersPerEntry;
         }
 
-        public @NotNull PaginatedItemStackFactoryBuilder<T> modifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
-            this.modifier = modifier;
+        public @NotNull PaginatedItemStackFactoryBuilder<T> placeholdersPerEntry(@NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry) {
+            this.placeholdersPerEntry = placeholdersPerEntry;
             return this;
         }
 
         public @NotNull TriConsumer<OpenContext, ItemComponent, T> modifier() {
             return this.modifier;
+        }
+
+        public @NotNull PaginatedItemStackFactoryBuilder<T> modifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
+            this.modifier = modifier;
+            return this;
         }
 
         @Override

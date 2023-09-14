@@ -14,6 +14,14 @@ import java.util.Map;
 
 public interface Button {
     @NotNull
+    static Button fromNode(@NotNull Node node) {
+        return DefaultButton.newBuilder()
+                .name(node.toStringKey())
+                .node(node)
+                .build();
+    }
+
+    @NotNull
     static DefaultButton.Builder newBuilder() {
         return DefaultButton.newBuilder();
     }

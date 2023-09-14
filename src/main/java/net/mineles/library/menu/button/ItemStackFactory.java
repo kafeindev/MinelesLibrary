@@ -25,6 +25,10 @@ interface ItemStackFactory {
             return (T) this;
         }
 
+        public @Nullable Function<OpenContext, Map<String, String>> placeholders() {
+            return this.placeholders;
+        }
+
         public @NotNull T placeholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
             this.placeholders = placeholders;
             return self();
@@ -32,10 +36,6 @@ interface ItemStackFactory {
 
         public @NotNull T placeholders(@NotNull Map<String, String> placeholders) {
             return placeholders(context -> placeholders);
-        }
-
-        public @Nullable Function<OpenContext, Map<String, String>> placeholders() {
-            return this.placeholders;
         }
 
         abstract @NotNull ItemStackFactory build();

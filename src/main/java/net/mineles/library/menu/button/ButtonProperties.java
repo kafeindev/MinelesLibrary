@@ -12,7 +12,7 @@ public final class ButtonProperties {
     private final @NotNull String parent;
     private final int[] slots;
 
-    private final @Nullable XSound clickSound;
+    private XSound clickSound;
 
     ButtonProperties(@Nullable Node node,
                      @NotNull String name,
@@ -44,6 +44,10 @@ public final class ButtonProperties {
 
     @Nullable XSound getClickSound() {
         return this.clickSound;
+    }
+
+    void setClickSound(@Nullable XSound clickSound) {
+        this.clickSound = clickSound;
     }
 
     static @NotNull Builder newBuilder() {

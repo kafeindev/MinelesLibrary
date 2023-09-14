@@ -6,20 +6,23 @@ import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public final class MenuProperties {
     private final @Nullable Node node;
 
     private final @NotNull String name;
-    private final @Nullable String parent;
     private final @NotNull InventoryProperties inventoryProperties;
 
-    private final @Nullable XSound openSound;
-    private final @Nullable XSound closeSound;
+    private String parent;
+
+    private XSound openSound;
+    private XSound closeSound;
 
     MenuProperties(@Nullable Node node,
                    @NotNull String name,
-                   @Nullable String parent,
                    @NotNull InventoryProperties inventoryProperties,
+                   @Nullable String parent,
                    @Nullable XSound openSound,
                    @Nullable XSound closeSound) {
         this.node = node;
@@ -38,10 +41,6 @@ public final class MenuProperties {
         return this.name;
     }
 
-    @Nullable String getParent() {
-        return this.parent;
-    }
-
     @NotNull InventoryProperties getInventoryProperties() {
         return this.inventoryProperties;
     }
@@ -58,12 +57,28 @@ public final class MenuProperties {
         return this.inventoryProperties.getType();
     }
 
+    @Nullable String getParent() {
+        return this.parent;
+    }
+
+    void setParent(@Nullable String parent) {
+        this.parent = parent;
+    }
+
     @Nullable XSound getOpenSound() {
         return this.openSound;
     }
 
+    void setOpenSound(@Nullable XSound openSound) {
+        this.openSound = openSound;
+    }
+
     @Nullable XSound getCloseSound() {
         return this.closeSound;
+    }
+
+    void setCloseSound(@Nullable XSound closeSound) {
+        this.closeSound = closeSound;
     }
 
     static @NotNull Builder newBuilder() {
@@ -84,9 +99,17 @@ public final class MenuProperties {
             this.inventoryPropertiesBuilder = InventoryProperties.newBuilder();
         }
 
+        @NotNull Node node() {
+            return checkNotNull(this.node, "node");
+        }
+
         @NotNull Builder node(@Nullable Node node) {
             this.node = node;
             return this;
+        }
+
+        @Nullable String name() {
+            return this.name;
         }
 
         @NotNull Builder name(@NotNull String name) {
@@ -94,9 +117,8 @@ public final class MenuProperties {
             return this;
         }
 
-        @NotNull Builder parent(@Nullable String parent) {
-            this.parent = parent;
-            return this;
+        @Nullable String title() {
+            return this.inventoryPropertiesBuilder.title();
         }
 
         @NotNull Builder title(@NotNull String title) {
@@ -104,9 +126,17 @@ public final class MenuProperties {
             return this;
         }
 
+        int size() {
+            return this.inventoryPropertiesBuilder.size();
+        }
+
         @NotNull Builder size(int size) {
             this.inventoryPropertiesBuilder.size(size);
             return this;
+        }
+
+        @Nullable InventoryType type() {
+            return this.inventoryPropertiesBuilder.type();
         }
 
         @NotNull Builder type(@NotNull InventoryType type) {
@@ -114,9 +144,26 @@ public final class MenuProperties {
             return this;
         }
 
+        @Nullable String parent() {
+            return this.parent;
+        }
+
+        @NotNull Builder parent(@Nullable String parent) {
+            this.parent = parent;
+            return this;
+        }
+
+        @Nullable XSound openSound() {
+            return this.openSound;
+        }
+
         @NotNull Builder openSound(@Nullable XSound openSound) {
             this.openSound = openSound;
             return this;
+        }
+
+        @Nullable XSound closeSound() {
+            return this.closeSound;
         }
 
         @NotNull Builder closeSound(@Nullable XSound closeSound) {
@@ -125,7 +172,7 @@ public final class MenuProperties {
         }
 
         @NotNull MenuProperties build() {
-            return new MenuProperties(this.node, this.name, this.parent, this.inventoryPropertiesBuilder.build(), this.openSound, this.closeSound);
+            return new MenuProperties(this.node, this.name, this.inventoryPropertiesBuilder.build(), this.parent, this.openSound, this.closeSound);
         }
     }
 }

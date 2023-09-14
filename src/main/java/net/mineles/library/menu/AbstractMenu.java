@@ -8,9 +8,11 @@ import net.mineles.library.menu.misc.ClickResult;
 import net.mineles.library.menu.misc.contexts.ClickContext;
 import net.mineles.library.node.Node;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,6 +38,15 @@ abstract class AbstractMenu implements Menu {
     @Override
     public boolean open(@NotNull PlayerComponent player, int page) {
         return false;
+    }
+
+    @NotNull Inventory createInventory(@NotNull PlayerComponent player, int page) {
+        Map<String, String> placeholders = createTitlePlaceholders(player, page);
+        return getInventoryProperties().createInventory(placeholders);
+    }
+
+    @NotNull Map<String, String> createTitlePlaceholders(@NotNull PlayerComponent player, int page) {
+        return Map.of("%player%", player.getName(), "%page%", String.valueOf(page + 1));
     }
 
     @Override
