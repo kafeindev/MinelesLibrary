@@ -24,7 +24,7 @@
 
 package net.mineles.library.components;
 
-import net.mineles.library.util.text.PlaceholderParser;
+import net.mineles.library.utils.text.PlaceholderParser;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

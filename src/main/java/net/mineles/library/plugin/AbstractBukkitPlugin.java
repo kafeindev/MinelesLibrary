@@ -28,16 +28,12 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.PaperCommandManager;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.google.common.collect.Sets;
 import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.components.SenderComponent;
-import net.mineles.library.config.ConfigManager;
-import net.mineles.library.config.key.ConfigKeys;
-import net.mineles.library.listener.ConnectionListener;
-import net.mineles.library.listener.InventoryListener;
-import net.mineles.library.listener.registry.ListenerRegistry;
+import net.mineles.library.listener.ListenerRegistry;
 import net.mineles.library.menu.MenuManager;
 import net.mineles.library.metadata.store.MetadataStore;
-import net.mineles.library.packet.EntityHider;
 import net.mineles.library.plugin.scheduler.concurrent.ConcurrentTaskScheduler;
 import net.mineles.library.plugin.scheduler.concurrent.forkjoin.ForkJoinPoolBuilder;
 import org.bukkit.command.CommandSender;
@@ -54,11 +50,9 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
 
     private ConcurrentTaskScheduler taskScheduler;
 
-    private ConfigManager configManager;
     private MenuManager menuManager;
     private PaperCommandManager commandManager;
     private ProtocolManager protocolManager;
-    private EntityHider entityHider;
     private MetadataStore metadataStore;
 
     protected AbstractBukkitPlugin(@NotNull Plugin plugin) {
@@ -78,11 +72,6 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
         this.taskScheduler = setupTaskScheduler();
 
         this.protocolManager = ProtocolLibrary.getProtocolManager();
-        this.entityHider = new EntityHider(this.plugin, EntityHider.Policy.BLACKLIST);
-
-        getLogger().info("Loading configs...");
-        this.configManager = new ConfigManager(getDataPath());
-        loadConfigs();
 
         onEnable();
 
@@ -124,7 +113,7 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
         getCommandManager().getCommandContexts().registerIssuerAwareContext(PlayerComponent.class, resolver -> {
             CommandSender sender = resolver.getSender();
             if (!(sender instanceof Player)) {
-                SenderComponent.of(sender).sendMessage(ConfigKeys.Language.NO_PLAYER.getValue());
+                SenderComponent.of(sender).sendMessage("§cYou must be a player to use this command.");
                 return null;
             }
 
@@ -143,10 +132,7 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
 
     @NotNull
     public Set<Class<?>> getListeners() {
-        return Set.of(
-                ConnectionListener.class,
-                InventoryListener.class
-        );
+        return Sets.newHashSet();
     }
 
     @Override
@@ -166,7 +152,7 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
 
     @Override
     public @NotNull ConcurrentTaskScheduler setupTaskScheduler() {
-        ConcurrentTaskScheduler taskScheduler = new ConcurrentTaskScheduler(getLogger());
+        ConcurrentTaskScheduler taskScheduler = new ConcurrentTaskScheduler(getLogger(), getPlugin().getName());
 
         ForkJoinPoolBuilder builder = taskScheduler.createWorkerPoolBuilder()
                 .setDaemon(true)
@@ -182,11 +168,6 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     }
 
     @Override
-    public @NotNull ConfigManager getConfigManager() {
-        return this.configManager;
-    }
-
-    @Override
     public @NotNull MenuManager getMenuManager() {
         return this.menuManager;
     }
@@ -199,11 +180,6 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     @Override
     public @NotNull ProtocolManager getProtocolManager() {
         return this.protocolManager;
-    }
-
-    @Override
-    public @NotNull EntityHider getEntityHider() {
-        return this.entityHider;
     }
 
     @Override

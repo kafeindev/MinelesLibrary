@@ -24,16 +24,15 @@
 
 package net.mineles.library.plugin.loader;
 
-import net.mineles.library.CinematicCreator;
 import net.mineles.library.plugin.BukkitPlugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public final class BukkitPluginLoader extends JavaPlugin {
+public abstract class BukkitPluginLoader extends JavaPlugin {
     private final @NotNull BukkitPlugin plugin;
 
-    public BukkitPluginLoader() {
-        this.plugin = new CinematicCreator(this);
+    protected BukkitPluginLoader(@NotNull BukkitPlugin plugin) {
+        this.plugin = plugin;
     }
 
     @Override

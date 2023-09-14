@@ -28,8 +28,7 @@ import com.cryptomorin.xseries.XSound;
 import net.mineles.library.metadata.Metadata;
 import net.mineles.library.metadata.store.MetadataMap;
 import net.mineles.library.plugin.BukkitPlugin;
-import net.mineles.library.util.text.PlaceholderParser;
-import io.papermc.lib.PaperLib;
+import net.mineles.library.utils.text.PlaceholderParser;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -165,8 +164,7 @@ public final class PlayerComponent {
     }
 
     public void teleport(@NotNull LocationComponent location) {
-        sync(player -> PaperLib.getChunkAtAsync(location.getAsBukkitLocation())
-                .thenAccept(chunk -> player.teleport(location.getAsBukkitLocation())));
+        sync(player -> player.teleport(location.getAsBukkitLocation()));
     }
 
     public void openInventory(@NotNull Inventory inventory) {

@@ -32,7 +32,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import de.tr7zw.nbtapi.NBTItem;
 import net.mineles.library.node.Node;
-import net.mineles.library.util.text.PlaceholderParser;
+import net.mineles.library.utils.text.PlaceholderParser;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

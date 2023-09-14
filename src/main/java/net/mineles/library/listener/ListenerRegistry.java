@@ -24,27 +24,22 @@
 
 package net.mineles.library.listener;
 
-import com.google.common.base.Preconditions;
 import net.mineles.library.plugin.BukkitPlugin;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 public final class ListenerRegistry {
     private ListenerRegistry() {}
 
     public static void register(@NotNull BukkitPlugin plugin, @NotNull Set<Class<?>> listenerClasses) {
-        checkArgument(!listenerClasses.isEmpty(), "Listener list is empty");
-
         Plugin handle = plugin.getPlugin();
         PluginManager pluginManager = handle.getServer().getPluginManager();
+
         for (Class<?> listenerClass : listenerClasses) {
             Listener listener = cast(plugin, listenerClass);
 

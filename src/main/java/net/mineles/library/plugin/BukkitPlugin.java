@@ -26,7 +26,6 @@ package net.mineles.library.plugin;
 
 import co.aikar.commands.PaperCommandManager;
 import com.comphenix.protocol.ProtocolManager;
-import net.mineles.library.config.ConfigManager;
 import net.mineles.library.menu.MenuManager;
 import net.mineles.library.metadata.store.MetadataStore;
 import net.mineles.library.plugin.scheduler.concurrent.ConcurrentTaskScheduler;
