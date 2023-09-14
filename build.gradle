@@ -1,10 +1,11 @@
 plugins {
     id 'java'
     id 'java-library'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-group = 'net.mineles.library'
+group = 'net.mineles'
 version = '1.0.0'
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -73,5 +74,13 @@ processResources {
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
         expand props
+    }
+}
+
+publishing {
+    publications {
+        shadow(MavenPublication) {
+            from components.java
+        }
     }
 }
