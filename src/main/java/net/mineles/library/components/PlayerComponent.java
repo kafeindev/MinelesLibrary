@@ -35,6 +35,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -167,8 +168,8 @@ public final class PlayerComponent {
         sync(player -> player.teleport(location.getAsBukkitLocation()));
     }
 
-    public void openInventory(@NotNull Inventory inventory) {
-        sync(player -> player.openInventory(inventory));
+    public @NotNull InventoryView openInventory(@NotNull Inventory inventory) {
+        return getHandle().openInventory(inventory);
     }
 
     public boolean isInventoryOpen() {
@@ -189,7 +190,11 @@ public final class PlayerComponent {
         }
     }
 
-    public void playSound(@NotNull XSound sound) {
+    public void playSound(@Nullable XSound sound) {
+        if (sound == null) {
+            return;
+        }
+
         sync(sound::play);
     }
 
