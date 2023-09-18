@@ -31,6 +31,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.google.common.collect.Sets;
 import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.components.SenderComponent;
+import net.mineles.library.listener.InventoryListener;
 import net.mineles.library.listener.ListenerRegistry;
 import net.mineles.library.menu.MenuManager;
 import net.mineles.library.metadata.store.MetadataStore;
@@ -71,13 +72,10 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
         getLogger().info("Setting up task scheduler...");
         this.taskScheduler = setupTaskScheduler();
 
+        this.menuManager = new MenuManager();
         this.protocolManager = ProtocolLibrary.getProtocolManager();
 
         onEnable();
-
-        getLogger().info("Loading menus...");
-        this.menuManager = new MenuManager(this);
-        this.menuManager.initialize();
 
         getLogger().info("Starting tasks...");
         startTasks();
@@ -132,7 +130,7 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
 
     @NotNull
     public Set<Class<?>> getListeners() {
-        return Sets.newHashSet();
+        return Set.of(InventoryListener.class);
     }
 
     @Override
