@@ -4,5 +4,4 @@ public enum OpenCause {
     OPEN,
     REFRESH,
     CHANGE_PAGE,
-    CLOSE,
 }

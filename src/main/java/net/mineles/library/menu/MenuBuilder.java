@@ -70,11 +70,6 @@ public final class MenuBuilder {
         return this;
     }
 
-    public @NotNull MenuBuilder parent(@NotNull String parent) {
-        this.propertiesBuilder.parent(parent);
-        return this;
-    }
-
     public @NotNull MenuBuilder openSound(@NotNull XSound openSound) {
         this.propertiesBuilder.openSound(openSound);
         return this;

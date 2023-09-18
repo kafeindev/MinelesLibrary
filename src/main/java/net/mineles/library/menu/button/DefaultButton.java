@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 final class DefaultButton extends AbstractButton {
@@ -37,7 +38,7 @@ final class DefaultButton extends AbstractButton {
             this.itemStackFactoryBuilder = new DefaultItemStackFactoryBuilder();
         }
 
-        public @NotNull DefaultButton.Builder itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
+        public @NotNull DefaultButton.Builder itemModifier(@NotNull BiFunction<OpenContext, ItemComponent, ItemComponent> modifier) {
             this.itemStackFactoryBuilder.itemModifier(modifier);
             return this;
         }
@@ -59,7 +60,7 @@ final class DefaultButton extends AbstractButton {
 
     static final class DefaultItemStackFactoryBuilder extends ItemStackFactory.Builder<DefaultItemStackFactoryBuilder> {
         private Function<OpenContext, ItemComponent> itemFactory;
-        private BiConsumer<OpenContext, ItemComponent> itemModifier;
+        private BiFunction<OpenContext, ItemComponent, ItemComponent> itemModifier;
 
         DefaultItemStackFactoryBuilder() {
             super();
@@ -74,11 +75,11 @@ final class DefaultButton extends AbstractButton {
             return this;
         }
 
-        public @Nullable BiConsumer<OpenContext, ItemComponent> itemModifier() {
+        public @Nullable BiFunction<OpenContext, ItemComponent, ItemComponent> itemModifier() {
             return this.itemModifier;
         }
 
-        public @NotNull DefaultItemStackFactoryBuilder itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
+        public @NotNull DefaultItemStackFactoryBuilder itemModifier(@NotNull BiFunction<OpenContext, ItemComponent, ItemComponent> modifier) {
             this.itemModifier = modifier;
             return this;
         }
@@ -98,7 +99,7 @@ final class DefaultButton extends AbstractButton {
                             ? this.itemFactory.apply(context)
                             : ItemComponent.from(button.getNode(), placeholders);
                     if (this.itemModifier != null) {
-                        this.itemModifier.accept(context, itemComponent);
+                        itemComponent = this.itemModifier.apply(context, itemComponent);
                     }
 
                     itemStacks.put(slot, itemComponent.getHandle());

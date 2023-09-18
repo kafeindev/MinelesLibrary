@@ -64,6 +64,15 @@ abstract class AbstractButton implements Button {
         return this.properties.getClickSound();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Button)) return false;
+
+        Button button = (Button) obj;
+        return getName().equals(button.getName());
+    }
+
     abstract static class Builder<T, B extends Builder<T, B>> {
         protected final ButtonProperties.Builder properties;
         protected ClickHandler clickHandler;

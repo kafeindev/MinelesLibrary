@@ -6,5 +6,5 @@ import net.mineles.library.menu.misc.contexts.ClickContext;
 import java.util.function.Function;
 
 @FunctionalInterface
-interface ClickHandler extends Function<ClickContext, ClickResult> {
+public interface ClickHandler extends Function<ClickContext, ClickResult> {
 }

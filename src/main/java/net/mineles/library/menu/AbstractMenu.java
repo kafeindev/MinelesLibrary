@@ -1,48 +1,72 @@
 package net.mineles.library.menu;
 
 import com.cryptomorin.xseries.XSound;
-import com.google.common.collect.Sets;
 import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.menu.button.Button;
 import net.mineles.library.menu.misc.ClickResult;
+import net.mineles.library.menu.misc.OpenCause;
 import net.mineles.library.menu.misc.contexts.ClickContext;
+import net.mineles.library.menu.misc.contexts.OpenContext;
+import net.mineles.library.menu.view.Viewer;
+import net.mineles.library.menu.view.ViewersHolder;
 import net.mineles.library.node.Node;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 abstract class AbstractMenu implements Menu {
     private final @NotNull MenuProperties properties;
     private final @NotNull Set<Button> buttons;
-
-    protected AbstractMenu(@NotNull MenuProperties properties) {
-        this(properties, Sets.newHashSet());
-    }
+    private final @NotNull ViewersHolder viewers;
 
     protected AbstractMenu(@NotNull MenuProperties properties,
                            @NotNull Set<Button> buttons) {
         this.properties = properties;
         this.buttons = buttons;
+        this.viewers = ViewersHolder.create();
     }
 
     @Override
-    public boolean open(@NotNull PlayerComponent player) {
+    public @NotNull Viewer open(@NotNull PlayerComponent player) {
         return open(player, 0);
     }
 
     @Override
-    public boolean open(@NotNull PlayerComponent player, int page) {
-        return false;
+    public @NotNull Viewer open(@NotNull PlayerComponent player, int page) {
+        return open(player, page, OpenCause.OPEN);
     }
 
-    @NotNull Inventory createInventory(@NotNull PlayerComponent player, int page) {
-        Map<String, String> placeholders = createTitlePlaceholders(player, page);
-        return getInventoryProperties().createInventory(placeholders);
+    @Override
+    public @NotNull Viewer open(@NotNull PlayerComponent player, int page, @NotNull OpenCause cause) {
+        OpenContext context = OpenContext.create(player, this, cause, page);
+
+        Inventory inventory = createInventory(context);
+        InventoryView view = player.openInventory(inventory);
+
+        player.playSound(getOpenSound());
+
+        Viewer viewer = Viewer.create(player, view, getName(), page);
+        return this.viewers.addViewer(viewer);
+    }
+
+    @NotNull Inventory createInventory(@NotNull OpenContext context) {
+        Map<String, String> placeholders = createTitlePlaceholders(context.getPlayer(), context.getPage());
+
+        Inventory inventory = getInventoryProperties().createInventory(placeholders);
+        getButtons().forEach(button -> {
+            Map<Integer, ItemStack> itemStackMap = button.createItemStacks(context);
+            itemStackMap.forEach(inventory::setItem);
+        });
+
+        return inventory;
     }
 
     @NotNull Map<String, String> createTitlePlaceholders(@NotNull PlayerComponent player, int page) {
@@ -50,29 +74,210 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public boolean close(@NotNull PlayerComponent player) {
-        return false;
+    public @Nullable Viewer nextPage(@NotNull UUID uniqueId) {
+        Viewer viewer = this.viewers.getViewer(uniqueId);
+        if (viewer == null) {
+            return null;
+        }
+
+        return nextPage(viewer);
     }
 
     @Override
-    public boolean refresh(@NotNull PlayerComponent player) {
-        return false;
+    public @NotNull Viewer nextPage(@NotNull PlayerComponent player) {
+        Viewer viewer = this.viewers.getViewer(player.getUniqueId());
+        if (viewer == null) {
+            return open(player);
+        }
+
+        return nextPage(viewer);
     }
 
     @Override
-    public boolean refreshButton(@NotNull PlayerComponent player, int slot) {
-        return false;
+    public @NotNull Viewer nextPage(@NotNull Viewer viewer) {
+        open(viewer.getPlayer(), viewer.getPage() + 1, OpenCause.CHANGE_PAGE);
+        return viewer;
     }
 
     @Override
-    public boolean refreshButton(@NotNull PlayerComponent player, @NotNull String buttonName) {
-        return false;
+    public @Nullable Viewer previousPage(@NotNull UUID uniqueId) {
+        Viewer viewer = this.viewers.getViewer(uniqueId);
+        if (viewer == null) {
+            return null;
+        }
+
+        return previousPage(viewer);
+    }
+
+    @Override
+    public @NotNull Viewer previousPage(@NotNull PlayerComponent player) {
+        Viewer viewer = this.viewers.getViewer(player.getUniqueId());
+        if (viewer == null) {
+            return open(player);
+        }
+
+        return previousPage(viewer);
+    }
+
+    @Override
+    public @NotNull Viewer previousPage(@NotNull Viewer viewer) {
+        open(viewer.getPlayer(), viewer.getPage() - 1, OpenCause.CHANGE_PAGE);
+        return viewer;
+    }
+
+    @Override
+    public @Nullable Viewer refresh(@NotNull UUID uniqueId) {
+        Viewer viewer = this.viewers.getViewer(uniqueId);
+        if (viewer == null) {
+            return null;
+        }
+
+        return refresh(viewer);
+    }
+
+    @Override
+    public @NotNull Viewer refresh(@NotNull PlayerComponent player) {
+        Viewer viewer = this.viewers.getViewer(player.getUniqueId());
+        if (viewer == null) {
+            return open(player);
+        }
+
+        return refresh(viewer);
+    }
+
+    @Override
+    public @NotNull Viewer refresh(@NotNull Viewer viewer) {
+        OpenContext context = OpenContext.create(viewer.getPlayer(), this, OpenCause.REFRESH, viewer.getPage());
+
+        Inventory inventory = viewer.getView().getTopInventory();
+        getButtons().forEach(button -> {
+            Map<Integer, ItemStack> itemStackMap = button.createItemStacks(context);
+            itemStackMap.forEach(inventory::setItem);
+        });
+
+        return viewer;
+    }
+
+    @Override
+    public @Nullable Viewer refreshButton(@NotNull UUID uniqueId, int slot) {
+        Viewer viewer = this.viewers.getViewer(uniqueId);
+        if (viewer == null) {
+            return null;
+        }
+
+        return refreshButton(viewer, slot);
+    }
+
+    @Override
+    public @Nullable Viewer refreshButton(@NotNull UUID uniqueId, @NotNull String buttonName) {
+        Viewer viewer = this.viewers.getViewer(uniqueId);
+        if (viewer == null) {
+            return null;
+        }
+
+        return refreshButton(viewer, buttonName);
+    }
+
+    @Override
+    public @NotNull Viewer refreshButton(@NotNull PlayerComponent player, int slot) {
+        Viewer viewer = this.viewers.getViewer(player.getUniqueId());
+        if (viewer == null) {
+            return open(player);
+        }
+
+        return refreshButton(viewer, slot);
+    }
+
+    @Override
+    public @NotNull Viewer refreshButton(@NotNull PlayerComponent player, @NotNull String buttonName) {
+        Viewer viewer = this.viewers.getViewer(player.getUniqueId());
+        if (viewer == null) {
+            return open(player);
+        }
+
+        return refreshButton(viewer, buttonName);
+    }
+
+    @Override
+    public @NotNull Viewer refreshButton(@NotNull Viewer viewer, int slot) {
+        Inventory inventory = viewer.getView().getTopInventory();
+        findButton(slot).ifPresent(button -> {
+            OpenContext context = OpenContext.create(viewer.getPlayer(), this, OpenCause.REFRESH, viewer.getPage());
+
+            Map<Integer, ItemStack> itemStackMap = button.createItemStacks(context);
+            itemStackMap.forEach(inventory::setItem);
+        });
+
+        return viewer;
+    }
+
+    @Override
+    public @NotNull Viewer refreshButton(@NotNull Viewer viewer, @NotNull String buttonName) {
+        Inventory inventory = viewer.getView().getTopInventory();
+        findButton(buttonName).ifPresent(button -> {
+            OpenContext context = OpenContext.create(viewer.getPlayer(), this, OpenCause.REFRESH, viewer.getPage());
+
+            Map<Integer, ItemStack> itemStackMap = button.createItemStacks(context);
+            itemStackMap.forEach(inventory::setItem);
+        });
+
+        return viewer;
+    }
+
+    @Override
+    public @Nullable Viewer close(@NotNull UUID uniqueId) {
+        Viewer viewer = this.viewers.getViewer(uniqueId);
+        if (viewer == null) {
+            return null;
+        }
+
+        return close(viewer);
+    }
+
+    @Override
+    public @Nullable Viewer close(@NotNull PlayerComponent player) {
+        return close(player.getUniqueId());
+    }
+
+    @Override
+    public @NotNull Viewer close(@NotNull Viewer viewer) {
+        if (viewer.isClosed()) {
+            return viewer;
+        }
+        viewer.setClosed(true);
+
+        PlayerComponent player = viewer.getPlayer();
+        player.closeInventory();
+        player.playSound(getCloseSound());
+
+        return this.viewers.removeViewer(player.getUniqueId());
     }
 
     @Override
     public @NotNull ClickResult click(@NotNull ClickContext context) {
         Button button = context.getButton();
         return button.click(context);
+    }
+
+    @Override
+    public @NotNull ViewersHolder getViewers() {
+        return this.viewers;
+    }
+
+    @Override
+    public boolean isViewing(@NotNull PlayerComponent player) {
+        return isViewing(player.getUniqueId());
+    }
+
+    @Override
+    public boolean isViewing(@NotNull UUID uniqueId) {
+        return this.viewers.containsViewer(uniqueId);
+    }
+
+    @Override
+    public void stopViewing() {
+        Map<UUID, Viewer> viewersSafe = this.viewers.getViewersSafe();
+        viewersSafe.values().forEach(this::close);
     }
 
     @Override
@@ -88,11 +293,6 @@ abstract class AbstractMenu implements Menu {
     @Override
     public @NotNull String getName() {
         return this.properties.getName();
-    }
-
-    @Override
-    public @Nullable String getParent() {
-        return this.properties.getParent();
     }
 
     @Override
@@ -185,5 +385,14 @@ abstract class AbstractMenu implements Menu {
     @Override
     public @Nullable XSound getCloseSound() {
         return this.properties.getCloseSound();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Menu)) return false;
+        if (obj == this) return true;
+
+        Menu menu = (Menu) obj;
+        return menu.getName().equals(getName());
     }
 }
