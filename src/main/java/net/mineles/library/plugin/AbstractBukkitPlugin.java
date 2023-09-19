@@ -72,6 +72,9 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
         getLogger().info("Setting up task scheduler...");
         this.taskScheduler = setupTaskScheduler();
 
+        getLogger().info("Loading configs...");
+        loadConfigs();
+
         this.menuManager = new MenuManager();
         this.protocolManager = ProtocolLibrary.getProtocolManager();
 
