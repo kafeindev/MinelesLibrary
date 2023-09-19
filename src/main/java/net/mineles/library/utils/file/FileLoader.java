@@ -36,10 +36,10 @@ public final class FileLoader {
     }
 
     public boolean load() throws IOException {
-        Files.createDirectories(path.getParent());
+        Files.createDirectories(this.path.getParent());
 
-        if (!Files.exists(path)) {
-            Files.createFile(path);
+        if (!Files.exists(this.path)) {
+            Files.createFile(this.path);
             return true;
         }
 
@@ -54,10 +54,10 @@ public final class FileLoader {
     }
 
     public boolean loadAndInitViaStream(@NotNull InputStream inputStream) throws IOException {
-        boolean loaded = load();
-        if (!loaded) return false;
+        Files.createDirectories(this.path.getParent());
+        if (Files.exists(this.path)) return false;
 
-        Files.copy(inputStream, path);
+        Files.copy(inputStream, this.path);
         return true;
     }
 }
