@@ -60,7 +60,7 @@ shadowJar {
     relocate 'co.aikar.locales', project.group + '.libs.locales'
 
     relocate 'com.cryptomorin.xseries', project.group + '.libs.xseries'
-    relocate 'de.tr7zw', project.group + '.libs.item-nbt-api'
+    relocate 'de.tr7zw', project.group + '.libs.nbtapi'
 }
 
 artifacts {
