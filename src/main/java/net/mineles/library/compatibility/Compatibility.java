@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2023 Kafein
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,30 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.node.serializer;
+package net.mineles.library.compatibility;
 
-import net.mineles.library.node.Node;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Type;
+public enum Compatibility {
+    MODEL_ENGINE("ModelEngine"),
+    ITEMS_ADDER("ItemsAdder"),
+    ORAXEN("Oraxen"),
+    CITIZENS("Citizens");
 
-public interface NodeSerializer<T> {
-    @Nullable T deserialize(@NotNull Type type, @NotNull Node node);
+    private final @NotNull String name;
 
-    void serialize(@NotNull Node node, @Nullable T value);
+    Compatibility(@NotNull String name) {
+        this.name = name;
+    }
+
+    public @NotNull String getName() {
+        return this.name;
+    }
+
+    public boolean isCompatible() {
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        return pluginManager.isPluginEnabled(this.name);
+    }
 }
