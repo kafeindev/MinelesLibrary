@@ -1,0 +1,5 @@
+name: MinelesLibrary
+version: '${version}'
+authors: ['HeyMrau', 'KafeinDev']
+main: net.mineles.library.loader.MinelesLibraryBungeeLoader
+api-version: '1.13'

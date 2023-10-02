@@ -26,10 +26,11 @@ package net.mineles.library.plugin;
 
 import co.aikar.commands.PaperCommandManager;
 import com.comphenix.protocol.ProtocolManager;
+import net.mineles.library.configuration.ConfigManager;
 import net.mineles.library.menu.MenuManager;
 import net.mineles.library.metadata.store.MetadataStore;
-import net.mineles.library.plugin.scheduler.concurrent.ConcurrentTaskScheduler;
 import net.mineles.library.plugin.scheduler.task.TaskScheduler;
+import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,9 +48,7 @@ public interface BukkitPlugin {
 
     void loadConfigs();
 
-    void registerCommands();
-
-    void registerListeners();
+    void loadMenus();
 
     @NotNull Plugin getPlugin();
 
@@ -57,9 +56,11 @@ public interface BukkitPlugin {
 
     @NotNull Logger getLogger();
 
-    @NotNull ConcurrentTaskScheduler setupTaskScheduler();
+    @NotNull Server getServer();
 
     @NotNull TaskScheduler getTaskScheduler();
+
+    @NotNull ConfigManager getConfigManager();
 
     @NotNull MenuManager getMenuManager();
 

@@ -25,18 +25,23 @@
 package net.mineles.library.plugin;
 
 import co.aikar.commands.BaseCommand;
+import co.aikar.commands.BukkitCommandExecutionContext;
+import co.aikar.commands.CommandContexts;
 import co.aikar.commands.PaperCommandManager;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.components.SenderComponent;
+import net.mineles.library.configuration.ConfigManager;
 import net.mineles.library.listener.InventoryListener;
 import net.mineles.library.listener.ListenerRegistry;
+import net.mineles.library.menu.Menu;
 import net.mineles.library.menu.MenuManager;
 import net.mineles.library.metadata.store.MetadataStore;
 import net.mineles.library.plugin.scheduler.concurrent.ConcurrentTaskScheduler;
 import net.mineles.library.plugin.scheduler.concurrent.forkjoin.ForkJoinPoolBuilder;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -51,6 +56,7 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
 
     private ConcurrentTaskScheduler taskScheduler;
 
+    private ConfigManager configManager;
     private MenuManager menuManager;
     private PaperCommandManager commandManager;
     private ProtocolManager protocolManager;
@@ -70,12 +76,16 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     @Override
     public void enable() {
         getLogger().info("Setting up task scheduler...");
-        this.taskScheduler = setupTaskScheduler();
+        setupTaskScheduler();
 
         getLogger().info("Loading configs...");
+        this.configManager = new ConfigManager(getDataPath());
         loadConfigs();
 
+        getLogger().info("Loading menus...");
         this.menuManager = new MenuManager();
+        loadMenus();
+
         this.protocolManager = ProtocolLibrary.getProtocolManager();
 
         onEnable();
@@ -87,10 +97,15 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
         this.commandManager = new PaperCommandManager(this.plugin);
         registerCommands();
 
-        this.metadataStore = new MetadataStore();
-
         getLogger().info("Registering listeners...");
-        registerListeners();
+        ListenerRegistry.register(this, new ImmutableSet.Builder<Class<?>>()
+                .add(InventoryListener.class)
+                .addAll(getListeners())
+                .build());
+
+        getServer().getMessenger().registerOutgoingPluginChannel(this.plugin, "BungeeCord");
+
+        this.metadataStore = new MetadataStore();
     }
 
     public abstract void onEnable();
@@ -107,34 +122,33 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     public abstract void onDisable();
 
     @Override
-    public void registerCommands() {
-        getCommandManager().getCommandContexts().registerIssuerAwareContext(SenderComponent.class, resolver -> {
-            return SenderComponent.of(resolver.getSender());
-        });
-        getCommandManager().getCommandContexts().registerIssuerAwareContext(PlayerComponent.class, resolver -> {
+    public void loadMenus() {
+        this.menuManager.stopViewing();
+        this.menuManager.clear();
+        this.menuManager.register(getMenus());
+    }
+
+    protected void registerCommands() {
+        CommandContexts<BukkitCommandExecutionContext> commandContexts = this.commandManager.getCommandContexts();
+        commandContexts.registerIssuerAwareContext(SenderComponent.class, resolver -> SenderComponent.of(resolver.getSender()));
+        commandContexts.registerIssuerAwareContext(PlayerComponent.class, resolver -> {
             CommandSender sender = resolver.getSender();
             if (!(sender instanceof Player)) {
-                SenderComponent.of(sender).sendMessage("§cYou must be a player to use this command.");
+                SenderComponent.of(sender).sendMessage("<red>You must be a player to use this command.");
                 return null;
             }
 
             return PlayerComponent.from(this, (Player) sender);
         });
 
-        getCommands().forEach(command -> getCommandManager().registerCommand(command));
+        getCommands().forEach(this.commandManager::registerCommand);
     }
 
-    public abstract @NotNull Set<BaseCommand> getCommands();
+    protected abstract @NotNull Set<BaseCommand> getCommands();
 
-    @Override
-    public void registerListeners() {
-        ListenerRegistry.register(this, getListeners());
-    }
+    protected abstract @NotNull Set<Menu> getMenus();
 
-    @NotNull
-    public Set<Class<?>> getListeners() {
-        return Set.of(InventoryListener.class);
-    }
+    protected abstract @NotNull Set<Class<?>> getListeners();
 
     @Override
     public @NotNull Plugin getPlugin() {
@@ -152,20 +166,27 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     }
 
     @Override
-    public @NotNull ConcurrentTaskScheduler setupTaskScheduler() {
-        ConcurrentTaskScheduler taskScheduler = new ConcurrentTaskScheduler(getLogger(), getPlugin().getName());
+    public @NotNull Server getServer() {
+        return this.plugin.getServer();
+    }
 
-        ForkJoinPoolBuilder builder = taskScheduler.createWorkerPoolBuilder()
+    private void setupTaskScheduler() {
+        this.taskScheduler = new ConcurrentTaskScheduler(getLogger(), getPlugin().getName());
+
+        ForkJoinPoolBuilder builder = this.taskScheduler.createWorkerPoolBuilder()
                 .setDaemon(true)
                 .setAsyncMode(true);
-        taskScheduler.setWorkerPool(builder.build());
-
-        return taskScheduler;
+        this.taskScheduler.setWorkerPool(builder.build());
     }
 
     @Override
     public @NotNull ConcurrentTaskScheduler getTaskScheduler() {
         return this.taskScheduler;
+    }
+
+    @Override
+    public @NotNull ConfigManager getConfigManager() {
+        return this.configManager;
     }
 
     @Override
