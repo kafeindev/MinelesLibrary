@@ -1,13 +1,13 @@
 package net.mineles.library.configuration;
 
-import net.mineles.library.node.Node;
-import net.mineles.library.node.NodeException;
-import net.mineles.library.node.loader.NodeLoader;
-import net.mineles.library.node.loader.gson.GsonNodeLoader;
-import net.mineles.library.node.loader.yaml.YamlNodeLoader;
 import net.mineles.library.utils.file.FileLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.gson.GsonConfigurationLoader;
+import org.spongepowered.configurate.loader.ConfigurationLoader;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
 import java.io.InputStream;
@@ -95,23 +95,23 @@ public final class ConfigBuilder {
     }
 
     public @UnknownNullability Config build() {
-        if (Files.notExists(path)) {
+        if (Files.notExists(this.path)) {
             throw new IllegalArgumentException("File does not exist. Please initialize the config first.");
         }
 
         try {
-            NodeLoader nodeLoader = switch (type) {
-                case YAML -> YamlNodeLoader.newBuilder().path(path).build();
-                case JSON -> GsonNodeLoader.newBuilder().path(path).build();
+            ConfigurationLoader<?> nodeLoader = switch (this.type) {
+                case YAML -> YamlConfigurationLoader.builder().path(this.path).build();
+                case JSON -> GsonConfigurationLoader.builder().path(this.path).build();
             };
 
-            Node node = nodeLoader.load();
+            ConfigurationNode node = nodeLoader.load();
             if (node == null) {
                 throw new RuntimeException("Empty config");
             }
 
             return new Config(type, node, this.path);
-        } catch (NodeException e) {
+        } catch (ConfigurateException e) {
             throw new RuntimeException("Failed to load config", e);
         }
     }
