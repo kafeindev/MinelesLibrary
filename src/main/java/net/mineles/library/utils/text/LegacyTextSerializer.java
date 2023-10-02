@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 MinelesNetwork
+ * Copyright (c) 2023 Kafein
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,35 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.node.loader;
+package net.mineles.library.utils.text;
 
-import net.mineles.library.node.Node;
+import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public interface NodeAdapter {
-    void write(@NotNull BufferedWriter writer, @NotNull Node value) throws IOException;
+public final class LegacyTextSerializer {
+    private static final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
 
-    Node read(@NotNull BufferedReader reader) throws IOException;
+    @NotNull
+    public static String deserialize(@NotNull String text) {
+        Matcher matcher = HEX_PATTERN.matcher(text);
+        while (matcher.find()) {
+            String hexCode = text.substring(matcher.start(), matcher.end());
+            String replaceSharp = hexCode.replace('#', 'x');
+
+            StringBuilder builder = new StringBuilder();
+            for (char c : replaceSharp.toCharArray()) {
+                builder.append("&").append(c);
+            }
+
+            text = text.replace(hexCode, builder.toString());
+            matcher = HEX_PATTERN.matcher(text);
+        }
+
+        return ChatColor.translateAlternateColorCodes('&', text);
+    }
+
+    private LegacyTextSerializer() {}
 }
