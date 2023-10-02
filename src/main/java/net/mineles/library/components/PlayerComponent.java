@@ -25,12 +25,14 @@
 package net.mineles.library.components;
 
 import com.cryptomorin.xseries.XSound;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import net.mineles.library.metadata.Metadata;
 import net.mineles.library.metadata.store.MetadataMap;
 import net.mineles.library.plugin.BukkitPlugin;
-import net.mineles.library.utils.text.PlaceholderParser;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
+import net.mineles.library.utils.text.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -168,6 +170,42 @@ public final class PlayerComponent {
         sync(player -> player.teleport(location.getAsBukkitLocation()));
     }
 
+    public void switchServer(@NotNull String targetServer) {
+        sync(bukkitPlayer -> {
+            ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
+            dataOutput.writeUTF("Connect");
+            dataOutput.writeUTF(targetServer);
+
+            bukkitPlayer.sendPluginMessage(this.plugin.getPlugin(), "BungeeCord", dataOutput.toByteArray());
+        });
+    }
+
+    public void showAllPlayers() {
+        sync(player -> {
+            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+                onlinePlayer.showPlayer(this.plugin.getPlugin(), player);
+                player.showPlayer(this.plugin.getPlugin(), onlinePlayer);
+            });
+        });
+    }
+
+    public void hideAllPlayers() {
+        sync(player -> {
+            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+                onlinePlayer.hidePlayer(this.plugin.getPlugin(), player);
+                player.hidePlayer(this.plugin.getPlugin(), onlinePlayer);
+            });
+        });
+    }
+
+    public void hidePlayer(@NotNull Player player) {
+        sync(p -> p.hidePlayer(this.plugin.getPlugin(), player));
+    }
+
+    public void hideHimselfForPlayer(@NotNull Player player) {
+        sync(p -> player.hidePlayer(this.plugin.getPlugin(), p));
+    }
+
     public @NotNull InventoryView openInventory(@NotNull Inventory inventory) {
         return getHandle().openInventory(inventory);
     }
@@ -216,7 +254,7 @@ public final class PlayerComponent {
 
     public void sendMessage(@NotNull String message,
                             @NotNull Map<String, String> placeholders) {
-        Component component = PlaceholderParser.parseComponent(getHandle(), message, placeholders);
+        Component component = ComponentSerializer.deserialize(getHandle(), message, placeholders);
         sendMessage(component);
     }
 
@@ -239,7 +277,7 @@ public final class PlayerComponent {
 
     public void sendActionBar(@NotNull String message,
                               @NotNull Map<String, String> placeholders) {
-        Component component = PlaceholderParser.parseComponent(getHandle(), message, placeholders);
+        Component component = ComponentSerializer.deserialize(getHandle(), message, placeholders);
         sendActionBar(component);
     }
 
@@ -280,7 +318,7 @@ public final class PlayerComponent {
     public void sendTitle(@NotNull String title,
                           @NotNull Map<String, String> placeholders,
                           long stay, long fadeOut, long fadeIn) {
-        Component titleComponent = PlaceholderParser.parseComponent(getHandle(), title, placeholders);
+        Component titleComponent = ComponentSerializer.deserialize(getHandle(), title, placeholders);
         sendTitle(titleComponent, fadeIn, stay, fadeOut);
     }
 
@@ -288,8 +326,8 @@ public final class PlayerComponent {
                           @NotNull String subtitle,
                           @NotNull Map<String, String> placeholders,
                           long stay, long fadeOut, long fadeIn) {
-        Component titleComponent = PlaceholderParser.parseComponent(getHandle(), title, placeholders);
-        Component subtitleComponent = PlaceholderParser.parseComponent(getHandle(), subtitle, placeholders);
+        Component titleComponent = ComponentSerializer.deserialize(getHandle(), title, placeholders);
+        Component subtitleComponent = ComponentSerializer.deserialize(getHandle(), subtitle, placeholders);
         sendTitle(titleComponent, subtitleComponent, fadeIn, stay, fadeOut);
     }
 

@@ -24,8 +24,8 @@
 
 package net.mineles.library.components;
 
-import net.mineles.library.utils.text.PlaceholderParser;
 import net.kyori.adventure.text.Component;
+import net.mineles.library.utils.text.ComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +54,7 @@ public final class SenderComponent {
 
     public void sendMessage(@NotNull String message,
                             @NotNull Map<String, String> placeholders) {
-        Component component = PlaceholderParser.parseComponent(message, placeholders);
+        Component component = ComponentSerializer.deserialize(message, placeholders);
         sendMessage(component);
     }
 
