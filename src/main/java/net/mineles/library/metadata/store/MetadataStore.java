@@ -24,8 +24,6 @@
 
 package net.mineles.library.metadata.store;
 
-import static com.google.common.base.Preconditions.*;
-
 import com.google.common.collect.Maps;
 import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.metadata.Metadata;
@@ -35,6 +33,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 public final class MetadataStore {
     private final Map<UUID, MetadataMap> playerMetadata;
@@ -156,6 +156,15 @@ public final class MetadataStore {
 
     public boolean containsKey(@NotNull UUID uniqueId) {
         return this.playerMetadata.containsKey(uniqueId);
+    }
+
+    public boolean containsKey(@NotNull UUID uniqueId, @NotNull String key) {
+        if (!this.playerMetadata.containsKey(uniqueId)) {
+            return false;
+        }
+
+        MetadataMap metadataMap = this.playerMetadata.get(uniqueId);
+        return metadataMap.contains(key);
     }
 
     public void remove(@NotNull UUID uniqueId) {
