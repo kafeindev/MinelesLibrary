@@ -1,36 +1,46 @@
 package net.mineles.library.menu;
 
 import com.cryptomorin.xseries.XSound;
+import com.google.common.collect.Sets;
 import net.mineles.library.components.PlayerComponent;
+import net.mineles.library.menu.action.ClickAction;
+import net.mineles.library.menu.action.ClickActionCollection;
 import net.mineles.library.menu.button.Button;
+import net.mineles.library.menu.button.ClickHandler;
 import net.mineles.library.menu.misc.ClickResult;
 import net.mineles.library.menu.misc.OpenCause;
 import net.mineles.library.menu.misc.contexts.ClickContext;
 import net.mineles.library.menu.misc.contexts.OpenContext;
 import net.mineles.library.menu.view.Viewer;
 import net.mineles.library.menu.view.ViewersHolder;
-import net.mineles.library.node.Node;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.configurate.ConfigurationNode;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 abstract class AbstractMenu implements Menu {
     private final @NotNull MenuProperties properties;
     private final @NotNull Set<Button> buttons;
+    private final @NotNull ClickActionCollection clickActions;
     private final @NotNull ViewersHolder viewers;
+
+    protected AbstractMenu(@NotNull MenuProperties properties) {
+        this.properties = properties;
+        this.buttons = properties.getNode() == null ? Sets.newHashSet() : loadButtonsFromNode();
+        this.clickActions = new ClickActionCollection();
+        this.viewers = ViewersHolder.create();
+    }
 
     protected AbstractMenu(@NotNull MenuProperties properties,
                            @NotNull Set<Button> buttons) {
         this.properties = properties;
         this.buttons = buttons;
+        this.clickActions = new ClickActionCollection();
         this.viewers = ViewersHolder.create();
     }
 
@@ -60,7 +70,7 @@ abstract class AbstractMenu implements Menu {
     @NotNull Inventory createInventory(@NotNull OpenContext context) {
         Map<String, String> placeholders = createTitlePlaceholders(context.getPlayer(), context.getPage());
 
-        Inventory inventory = getInventoryProperties().createInventory(placeholders);
+        Inventory inventory = getInventoryProperties().createInventory(context.getPlayer().getHandle(), placeholders);
         getButtons().forEach(button -> {
             Map<Integer, ItemStack> itemStackMap = button.createItemStacks(context);
             itemStackMap.forEach(inventory::setItem);
@@ -256,7 +266,48 @@ abstract class AbstractMenu implements Menu {
     @Override
     public @NotNull ClickResult click(@NotNull ClickContext context) {
         Button button = context.getButton();
+        if (button == null) {
+            return ClickResult.CANCELLED;
+        }
+
+        PlayerComponent player = context.getPlayer();
+        player.playSound(button.getClickSound());
+
+        button.getClickActions().forEach(registeredClickAction -> {
+            ClickAction clickAction = this.clickActions.findAction(registeredClickAction).orElse(null);
+            if (clickAction == null) {
+                return;
+            }
+
+            clickAction.accept(context, registeredClickAction);
+        });
+
         return button.click(context);
+    }
+
+    @Override
+    public @NotNull ClickResult clickEmptySlot(@NotNull ClickContext context) {
+        return ClickResult.CANCELLED;
+    }
+
+    @Override
+    public @NotNull ClickResult clickBottomInventory(@NotNull ClickContext context) {
+        return ClickResult.CANCELLED;
+    }
+
+    @Override
+    public @NotNull ClickActionCollection getClickActions() {
+        return this.clickActions;
+    }
+
+    @Override
+    public void registerClickAction(@NotNull String key, @NotNull ClickAction action) {
+        this.clickActions.registerAction(key, action);
+    }
+
+    @Override
+    public void unregisterClickAction(@NotNull String key) {
+        this.clickActions.unregisterAction(key);
     }
 
     @Override
@@ -286,7 +337,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @Nullable Node getNode() {
+    public @Nullable ConfigurationNode getNode() {
         return this.properties.getNode();
     }
 
@@ -313,6 +364,28 @@ abstract class AbstractMenu implements Menu {
     @Override
     public int getSize() {
         return this.properties.getSize();
+    }
+
+    @Override
+    public @Nullable Set<Button> loadButtonsFromNode() {
+        if (getNode() == null) {
+            return null;
+        }
+
+        ConfigurationNode node = getNode().node("buttons");
+        return loadButtonsFromNode(node);
+    }
+
+    @Override
+    public @Nullable Set<Button> loadButtonsFromNode(@NotNull ConfigurationNode node) {
+        Set<Button> nodeButtons = new HashSet<>();
+
+        for (ConfigurationNode child : node.childrenMap().values()) {
+            Button button = Button.fromNode(child);
+            nodeButtons.add(button);
+        }
+
+        return nodeButtons;
     }
 
     @Override
@@ -375,6 +448,18 @@ abstract class AbstractMenu implements Menu {
     @Override
     public void removeButton(@NotNull String name) {
         findButton(name).ifPresent(this::removeButton);
+    }
+
+    @Override
+    public @Nullable Button registerClickHandler(@NotNull String buttonName, @NotNull ClickHandler handler) {
+        Optional<Button> optionalButton = findButton(buttonName);
+        return optionalButton.map(button -> registerClickHandler(button, handler)).orElse(null);
+    }
+
+    @Override
+    public @Nullable Button registerClickHandler(@NotNull Button button, @NotNull ClickHandler handler) {
+        button.setClickHandler(handler);
+        return button;
     }
 
     @Override

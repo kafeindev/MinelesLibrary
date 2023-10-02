@@ -1,40 +1,54 @@
 package net.mineles.library.menu.button;
 
 import com.cryptomorin.xseries.XSound;
+import net.mineles.library.menu.action.RegisteredClickAction;
 import net.mineles.library.menu.misc.ClickResult;
 import net.mineles.library.menu.misc.contexts.ClickContext;
 import net.mineles.library.menu.misc.contexts.OpenContext;
-import net.mineles.library.node.Node;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.Map;
+import java.util.Set;
 
 public interface Button {
-    @NotNull
-    static Button fromNode(@NotNull Node node) {
+    static @NotNull Button fromNode(@NotNull ConfigurationNode node) {
         return DefaultButton.newBuilder()
-                .name(node.toStringKey())
                 .node(node)
+                .propertiesFromNode()
+                .clickActionsFromNode()
                 .build();
     }
 
-    @NotNull
-    static DefaultButton.Builder newBuilder() {
+    static @NotNull DefaultButton.Builder newBuilder() {
         return DefaultButton.newBuilder();
     }
 
-    @NotNull
-    static <T> PaginatedButton.Builder<T> newPaginatedBuilder() {
+    static @NotNull <T> PaginatedButton.Builder<T> newPaginatedBuilder() {
         return PaginatedButton.newBuilder();
     }
 
-    @NotNull ClickResult click(@NotNull ClickContext context);
-
     @NotNull Map<Integer, ItemStack> createItemStacks(@NotNull OpenContext context);
 
-    @Nullable Node getNode();
+    @NotNull ClickResult click(@NotNull ClickContext context);
+
+    void setClickHandler(@NotNull ClickHandler clickHandler);
+
+    @NotNull Set<RegisteredClickAction> getClickActions();
+
+    void putClickActions(@NotNull Set<RegisteredClickAction> actions);
+
+    void putClickAction(@NotNull RegisteredClickAction action);
+
+    void removeClickAction(@NotNull RegisteredClickAction action);
+
+    void clearClickActions();
+
+    @NotNull ButtonProperties getProperties();
+
+    @Nullable ConfigurationNode getNode();
 
     @NotNull String getName();
 

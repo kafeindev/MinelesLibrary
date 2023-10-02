@@ -13,6 +13,10 @@ import java.util.Set;
 public abstract class AbstractStaticMenu extends AbstractMenu {
     private Inventory inventory;
 
+    public AbstractStaticMenu(@NotNull MenuProperties properties) {
+        super(properties);
+    }
+
     protected AbstractStaticMenu(@NotNull MenuProperties properties,
                                  @NotNull Set<Button> buttons) {
         super(properties, buttons);

@@ -6,6 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public abstract class AbstractDynamicMenu extends AbstractMenu {
+    public AbstractDynamicMenu(@NotNull MenuProperties properties) {
+        super(properties);
+    }
+
     protected AbstractDynamicMenu(@NotNull MenuProperties properties,
                                   @NotNull Set<Button> buttons) {
         super(properties, buttons);

@@ -1,5 +1,6 @@
 package net.mineles.library.listener;
 
+import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.menu.misc.ClickResult;
 import net.mineles.library.menu.misc.contexts.ClickContext;
 import net.mineles.library.plugin.BukkitPlugin;
@@ -39,7 +40,9 @@ public final class InventoryListener implements Listener {
         }
 
         this.plugin.getMenuManager().findByViewer(humanEntity.getUniqueId()).ifPresent(menu -> {
-            ClickContext clickContext = ClickContext.from(event, menu);
+            PlayerComponent player = PlayerComponent.from(this.plugin, (Player) humanEntity);
+
+            ClickContext clickContext = ClickContext.from(this.plugin, menu, player, event);
             ClickResult result = menu.click(clickContext);
 
             switch (result) {

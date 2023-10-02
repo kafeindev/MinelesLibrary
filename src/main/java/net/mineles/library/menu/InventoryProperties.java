@@ -2,8 +2,9 @@ package net.mineles.library.menu;
 
 import com.google.common.collect.Maps;
 import net.kyori.adventure.text.Component;
-import net.mineles.library.utils.text.PlaceholderParser;
+import net.mineles.library.utils.text.ComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -38,71 +39,89 @@ public final class InventoryProperties {
         this(title, InventoryType.CHEST);
     }
 
-    @NotNull Inventory createInventory() {
-        return createInventory(PlaceholderParser.parseComponent(getTitle(), Maps.newHashMap()));
+    public @NotNull Inventory createInventory() {
+        return createInventory(ComponentSerializer.deserialize(getTitle(), Maps.newHashMap()));
     }
 
-    @NotNull Inventory createInventory(@NotNull Map<String, String> placeholders) {
-        return createInventory(PlaceholderParser.parseComponent(getTitle(), placeholders));
+    public @NotNull Inventory createInventory(@NotNull Map<String, String> placeholders) {
+        Component title = ComponentSerializer.deserialize(getTitle(), placeholders);
+        return createInventory(title);
     }
 
-    @NotNull Inventory createInventory(@NotNull Component parsedTitle) {
+    public @NotNull Inventory createInventory(@NotNull Player player,
+                                              @NotNull Map<String, String> placeholders) {
+        Component title = ComponentSerializer.deserialize(player, getTitle(), placeholders);
+        return createInventory(title);
+    }
+
+    public @NotNull Inventory createInventory(@NotNull Component parsedTitle) {
         return this.type == InventoryType.CHEST
                 ? Bukkit.createInventory(null, this.size, parsedTitle)
                 : Bukkit.createInventory(null, this.type, parsedTitle);
     }
 
-    @NotNull String getTitle() {
+    public @NotNull String getTitle() {
         return this.title;
     }
 
-    @NotNull InventoryType getType() {
+    public @NotNull InventoryType getType() {
         return this.type;
     }
 
-    int getSize() {
+    public int getSize() {
         return this.size;
     }
 
-    static @NotNull Builder newBuilder() {
+    public static @NotNull Builder newBuilder() {
         return new Builder();
     }
 
-    static final class Builder {
+    public static final class Builder {
         private String title;
         private InventoryType type;
         private int size;
 
         private Builder() {}
 
-        @Nullable String title() {
+        public @Nullable String title() {
             return this.title;
         }
 
-        @NotNull Builder title(@NotNull String title) {
+        public @NotNull Builder title(@NotNull String title) {
             this.title = title;
             return this;
         }
 
-        @Nullable InventoryType type() {
+        public @Nullable InventoryType type() {
             return this.type;
         }
 
-        @NotNull Builder type(@NotNull InventoryType type) {
+        public @NotNull Builder type(@NotNull InventoryType type) {
             this.type = type;
             return this;
         }
 
-        int size() {
+        public @NotNull Builder type(@Nullable String type) {
+            if (type != null) {
+                this.type = InventoryType.valueOf(type);
+            }
+            return this;
+        }
+
+        public int size() {
             return this.size;
         }
 
-        @NotNull Builder size(int size) {
+        public  @NotNull Builder size(int size) {
             this.size = size;
             return this;
         }
 
-        @NotNull InventoryProperties build() {
+        public @NotNull InventoryProperties build() {
+            if (this.type == null) {
+                this.type = InventoryType.CHEST;
+            }
+
             return new InventoryProperties(this.title, this.type, this.size);
         }
     }

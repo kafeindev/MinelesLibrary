@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 public final class ViewersHolder {
@@ -43,7 +42,8 @@ public final class ViewersHolder {
     }
 
     public @NotNull Viewer addViewer(@NotNull Viewer viewer) {
-        return Objects.requireNonNull(this.viewers.put(viewer.getUniqueId(), viewer));
+        this.viewers.put(viewer.getUniqueId(), viewer);
+        return viewer;
     }
 
     public @UnknownNullability Viewer removeViewer(@NotNull UUID uuid) {

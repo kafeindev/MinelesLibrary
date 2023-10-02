@@ -3,13 +3,14 @@ package net.mineles.library.menu;
 import com.cryptomorin.xseries.XSound;
 import com.google.common.collect.Sets;
 import net.mineles.library.menu.button.Button;
-import net.mineles.library.node.Node;
 import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class MenuBuilder {
@@ -45,7 +46,20 @@ public final class MenuBuilder {
         return this;
     }
 
-    public @NotNull MenuBuilder node(@NotNull Node node) {
+    public @NotNull MenuBuilder properties(@NotNull MenuProperties properties) {
+        this.propertiesBuilder = properties.toBuilder();
+        return this;
+    }
+
+    public @NotNull MenuBuilder propertiesFromNode(@NotNull ConfigurationNode node) {
+        if (this.propertiesBuilder.name() == null) {
+            throw new IllegalStateException("Name must be set before loading properties from node");
+        }
+
+        return properties(MenuProperties.fromNode(this.propertiesBuilder.name(), node));
+    }
+
+    public @NotNull MenuBuilder node(@NotNull ConfigurationNode node) {
         this.propertiesBuilder.node(node);
         return this;
     }
@@ -90,12 +104,12 @@ public final class MenuBuilder {
     }
 
     public @NotNull MenuBuilder buttonsFromNode() {
-        Node parent = checkNotNull(this.propertiesBuilder.node(), "node");
+        ConfigurationNode parent = checkNotNull(this.propertiesBuilder.node(), "node");
         return buttonsFromNode(parent.node("menu", "buttons"));
     }
 
-    public @NotNull MenuBuilder buttonsFromNode(@NotNull Node parent) {
-        for (Node node : parent.childList()) {
+    public @NotNull MenuBuilder buttonsFromNode(@NotNull ConfigurationNode parent) {
+        for (ConfigurationNode node : parent.childrenMap().values()) {
             Button button = Button.fromNode(node);
             this.buttons.add(button);
         }
@@ -110,6 +124,10 @@ public final class MenuBuilder {
 
     public @NotNull Menu build() {
         MenuProperties properties = this.propertiesBuilder.build();
+        checkNotNull(properties.getName(), "name");
+        checkNotNull(properties.getTitle(), "title");
+        checkArgument(properties.getSize() > 0, "size must be greater than 0");
+
         return switch (this.type) {
             case STATIC -> new StaticMenu(properties, this.buttons);
             case DYNAMIC -> new DynamicMenu(properties, this.buttons);

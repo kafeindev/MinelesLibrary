@@ -22,6 +22,7 @@ public final class OpenContext implements Context {
         this.page = page;
     }
 
+    @NotNull
     public static OpenContext create(@NotNull PlayerComponent player,
                                      @NotNull Menu menu,
                                      @NotNull OpenCause cause,

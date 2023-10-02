@@ -2,24 +2,33 @@ package net.mineles.library.menu.button;
 
 import com.google.common.collect.Maps;
 import net.mineles.library.components.ItemComponent;
+import net.mineles.library.menu.action.RegisteredClickAction;
 import net.mineles.library.menu.misc.contexts.OpenContext;
-import net.mineles.library.property.AttributeMap;
 import net.mineles.library.utils.TriConsumer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 final class PaginatedButton extends AbstractButton implements Button {
     PaginatedButton(@NotNull ButtonProperties properties,
+                    @NotNull ItemStackFactory itemStackFactory,
+                    @NotNull ClickHandler clickHandler) {
+        super(properties, itemStackFactory, clickHandler);
+    }
+
+    PaginatedButton(@NotNull ButtonProperties properties,
+                    @NotNull ItemStackFactory itemStackFactory,
                     @NotNull ClickHandler clickHandler,
-                    @NotNull ItemStackFactory itemStackFactory) {
-        super(properties, clickHandler, itemStackFactory);
+                    @NotNull Set<RegisteredClickAction> clickActions) {
+        super(properties, itemStackFactory, clickHandler, clickActions);
     }
 
     @NotNull
@@ -45,6 +54,11 @@ final class PaginatedButton extends AbstractButton implements Button {
             return this;
         }
 
+        public @NotNull PaginatedButton.Builder<T> itemFactory(@NotNull BiFunction<OpenContext, T, ItemComponent> itemFactory) {
+            this.itemStackFactoryBuilder.itemFactory(itemFactory);
+            return this;
+        }
+
         public @NotNull PaginatedButton.Builder<T> itemModifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
             this.itemStackFactoryBuilder.modifier(modifier);
             return this;
@@ -55,26 +69,27 @@ final class PaginatedButton extends AbstractButton implements Button {
             return this;
         }
 
-        public @NotNull PaginatedButton.Builder<T> placeholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
+        public @NotNull PaginatedButton.Builder<T> itemPlaceholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
             this.itemStackFactoryBuilder.placeholders(placeholders);
             return this;
         }
 
-        public @NotNull PaginatedButton.Builder<T> placeholders(@NotNull Map<String, String> placeholders) {
-            return placeholders(context -> placeholders);
+        public @NotNull PaginatedButton.Builder<T> itemPlaceholders(@NotNull Map<String, String> placeholders) {
+            return itemPlaceholders(context -> placeholders);
         }
 
 
         @Override
         public @NotNull PaginatedButton build() {
-            return new PaginatedButton(properties().build(), clickHandler(), this.itemStackFactoryBuilder.build());
+            return new PaginatedButton(properties().build(), this.itemStackFactoryBuilder.build(), clickHandler(), clickActions());
         }
     }
 
     static final class PaginatedItemStackFactoryBuilder<T> extends ItemStackFactory.Builder<PaginatedItemStackFactoryBuilder<T>> {
         private Function<OpenContext, List<T>> entries;
         private BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry;
-        private TriConsumer<OpenContext, ItemComponent, T> modifier;
+        private BiFunction<OpenContext, T, ItemComponent> itemFactory;
+        private TriConsumer<OpenContext, ItemComponent, T> itemModifier;
 
         private PaginatedItemStackFactoryBuilder() {
             super();
@@ -98,20 +113,31 @@ final class PaginatedButton extends AbstractButton implements Button {
             return this;
         }
 
+        public @NotNull BiFunction<OpenContext, T, ItemComponent> itemFactory() {
+            return this.itemFactory;
+        }
+
+        public @NotNull PaginatedItemStackFactoryBuilder<T> itemFactory(@NotNull BiFunction<OpenContext, T, ItemComponent> itemFactory) {
+            this.itemFactory = itemFactory;
+            return this;
+        }
+
         public @NotNull TriConsumer<OpenContext, ItemComponent, T> modifier() {
-            return this.modifier;
+            return this.itemModifier;
         }
 
         public @NotNull PaginatedItemStackFactoryBuilder<T> modifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
-            this.modifier = modifier;
+            this.itemModifier = modifier;
             return this;
         }
 
         @Override
         @NotNull ItemStackFactory build() {
-            checkNotNull(this.entries, "entries");
-
             return (context, button) -> {
+                checkNotNull(this.entries, "entries");
+                checkArgument(this.itemFactory != null || button.getNode() != null,
+                        "Either itemFactory or node must be set");
+
                 List<T> entries = this.entries.apply(context);
                 int slotCount = button.getSlots().length;
 
@@ -132,9 +158,11 @@ final class PaginatedButton extends AbstractButton implements Button {
                             ? this.placeholdersPerEntry.apply(context, entry)
                             : this.placeholders.apply(context);
 
-                    ItemComponent itemComponent = ItemComponent.from(button.getNode(), placeholders);
-                    if (this.modifier != null) {
-                        this.modifier.accept(context, itemComponent, entry);
+                    ItemComponent itemComponent = this.itemFactory != null
+                            ? this.itemFactory.apply(context, entry)
+                            : ItemComponent.from(button.getNode(), placeholders, context.getPlayer().getHandle());
+                    if (this.itemModifier != null) {
+                        this.itemModifier.accept(context, itemComponent, entry);
                     }
 
                     itemStacks.put(button.getSlots()[i], itemComponent.getHandle());

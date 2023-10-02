@@ -28,9 +28,23 @@ public final class MenuManager extends AbstractManager<String, Menu> {
         findByViewer(player.getUniqueId()).ifPresent(menu -> menu.close(player));
     }
 
+    public @NotNull Optional<Menu> find(@NotNull Class<? extends Menu> menuClass) {
+        return this.getValues().stream()
+                .filter(menuClass::isInstance)
+                .findFirst();
+    }
+
     public @NotNull Optional<Menu> findByViewer(@NotNull UUID uniqueId) {
         return this.getValues().stream()
                 .filter(menu -> menu.isViewing(uniqueId))
                 .findFirst();
+    }
+
+    public void register(@NotNull Menu menu) {
+        put(menu.getName(), menu);
+    }
+
+    public void register(@NotNull Iterable<Menu> menus) {
+        menus.forEach(this::register);
     }
 }
