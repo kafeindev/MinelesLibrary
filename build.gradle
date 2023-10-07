@@ -50,8 +50,9 @@ dependencies {
     implementation 'co.aikar:acf-bungee:0.5.1-SNAPSHOT'
     implementation 'de.tr7zw:item-nbt-api-plugin:2.11.3'
 
-    compileOnly 'net.md-5:bungeecord-api:1.20-R0.1'
+    compileOnly 'org.redisson:redisson:3.23.5'
 
+    compileOnly 'net.md-5:bungeecord-api:1.20-R0.1'
     compileOnly 'io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT'
     compileOnly 'com.mojang:authlib:1.5.25'
 
@@ -67,7 +68,6 @@ shadowJar {
     archiveFileName = 'MinelesLibrary-' + project.version + '.jar'
 
     relocate 'org.spongepowered.configurate', project.group + '.libs.configurate'
-    relocate 'io.leangen.geantyref', project.group + '.libs.geantyref'
 
     //relocate 'com.github.dockerjava', project.group + '.libs.dockerjava'
     //relocate 'reactor', project.group + '.libs.reactor'

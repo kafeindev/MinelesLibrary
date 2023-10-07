@@ -4,3 +4,5 @@ authors: ['HeyMrau', 'KafeinDev']
 main: net.mineles.library.loader.MinelesLibraryBukkitLoader
 api-version: '1.13'
 softdepend:  [ProtocolLib, Vault, PlaceholderAPI, ItemsAdder, ModelEngine]
+libraries:
+  - org.redisson:redisson:3.23.5
