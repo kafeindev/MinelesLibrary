@@ -8,34 +8,34 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public final class FileLoader {
+public final class FileCreator {
     private final @NotNull Path path;
 
-    public FileLoader(@NotNull Path path) {
+    public FileCreator(@NotNull Path path) {
         this.path = path;
     }
 
     @NotNull
-    public static FileLoader of(@NotNull Path path) {
-        return new FileLoader(path);
+    public static FileCreator of(@NotNull Path path) {
+        return new FileCreator(path);
     }
 
     @NotNull
-    public static FileLoader of(@NotNull String... path) {
-        return new FileLoader(Path.of(String.join("/", path)));
+    public static FileCreator of(@NotNull String... path) {
+        return new FileCreator(Path.of(String.join("/", path)));
     }
 
     @NotNull
-    public static FileLoader of(@NotNull Path dataFolder, @NotNull String... path) {
-        return new FileLoader(dataFolder.resolve(String.join("/", path)));
+    public static FileCreator of(@NotNull Path dataFolder, @NotNull String... path) {
+        return new FileCreator(dataFolder.resolve(String.join("/", path)));
     }
 
     @NotNull
-    public static FileLoader of(@NotNull File file) {
-        return new FileLoader(file.toPath());
+    public static FileCreator of(@NotNull File file) {
+        return new FileCreator(file.toPath());
     }
 
-    public boolean load() throws IOException {
+    public boolean create() throws IOException {
         Files.createDirectories(this.path.getParent());
 
         if (!Files.exists(this.path)) {
@@ -46,14 +46,14 @@ public final class FileLoader {
         return false;
     }
 
-    public boolean loadAndInitFromResource(@NotNull Class<?> clazz, @NotNull String resource) throws IOException {
+    public boolean createAndInject(@NotNull Class<?> clazz, @NotNull String resource) throws IOException {
         InputStream inputStream = clazz.getResourceAsStream(resource);
         if (inputStream == null) throw new IOException("Resource not found: " + resource);
 
-        return loadAndInitViaStream(inputStream);
+        return createAndInject(inputStream);
     }
 
-    public boolean loadAndInitViaStream(@NotNull InputStream inputStream) throws IOException {
+    public boolean createAndInject(@NotNull InputStream inputStream) throws IOException {
         Files.createDirectories(this.path.getParent());
         if (Files.exists(this.path)) return false;
 
