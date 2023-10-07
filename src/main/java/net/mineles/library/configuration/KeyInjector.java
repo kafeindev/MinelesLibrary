@@ -22,6 +22,10 @@ final class KeyInjector {
         }
     }
 
+    void inject(@NotNull Field field, @NotNull Config config) {
+        inject(field, config.getNode());
+    }
+
     void inject(@NotNull Field field, @NotNull ConfigurationNode node) {
         if (!field.getType().isAssignableFrom(ConfigKey.class)) {
             return;

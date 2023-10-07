@@ -1,23 +1,26 @@
 package net.mineles.library.configuration;
 
-import net.mineles.library.utils.file.FileLoader;
+import net.mineles.library.utils.file.FileCreator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.ConfigurationOptions;
 import org.spongepowered.configurate.gson.GsonConfigurationLoader;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class ConfigBuilder {
     private final @NotNull Path path;
 
     private ConfigType type = ConfigType.YAML;
+    private ConfigurationOptions options = ConfigurationOptions.defaults();
+    private InputStream resource;
 
     public ConfigBuilder(@NotNull Path path) {
         this.path = path;
@@ -51,11 +54,11 @@ public final class ConfigBuilder {
         return new ConfigBuilder(file);
     }
 
-    public @NotNull Path getPath() {
+    public @NotNull Path path() {
         return this.path;
     }
 
-    public @NotNull ConfigType getType() {
+    public @NotNull ConfigType type() {
         return this.type;
     }
 
@@ -64,45 +67,51 @@ public final class ConfigBuilder {
         return this;
     }
 
-    public @NotNull ConfigBuilder init() {
-        FileLoader fileLoader = FileLoader.of(this.path);
-        try {
-            fileLoader.load();
-            return this;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load config", e);
-        }
+    public @NotNull ConfigurationOptions options() {
+        return this.options;
     }
 
-    public @NotNull ConfigBuilder initFromResource(@NotNull Class<?> clazz, @NotNull String resource) {
-        FileLoader fileLoader = FileLoader.of(this.path);
-        try {
-            fileLoader.loadAndInitFromResource(clazz, resource);
-            return this;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load config", e);
-        }
+    public @NotNull ConfigBuilder options(@NotNull ConfigurationOptions options) {
+        this.options = options;
+        return this;
     }
 
-    public @NotNull ConfigBuilder initViaStream(@NotNull InputStream inputStream) {
-        FileLoader fileLoader = FileLoader.of(this.path);
-        try {
-            fileLoader.loadAndInitViaStream(inputStream);
-            return this;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load config", e);
-        }
+    public @NotNull InputStream resource() {
+        return this.resource;
+    }
+
+    public @NotNull ConfigBuilder resource(@NotNull Class<?> clazz, @NotNull String resource) {
+        this.resource = clazz.getResourceAsStream(resource);
+        return this;
+    }
+
+    public @NotNull ConfigBuilder resource(@NotNull InputStream inputStream) {
+        this.resource = inputStream;
+        return this;
     }
 
     public @UnknownNullability Config build() {
-        if (Files.notExists(this.path)) {
-            throw new IllegalArgumentException("File does not exist. Please initialize the config first.");
+        FileCreator fileCreator = FileCreator.of(this.path);
+        try {
+            if (this.resource != null) {
+                fileCreator.createAndInject(this.resource);
+            } else {
+                fileCreator.create();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create file", e);
         }
 
         try {
             ConfigurationLoader<?> nodeLoader = switch (this.type) {
-                case YAML -> YamlConfigurationLoader.builder().path(this.path).build();
-                case JSON -> GsonConfigurationLoader.builder().path(this.path).build();
+                case YAML -> YamlConfigurationLoader.builder()
+                        .path(this.path)
+                        .defaultOptions(this.options)
+                        .build();
+                case JSON -> GsonConfigurationLoader.builder()
+                        .path(this.path)
+                        .defaultOptions(this.options)
+                        .build();
             };
 
             ConfigurationNode node = nodeLoader.load();
@@ -112,7 +121,7 @@ public final class ConfigBuilder {
 
             return new Config(type, node, this.path);
         } catch (ConfigurateException e) {
-            throw new RuntimeException("Failed to load config", e);
+            throw new RuntimeException("Failed to create config", e);
         }
     }
 }
