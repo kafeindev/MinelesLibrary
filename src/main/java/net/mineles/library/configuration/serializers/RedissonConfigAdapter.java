@@ -8,10 +8,10 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public final class RedissonConfigSerializer implements TypeSerializer<Config> {
-    public static final RedissonConfigSerializer INSTANCE = new RedissonConfigSerializer();
+public final class RedissonConfigAdapter implements TypeSerializer<Config> {
+    public static final RedissonConfigAdapter INSTANCE = new RedissonConfigAdapter();
 
-    private RedissonConfigSerializer() {}
+    private RedissonConfigAdapter() {}
 
     @Override
     public Config deserialize(Type type, ConfigurationNode node) throws SerializationException {
@@ -21,7 +21,7 @@ public final class RedissonConfigSerializer implements TypeSerializer<Config> {
 
         Config config = new Config();
         config.useSingleServer()
-                .setAddress(node.node("host").getString("redis://localhost:6379"))
+                .setAddress("redis://" + node.node("host").getString("localhost") + ":" + node.node("port").getInt(6379))
                 .setPassword(node.node("password").getString())
                 .setDatabase(node.node("database").getInt(0));
         return config;

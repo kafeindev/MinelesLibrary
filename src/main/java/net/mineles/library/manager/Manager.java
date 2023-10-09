@@ -25,6 +25,7 @@
 package net.mineles.library.manager;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -44,11 +45,11 @@ public interface Manager<K, V> {
 
     @NotNull Optional<V> find(@NotNull K key);
 
-    V get(@NotNull K key);
+    @Nullable V get(@NotNull K key);
 
     void putAll(@NotNull Map<K, V> map);
 
-    V put(@NotNull K key, @NotNull V value);
+    @NotNull V put(@NotNull K key, @NotNull V value);
 
     void remove(@NotNull K key);
 

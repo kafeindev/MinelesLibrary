@@ -39,7 +39,7 @@ public interface Menu {
                                     @NotNull String resource,
                                     @NotNull String... path) {
         Config config = ConfigBuilder.builder(path)
-                .initFromResource(clazz, resource)
+                .resource(clazz, resource)
                 .build();
         return fromConfig(name, config);
     }

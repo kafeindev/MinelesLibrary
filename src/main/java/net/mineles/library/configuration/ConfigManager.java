@@ -1,6 +1,9 @@
 package net.mineles.library.configuration;
 
-import net.mineles.library.configuration.serializers.RedissonConfigSerializer;
+import net.mineles.library.components.CuboidComponent;
+import net.mineles.library.components.ItemComponent;
+import net.mineles.library.components.LocationComponent;
+import net.mineles.library.configuration.serializers.*;
 import net.mineles.library.manager.AbstractManager;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -20,7 +23,11 @@ public final class ConfigManager extends AbstractManager<String, Config> {
         this.keyInjector = new KeyInjector();
         this.options = ConfigurationOptions.defaults()
                 .serializers(builder -> {
-                    builder.register(org.redisson.config.Config.class, RedissonConfigSerializer.INSTANCE);
+                    builder.register(org.redisson.config.Config.class, RedissonConfigAdapter.INSTANCE);
+                    builder.register(LocationComponent.class, LocationComponentAdapter.INSTANCE);
+                    builder.register(CuboidComponent.class, CuboidComponentAdapter.INSTANCE);
+                    builder.register(ItemComponent.class, ItemComponentAdapter.INSTANCE);
+                    //builder.register(ItemStack.class, BukkitItemStackAdapter.INSTANCE);
                 });
     }
 
@@ -92,5 +99,17 @@ public final class ConfigManager extends AbstractManager<String, Config> {
 
     public void injectKeys(@NotNull Field field, @NotNull ConfigurationNode node) {
         this.keyInjector.inject(field, node);
+    }
+
+    public @NotNull Path getDataFolder() {
+        return this.dataFolder;
+    }
+
+    public @NotNull KeyInjector getKeyInjector() {
+        return this.keyInjector;
+    }
+
+    public @NotNull ConfigurationOptions getOptions() {
+        return this.options;
     }
 }

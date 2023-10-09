@@ -45,7 +45,7 @@ public final class MenuProperties {
                                             @NotNull String resource,
                                             @NotNull String... path) {
         Config config = ConfigBuilder.builder(path)
-                .initFromResource(clazz, resource)
+                .resource(clazz, resource)
                 .build();
         return fromNode(name, config.getNode().node("menu"));
     }

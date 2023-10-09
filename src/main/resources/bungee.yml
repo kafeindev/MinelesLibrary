@@ -5,3 +5,5 @@ main: net.mineles.library.loader.MinelesLibraryBungeeLoader
 api-version: '1.13'
 libraries:
   - org.redisson:redisson:3.23.5
+  - org.mongodb:mongodb-driver-sync:4.10.2
+  - dev.morphia.morphia:morphia-core:2.4.6

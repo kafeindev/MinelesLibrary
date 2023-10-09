@@ -52,6 +52,9 @@ dependencies {
 
     compileOnly 'org.redisson:redisson:3.23.5'
 
+    compileOnly 'org.mongodb:mongodb-driver-sync:4.10.2'
+    compileOnly 'dev.morphia.morphia:morphia-core:2.4.6'
+
     compileOnly 'net.md-5:bungeecord-api:1.20-R0.1'
     compileOnly 'io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT'
     compileOnly 'com.mojang:authlib:1.5.25'
@@ -68,9 +71,13 @@ shadowJar {
     archiveFileName = 'MinelesLibrary-' + project.version + '.jar'
 
     relocate 'org.spongepowered.configurate', project.group + '.libs.configurate'
+    relocate 'io.leangen.geantyref', project.group + '.libs.geantyref'
 
     //relocate 'com.github.dockerjava', project.group + '.libs.dockerjava'
     //relocate 'reactor', project.group + '.libs.reactor'
+
+    relocate 'com.mongodb', project.group + '.libs.mongodb'
+    relocate 'org.bson', project.group + '.libs.bson'
 
     relocate 'co.aikar.commands', project.group + '.libs.commands'
     relocate 'co.aikar.locales', project.group + '.libs.locales'

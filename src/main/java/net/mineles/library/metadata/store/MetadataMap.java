@@ -110,8 +110,22 @@ public final class MetadataMap {
         return this.metadataMap.containsKey(key);
     }
 
+    public boolean contains(@NotNull String... keys) {
+        for (String key : keys) {
+            if (!contains(key)) return false;
+        }
+        return true;
+    }
+
     public boolean contains(@NotNull Enum<?> key) {
         return contains(key.name());
+    }
+
+    public boolean contains(@NotNull Enum<?>... keys) {
+        for (Enum<?> key : keys) {
+            if (!contains(key)) return false;
+        }
+        return true;
     }
 
     public void remove(@NotNull String key) {

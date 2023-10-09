@@ -38,6 +38,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -204,6 +205,28 @@ public final class PlayerComponent {
 
     public void hideHimselfForPlayer(@NotNull Player player) {
         sync(p -> player.hidePlayer(this.plugin.getPlugin(), p));
+    }
+
+    public void vanish() {
+        sync(player -> {
+            player.setMetadata("vanished", new FixedMetadataValue(this.plugin.getPlugin(), true));
+            putMetadata("vanished", true);
+
+            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+                onlinePlayer.hidePlayer(this.plugin.getPlugin(), player);
+            });
+        });
+    }
+
+    public void unvanish() {
+        sync(player -> {
+            player.removeMetadata("vanished", this.plugin.getPlugin());
+            removeMetadata("vanished");
+
+            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+                onlinePlayer.showPlayer(this.plugin.getPlugin(), player);
+            });
+        });
     }
 
     public @NotNull InventoryView openInventory(@NotNull Inventory inventory) {

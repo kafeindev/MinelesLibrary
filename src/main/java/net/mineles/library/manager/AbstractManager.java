@@ -26,6 +26,7 @@ package net.mineles.library.manager;
 
 import com.google.common.collect.Maps;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -68,9 +69,8 @@ public abstract class AbstractManager<K, V> implements Manager<K, V> {
     }
 
     @Override
-    public V get(@NotNull K key) {
-        return find(key)
-                .orElseThrow(() -> new IllegalArgumentException("Value not found"));
+    public @Nullable V get(@NotNull K key) {
+        return find(key).orElse(null);
     }
 
     @Override
@@ -79,7 +79,7 @@ public abstract class AbstractManager<K, V> implements Manager<K, V> {
     }
 
     @Override
-    public V put(@NotNull K key, @NotNull V value) {
+    public @NotNull V put(@NotNull K key, @NotNull V value) {
         this.map.put(key, value);
 
         return value;

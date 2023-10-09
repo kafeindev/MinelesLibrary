@@ -40,9 +40,9 @@ final class KeyInjector {
 
             Fields.set(field, key, value, "value");
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Failed to inject config key", e);
+            throw new RuntimeException("Failed to inject config key: " + field.getName(), e);
         } catch (SerializationException e) {
-            throw new RuntimeException("Failed to deserialize config key", e);
+            throw new RuntimeException("Failed to deserialize config key: " + field.getName(), e);
         }
     }
 }

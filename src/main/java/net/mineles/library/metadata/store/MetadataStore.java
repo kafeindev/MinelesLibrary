@@ -88,8 +88,18 @@ public final class MetadataStore {
                 .collect(HashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()), HashMap::putAll);
     }
 
+    public @NotNull Map<UUID, MetadataMap> getByKey(@NotNull String... keys) {
+        return this.playerMetadata.entrySet().stream()
+                .filter(entry -> entry.getValue().contains(keys))
+                .collect(HashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()), HashMap::putAll);
+    }
+
     public @NotNull Map<UUID, MetadataMap> getByKey(@NotNull Enum<?> key) {
         return getByKey(key.name());
+    }
+
+    public @NotNull Map<UUID, MetadataMap> getByKey(@NotNull Enum<?>... keys) {
+        return getByKey(Arrays.stream(keys).map(Enum::name).toArray(String[]::new));
     }
 
     public <T> @NotNull Set<UUID> getByKeyAndValue(@NotNull String key, @NotNull T value) {
