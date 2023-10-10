@@ -5,6 +5,7 @@ import net.mineles.library.components.ItemComponent;
 import net.mineles.library.components.LocationComponent;
 import net.mineles.library.configuration.serializers.*;
 import net.mineles.library.manager.AbstractManager;
+import net.mineles.library.redis.RedisCredentials;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.ConfigurationOptions;
@@ -23,7 +24,7 @@ public final class ConfigManager extends AbstractManager<String, Config> {
         this.keyInjector = new KeyInjector();
         this.options = ConfigurationOptions.defaults()
                 .serializers(builder -> {
-                    builder.register(org.redisson.config.Config.class, RedissonConfigAdapter.INSTANCE);
+                    builder.register(RedisCredentials.class, RedisCredentialsAdapter.INSTANCE);
                     builder.register(LocationComponent.class, LocationComponentAdapter.INSTANCE);
                     builder.register(CuboidComponent.class, CuboidComponentAdapter.INSTANCE);
                     builder.register(ItemComponent.class, ItemComponentAdapter.INSTANCE);
