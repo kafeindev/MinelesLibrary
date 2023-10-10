@@ -45,15 +45,17 @@ dependencies {
         exclude(module: 'guice')
     }
 
+    implementation 'org.mongodb:mongodb-driver-sync:4.10.2'
+    implementation('redis.clients:jedis:4.4.3') {
+        exclude(module: 'gson')
+        exclude(module: 'json')
+        exclude(module: 'slf4j-api')
+    }
+
     implementation 'com.github.cryptomorin:XSeries:9.2.0'
     implementation 'co.aikar:acf-paper:0.5.1-SNAPSHOT'
     implementation 'co.aikar:acf-bungee:0.5.1-SNAPSHOT'
     implementation 'de.tr7zw:item-nbt-api-plugin:2.11.3'
-
-    compileOnly 'org.redisson:redisson:3.23.5'
-
-    compileOnly 'org.mongodb:mongodb-driver-sync:4.10.2'
-    compileOnly 'dev.morphia.morphia:morphia-core:2.4.6'
 
     compileOnly 'net.md-5:bungeecord-api:1.20-R0.1'
     compileOnly 'io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT'
@@ -78,6 +80,9 @@ shadowJar {
 
     relocate 'com.mongodb', project.group + '.libs.mongodb'
     relocate 'org.bson', project.group + '.libs.bson'
+
+    relocate 'redis.clients.jedis', project.group + '.libs.jedis'
+    relocate 'org.apache.commons.pool2', project.group + '.libs.commons-pool2'
 
     relocate 'co.aikar.commands', project.group + '.libs.commands'
     relocate 'co.aikar.locales', project.group + '.libs.locales'
