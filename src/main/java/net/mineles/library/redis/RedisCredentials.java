@@ -10,6 +10,7 @@ public final class RedisCredentials {
     private final @Nullable String username;
     private final @Nullable String password;
     private final boolean useSsl;
+    private final RedisCredentialsType type;
 
     public RedisCredentials(@NotNull HostAndPort hostAndPort,
                             @Nullable String username,
@@ -19,6 +20,13 @@ public final class RedisCredentials {
         this.username = username;
         this.password = password;
         this.useSsl = useSsl;
+        if (username != null && password != null) {
+            this.type = RedisCredentialsType.WITH_USERNAME_AND_PASSWORD;
+        } else if (password != null) {
+            this.type = RedisCredentialsType.WITH_PASSWORD;
+        } else {
+            throw new IllegalArgumentException("Redis credentials must have a password");
+        }
     }
 
     @NotNull
@@ -45,5 +53,14 @@ public final class RedisCredentials {
 
     public boolean useSsl() {
         return this.useSsl;
+    }
+
+    RedisCredentialsType getType() {
+        return this.type;
+    }
+
+    enum RedisCredentialsType {
+        WITH_USERNAME_AND_PASSWORD,
+        WITH_PASSWORD,
     }
 }

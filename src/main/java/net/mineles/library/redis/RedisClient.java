@@ -6,22 +6,20 @@ import net.mineles.library.redis.message.Message;
 import net.mineles.library.redis.message.MessageDecoder;
 import net.mineles.library.redis.message.MessageListener;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Map;
 
 public final class RedisClient {
-    private final @NotNull BukkitPlugin plugin;
     private final @NotNull RedisCredentials credentials;
     private final @NotNull Map<String, RedisSubscription> subscriptions;
 
     private JedisPool jedisPool;
     private boolean closed;
 
-    public RedisClient(@NotNull BukkitPlugin plugin,
-                       @NotNull RedisCredentials credentials) {
-        this.plugin = plugin;
+    public RedisClient(@NotNull RedisCredentials credentials) {
         this.credentials = credentials;
         this.subscriptions = Maps.newConcurrentMap();
     }
@@ -56,26 +54,29 @@ public final class RedisClient {
         return this.subscriptions.containsKey(channel);
     }
 
-    public void subscribe(@NotNull String channel) {
+    public void subscribe(@NotNull Plugin plugin,
+                          @NotNull String channel) {
         RedisSubscription subscription = new RedisSubscription(this, channel);
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin.getPlugin(), subscription);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, subscription);
 
         this.subscriptions.put(channel, subscription);
     }
 
-    public void subscribe(@NotNull String channel,
+    public void subscribe(@NotNull Plugin plugin,
+                          @NotNull String channel,
                           @NotNull Map<String, MessageListener<?>> listeners) {
         RedisSubscription subscription = new RedisSubscription(this, channel, listeners);
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin.getPlugin(), subscription);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, subscription);
 
         this.subscriptions.put(channel, subscription);
     }
 
-    public void subscribe(@NotNull String channel,
+    public void subscribe(@NotNull Plugin plugin,
+                          @NotNull String channel,
                           @NotNull Map<String, MessageListener<?>> listeners,
                           @NotNull Map<String, MessageDecoder<?>> decoders) {
         RedisSubscription subscription = new RedisSubscription(this, channel, listeners, decoders);
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin.getPlugin(), subscription);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, subscription);
 
         this.subscriptions.put(channel, subscription);
     }
