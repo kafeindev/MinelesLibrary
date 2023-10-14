@@ -229,6 +229,18 @@ public final class PlayerComponent {
         });
     }
 
+    public boolean isAllowedFlight() {
+        return getHandle().getAllowFlight();
+    }
+
+    public void setAllowFlight(boolean allowFlight) {
+        sync(player -> player.setAllowFlight(allowFlight));
+    }
+
+    public void setFlySpeed(float speed) {
+        sync(player -> player.setFlySpeed(speed));
+    }
+
     public @NotNull InventoryView openInventory(@NotNull Inventory inventory) {
         return getHandle().openInventory(inventory);
     }
