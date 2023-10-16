@@ -12,11 +12,11 @@ public final class ClickActionCollection {
 
     static {
         DEFAULTS = ClickActionCollection.newBuilder()
-                .registerAction("CLOSE", ClickActionDefaults.CLOSE)
-                .registerAction("OPEN", ClickActionDefaults.OPEN)
-                .registerAction("CONSOLE", ClickActionDefaults.COMMAND_CONSOLE)
-                .registerAction("PLAYER", ClickActionDefaults.COMMAND_PLAYER)
-                .registerAction("SERVER", ClickActionDefaults.SERVER)
+                .registerAction("CLOSE", DefaultClickActions.CLOSE)
+                .registerAction("OPEN", DefaultClickActions.OPEN)
+                .registerAction("CONSOLE", DefaultClickActions.COMMAND_CONSOLE)
+                .registerAction("PLAYER", DefaultClickActions.COMMAND_PLAYER)
+                .registerAction("SERVER", DefaultClickActions.SERVER)
                 .build();
     }
 

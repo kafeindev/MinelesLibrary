@@ -9,7 +9,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static net.mineles.library.utils.text.PlaceholderParser.applyPlaceholders;
 
-final class ClickActionDefaults {
+final class DefaultClickActions {
     static ClickAction CLOSE = (clickContext, registeredClickAction) -> clickContext.getPlayer().closeInventory();
 
     static ClickAction OPEN = (clickContext, registeredClickAction) -> {
@@ -49,5 +49,5 @@ final class ClickActionDefaults {
         clickContext.getPlayer().switchServer(serverName);
     };
 
-    private ClickActionDefaults() {}
+    private DefaultClickActions() {}
 }
