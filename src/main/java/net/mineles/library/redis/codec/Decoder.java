@@ -1,10 +1,10 @@
-package net.mineles.library.redis.message;
+package net.mineles.library.redis.codec;
 
 import com.google.gson.JsonObject;
 import net.mineles.library.utils.GsonProvider;
 import org.jetbrains.annotations.NotNull;
 
-public interface MessageDecoder<T> {
+public interface Decoder<T> {
     default @NotNull T decode(@NotNull String payload) {
         return decode(GsonProvider.getGson().fromJson(payload, JsonObject.class));
     }

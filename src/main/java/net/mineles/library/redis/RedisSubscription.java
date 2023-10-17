@@ -2,7 +2,7 @@ package net.mineles.library.redis;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
-import net.mineles.library.redis.message.MessageDecoder;
+import net.mineles.library.redis.codec.Decoder;
 import net.mineles.library.redis.message.MessageListener;
 import net.mineles.library.utils.GsonProvider;
 import org.jetbrains.annotations.NotNull;
@@ -12,41 +12,33 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public final class RedisSubscription extends JedisPubSub implements Runnable {
-    private final @NotNull RedisClient client;
+    private final @NotNull RedisOperations operations;
     private final @NotNull String channel;
+    private final @NotNull Map<String, MessageListener> listeners;
 
-    private final @NotNull Map<String, MessageListener<?>> listeners;
-    private final @NotNull Map<String, MessageDecoder<?>> decoders;
-
-    RedisSubscription(@NotNull RedisClient client,
+    RedisSubscription(@NotNull RedisOperations operations,
                       @NotNull String channel) {
-        this(client, channel, Maps.newConcurrentMap(), Maps.newConcurrentMap());
+        this(operations, channel, Maps.newConcurrentMap());
     }
 
-    RedisSubscription(@NotNull RedisClient client,
+    RedisSubscription(@NotNull RedisOperations operations,
                       @NotNull String channel,
-                      @NotNull Map<String, MessageListener<?>> listeners) {
-        this(client, channel, listeners, Maps.newConcurrentMap());
-    }
-
-    RedisSubscription(@NotNull RedisClient client,
-                      @NotNull String channel,
-                      @NotNull Map<String, MessageListener<?>> listeners,
-                      @NotNull Map<String, MessageDecoder<?>> decoders) {
-        this.client = client;
+                      @NotNull Map<String, MessageListener> listeners) {
+        this.operations = operations;
         this.channel = channel;
         this.listeners = listeners;
-        this.decoders = decoders;
     }
 
     @Override
     public void run() {
-        while (!this.client.isClosed() && !this.client.getJedisPool().isClosed() && !Thread.interrupted()) {
-            try (Jedis jedis = this.client.getJedisPool().getResource()) {
+        while (!this.operations.getClient().isClosed() && !this.operations.getJedisPool().isClosed() && !Thread.interrupted()) {
+            try (Jedis jedis = this.operations.getJedisPool().getResource()) {
                 jedis.subscribe(this, this.channel);
             } catch (JedisConnectionException e) {
-                if (this.client.isClosed()) {
+                if (this.operations.getClient().isClosed()) {
                     return;
                 }
 
@@ -77,42 +69,21 @@ public final class RedisSubscription extends JedisPubSub implements Runnable {
         JsonObject parsed = GsonProvider.getGson().fromJson(message, JsonObject.class);
         String key = parsed.get("key").getAsString();
 
-        MessageDecoder<T> decoder = getDecoder(key);
-        if (decoder == null) {
-            throw new IllegalStateException("No decoder found for key " + key);
-        }
+        MessageListener listener = getListener(key);
+        checkNotNull(listener, "Listener for key " + key + " is not registered");
 
-        MessageListener<T> listener = getListener(key);
-        if (listener == null) {
-            throw new IllegalStateException("No listener found for key " + key);
-        }
-
-        listener.onMessage(decoder, this.channel, decoder.decode(parsed));
+        listener.onMessage(this.operations.getClient(), parsed);
     }
 
-    @SuppressWarnings("unchecked")
-    <T> MessageDecoder<T> getDecoder(@NotNull String key) {
-        return (MessageDecoder<T>) this.decoders.get(key);
+    public MessageListener getListener(@NotNull String key) {
+        return this.listeners.get(key);
     }
 
-    void registerDecoder(@NotNull String key, @NotNull MessageDecoder<?> decoder) {
-        this.decoders.put(key, decoder);
-    }
-
-    void unregisterDecoder(@NotNull String key) {
-        this.decoders.remove(key);
-    }
-
-    @SuppressWarnings("unchecked")
-    <T> MessageListener<T> getListener(@NotNull String key) {
-        return (MessageListener<T>) this.listeners.get(key);
-    }
-
-    void registerListener(@NotNull String key, @NotNull MessageListener<?> listener) {
+    public void registerListener(@NotNull String key, @NotNull MessageListener listener) {
         this.listeners.put(key, listener);
     }
 
-    void unregisterListener(@NotNull String key) {
+    public void unregisterListener(@NotNull String key) {
         this.listeners.remove(key);
     }
 }

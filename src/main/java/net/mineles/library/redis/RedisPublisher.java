@@ -5,27 +5,27 @@ import net.mineles.library.utils.GsonProvider;
 import org.jetbrains.annotations.NotNull;
 import redis.clients.jedis.Jedis;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 final class RedisPublisher {
-    private final @NotNull RedisClient client;
+    private final @NotNull RedisOperations pubSub;
     private final @NotNull String channel;
 
-    RedisPublisher(@NotNull RedisClient client,
+    RedisPublisher(@NotNull RedisOperations pubSub,
                    @NotNull String channel) {
-        this.client = client;
+        this.pubSub = pubSub;
         this.channel = channel;
     }
 
     void publish(@NotNull String key, @NotNull String message) {
         JsonObject json = GsonProvider.getGson().fromJson(message, JsonObject.class);
-        if (json == null) {
-            throw new IllegalArgumentException("Message is not a valid JSON object");
-        }
+        checkNotNull(json, "Message is not a valid JSON object");
 
         if (json.get("key") == null) {
             json.addProperty("key", key);
         }
 
-        try (Jedis jedis = this.client.getJedisPool().getResource()) {
+        try (Jedis jedis = this.pubSub.getJedisPool().getResource()) {
             jedis.publish(this.channel, json.toString());
         }
     }
