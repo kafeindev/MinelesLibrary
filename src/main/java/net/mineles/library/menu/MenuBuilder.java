@@ -52,10 +52,7 @@ public final class MenuBuilder {
     }
 
     public @NotNull MenuBuilder propertiesFromNode(@NotNull ConfigurationNode node) {
-        if (this.propertiesBuilder.name() == null) {
-            throw new IllegalStateException("Name must be set before loading properties from node");
-        }
-
+        checkNotNull(this.propertiesBuilder.name(), "Name must be set before loading properties from node");
         return properties(MenuProperties.fromNode(this.propertiesBuilder.name(), node));
     }
 

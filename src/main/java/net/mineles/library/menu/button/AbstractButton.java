@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 abstract class AbstractButton implements Button {
     private final @NotNull ButtonProperties properties;
     private final @NotNull ItemStackFactory itemStackFactory;
@@ -146,10 +148,7 @@ abstract class AbstractButton implements Button {
         }
 
         public @NotNull B propertiesFromNode() {
-            if (this.properties.node() == null) {
-                throw new IllegalStateException("Node is null");
-            }
-
+            checkNotNull(this.properties.node(), "Node is null");
             return propertiesFromNode(this.properties.node());
         }
 
@@ -193,10 +192,7 @@ abstract class AbstractButton implements Button {
         }
 
         public @NotNull B clickActionsFromNode() {
-            if (this.properties.node() == null) {
-                throw new IllegalStateException("Node is null");
-            }
-
+            checkNotNull(this.properties.node(), "Node is null");
             return clickActionsFromNode(this.properties.node());
         }
 
