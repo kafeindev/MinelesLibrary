@@ -62,10 +62,6 @@ public final class RedisSubscription extends JedisPubSub implements Runnable {
             return;
         }
 
-        receive(message);
-    }
-
-    private <T> void receive(@NotNull String message) {
         JsonObject parsed = GsonProvider.getGson().fromJson(message, JsonObject.class);
         String key = parsed.get("key").getAsString();
 
