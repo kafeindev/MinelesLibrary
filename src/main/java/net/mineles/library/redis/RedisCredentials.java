@@ -20,4 +20,13 @@ public record RedisCredentials(@NotNull HostAndPort hostAndPort,
         );
     }
 
+    @NotNull
+    public static RedisCredentials empty() {
+        return new RedisCredentials(
+                HostAndPort.from("localhost:6379"),
+                null,
+                "",
+                false
+        );
+    }
 }
