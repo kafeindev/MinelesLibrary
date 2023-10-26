@@ -15,7 +15,8 @@ final class RedisConnector {
         return connect(credentials, new JedisPoolConfig());
     }
 
-    static @NotNull JedisPool connect(@NotNull RedisCredentials credentials, @NotNull GenericObjectPoolConfig<Jedis> config) {
+    static @NotNull JedisPool connect(@NotNull RedisCredentials credentials,
+                                      @NotNull GenericObjectPoolConfig<Jedis> config) {
         return new JedisPool(config,
                 credentials.hostAndPort().getHost(),
                 credentials.hostAndPort().getPort(),

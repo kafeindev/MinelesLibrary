@@ -3,6 +3,7 @@ package net.mineles.library.redis;
 import com.google.gson.JsonObject;
 import net.mineles.library.utils.GsonProvider;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.Jedis;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,11 +18,11 @@ final class RedisPublisher {
         this.channel = channel;
     }
 
-    void publish(@NotNull String key, @NotNull String message) {
+    void publish(@Nullable String key, @NotNull String message) {
         JsonObject json = GsonProvider.getGson().fromJson(message, JsonObject.class);
         checkNotNull(json, "Message is not a valid JSON object");
 
-        if (json.get("key") == null) {
+        if (key != null && json.get("key") == null) {
             json.addProperty("key", key);
         }
 

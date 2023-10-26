@@ -7,6 +7,7 @@ import net.mineles.library.redis.message.MessageListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Map;
@@ -33,7 +34,12 @@ public final class RedisOperations {
     }
 
     public <T> void publish(@NotNull String channel,
-                            @NotNull String key,
+                            @NotNull T message) {
+        publish(channel, null, message);
+    }
+
+    public <T> void publish(@NotNull String channel,
+                            @Nullable String key,
                             @NotNull T message) {
         RedisSubscription subscription = this.subscriptions.get(channel);
         checkNotNull(subscription, "Cannot publish message to channel " + channel + " as it is not subscribed to");
@@ -44,8 +50,13 @@ public final class RedisOperations {
         publish(channel, key, decoder.encode(message));
     }
 
+    public <T> void publish(@NotNull String channel,
+                            @NotNull String message) {
+        publish(channel, null, message);
+    }
+
     public void publish(@NotNull String channel,
-                        @NotNull String key,
+                        @Nullable String key,
                         @NotNull String message) {
         RedisPublisher publisher = new RedisPublisher(this, channel);
         publisher.publish(key, message);
@@ -69,8 +80,27 @@ public final class RedisOperations {
 
     public void subscribe(@NotNull Plugin plugin,
                           @NotNull String channel,
+                          @NotNull MessageListener mainListener) {
+        RedisSubscription subscription = new RedisSubscription(this, channel, mainListener);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, subscription);
+
+        this.subscriptions.put(channel, subscription);
+    }
+
+    public void subscribe(@NotNull Plugin plugin,
+                          @NotNull String channel,
                           @NotNull Map<String, MessageListener> listeners) {
         RedisSubscription subscription = new RedisSubscription(this, channel, listeners);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, subscription);
+
+        this.subscriptions.put(channel, subscription);
+    }
+
+    public void subscribe(@NotNull Plugin plugin,
+                          @NotNull String channel,
+                          @NotNull MessageListener mainListener,
+                          @NotNull Map<String, MessageListener> listeners) {
+        RedisSubscription subscription = new RedisSubscription(this, channel, mainListener, listeners);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, subscription);
 
         this.subscriptions.put(channel, subscription);
@@ -86,12 +116,27 @@ public final class RedisOperations {
     }
 
     public void registerListener(@NotNull String channel,
+                                 @NotNull MessageListener listener) {
+        RedisSubscription subscription = this.subscriptions.get(channel);
+        checkNotNull(subscription, "Cannot register listener for channel " + channel + " as it is not subscribed to");
+
+        subscription.setMainListener(listener);
+    }
+
+    public void registerListener(@NotNull String channel,
                                  @NotNull String key,
                                  @NotNull MessageListener listener) {
         RedisSubscription subscription = this.subscriptions.get(channel);
         checkNotNull(subscription, "Cannot register listener for channel " + channel + " as it is not subscribed to");
 
         subscription.registerListener(key, listener);
+    }
+
+    public void unregisterListener(@NotNull String channel) {
+        RedisSubscription subscription = this.subscriptions.get(channel);
+        checkNotNull(subscription, "Cannot unregister listener for channel " + channel + " as it is not subscribed to");
+
+        subscription.setMainListener(null);
     }
 
     public void unregisterListener(@NotNull String channel,

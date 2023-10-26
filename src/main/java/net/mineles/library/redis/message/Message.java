@@ -1,14 +1,15 @@
 package net.mineles.library.redis.message;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class Message {
     private final @NotNull String channel;
-    private final @NotNull String key;
+    private final @Nullable String key;
     private final @NotNull String payload;
 
     public Message(@NotNull String channel,
-                   @NotNull String key,
+                   @Nullable String key,
                    @NotNull String payload) {
         this.channel = channel;
         this.key = key;
@@ -17,7 +18,13 @@ public final class Message {
 
     @NotNull
     public static Message create(@NotNull String channel,
-                                 @NotNull String key,
+                                 @NotNull String payload) {
+        return new Message(channel, null, payload);
+    }
+
+    @NotNull
+    public static Message create(@NotNull String channel,
+                                 @Nullable String key,
                                  @NotNull String payload) {
         return new Message(channel, key, payload);
     }
@@ -26,7 +33,7 @@ public final class Message {
         return this.channel;
     }
 
-    public @NotNull String getKey() {
+    public @Nullable String getKey() {
         return this.key;
     }
 

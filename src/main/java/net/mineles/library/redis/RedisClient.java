@@ -6,6 +6,7 @@ import net.mineles.library.redis.message.Message;
 import net.mineles.library.redis.message.MessageListener;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Map;
@@ -62,13 +63,23 @@ public final class RedisClient {
     }
 
     public <T> void publish(@NotNull String channel,
-                            @NotNull String key,
+                            @NotNull T message) {
+        this.operations.publish(channel, null, message);
+    }
+
+    public <T> void publish(@NotNull String channel,
+                            @Nullable String key,
                             @NotNull T message) {
         this.operations.publish(channel, key, message);
     }
 
+    public <T> void publish(@NotNull String channel,
+                            @NotNull String message) {
+        this.operations.publish(channel, null, message);
+    }
+
     public void publish(@NotNull String channel,
-                        @NotNull String key,
+                        @Nullable String key,
                         @NotNull String message) {
         this.operations.publish(channel, key, message);
     }
