@@ -36,8 +36,11 @@ final class KeyInjector {
             Class<?> type = key.getValue().getClass();
 
             ConfigurationNode child = node.node(Arrays.asList(key.getPath()));
-            Object value = Collection.class.isAssignableFrom(type) ? child.raw() : child.get(type);
+            if (child.empty()) {
+                return;
+            }
 
+            Object value = Collection.class.isAssignableFrom(type) ? child.raw() : child.get(type);
             Fields.set(field, key, value, "value");
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Failed to inject config key: " + field.getName(), e);
