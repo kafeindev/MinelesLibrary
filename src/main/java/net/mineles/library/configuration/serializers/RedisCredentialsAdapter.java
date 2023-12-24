@@ -1,7 +1,7 @@
 package net.mineles.library.configuration.serializers;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import net.mineles.library.redis.RedisCredentials;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;

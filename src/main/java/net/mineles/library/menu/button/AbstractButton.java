@@ -21,21 +21,16 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 abstract class AbstractButton implements Button {
-    private final @NotNull ButtonProperties properties;
-    private final @NotNull ItemStackFactory itemStackFactory;
-    private final @NotNull Set<RegisteredClickAction> clickActions;
+    private final ButtonProperties properties;
+    private final ItemStackFactory itemStackFactory;
+    private final Set<RegisteredClickAction> clickActions;
     private ClickHandler clickHandler;
 
-    AbstractButton(@NotNull ButtonProperties properties,
-                   @NotNull ItemStackFactory itemStackFactory,
-                   @NotNull ClickHandler clickHandler) {
+    AbstractButton(ButtonProperties properties, ItemStackFactory itemStackFactory, ClickHandler clickHandler) {
         this(properties, itemStackFactory, clickHandler, Sets.newHashSet());
     }
 
-    AbstractButton(@NotNull ButtonProperties properties,
-                   @NotNull ItemStackFactory itemStackFactory,
-                   @NotNull ClickHandler clickHandler,
-                   @NotNull Set<RegisteredClickAction>clickActions) {
+    AbstractButton(ButtonProperties properties, ItemStackFactory itemStackFactory, ClickHandler clickHandler, Set<RegisteredClickAction>clickActions) {
         this.properties = properties;
         this.clickHandler = clickHandler;
         this.clickActions = clickActions;
@@ -43,12 +38,12 @@ abstract class AbstractButton implements Button {
     }
 
     @Override
-    public @NotNull Map<Integer, ItemStack> createItemStacks(@NotNull OpenContext context) {
+    public Map<Integer, ItemStack> createItemStacks(@NotNull OpenContext context) {
         return this.itemStackFactory.createItemStacks(context, this);
     }
 
     @Override
-    public @NotNull ClickResult click(@NotNull ClickContext context) {
+    public ClickResult click(@NotNull ClickContext context) {
         return this.clickHandler.apply(context);
     }
 
@@ -58,7 +53,7 @@ abstract class AbstractButton implements Button {
     }
 
     @Override
-    public @NotNull Set<RegisteredClickAction> getClickActions() {
+    public Set<RegisteredClickAction> getClickActions() {
         return this.clickActions;
     }
 
@@ -83,7 +78,7 @@ abstract class AbstractButton implements Button {
     }
 
     @Override
-    public @NotNull ButtonProperties getProperties() {
+    public ButtonProperties getProperties() {
         return this.properties;
     }
 
@@ -93,7 +88,7 @@ abstract class AbstractButton implements Button {
     }
 
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         return this.properties.getName();
     }
 
@@ -134,69 +129,69 @@ abstract class AbstractButton implements Button {
         }
 
         @SuppressWarnings("unchecked")
-        public @NotNull B self() {
+        public B self() {
             return (B) this;
         }
 
-        public @NotNull ButtonProperties.Builder properties() {
+        public ButtonProperties.Builder properties() {
             return this.properties;
         }
 
-        public @NotNull B properties(@NotNull ButtonProperties properties) {
+        public B properties(@NotNull ButtonProperties properties) {
             this.properties.copy(properties);
             return self();
         }
 
-        public @NotNull B propertiesFromNode() {
+        public B propertiesFromNode() {
             checkNotNull(this.properties.node(), "Node is null");
             return propertiesFromNode(this.properties.node());
         }
 
-        public @NotNull B propertiesFromNode(@NotNull ConfigurationNode node) {
+        public B propertiesFromNode(@NotNull ConfigurationNode node) {
             this.properties.copy(ButtonProperties.fromNode(node));
             return self();
         }
 
-        public @NotNull B node(@NotNull ConfigurationNode node) {
+        public B node(@NotNull ConfigurationNode node) {
             this.properties.node(node);
             return self();
         }
 
-        public @NotNull B name(@NotNull String name) {
+        public B name(@NotNull String name) {
             this.properties.name(name);
             return self();
         }
 
-        public @NotNull B slots(int... slots) {
+        public B slots(int... slots) {
             this.properties.slots(slots);
             return self();
         }
 
-        public @NotNull B clickSound(@NotNull XSound clickSound) {
+        public B clickSound(@NotNull XSound clickSound) {
             this.properties.clickSound(clickSound);
             return self();
         }
 
-        public @NotNull Set<RegisteredClickAction> clickActions() {
+        public Set<RegisteredClickAction> clickActions() {
             return this.clickActions;
         }
 
-        public @NotNull B clickAction(@NotNull Iterable<RegisteredClickAction> actions) {
+        public B clickAction(@NotNull Iterable<RegisteredClickAction> actions) {
             this.clickActions.addAll(Sets.newHashSet(actions));
             return self();
         }
 
-        public @NotNull B clickAction(@NotNull RegisteredClickAction... action) {
+        public B clickAction(@NotNull RegisteredClickAction... action) {
             this.clickActions.addAll(Arrays.asList(action));
             return self();
         }
 
-        public @NotNull B clickActionsFromNode() {
+        public B clickActionsFromNode() {
             checkNotNull(this.properties.node(), "Node is null");
             return clickActionsFromNode(this.properties.node());
         }
 
-        public @NotNull B clickActionsFromNode(@NotNull ConfigurationNode node) {
+        public B clickActionsFromNode(@NotNull ConfigurationNode node) {
             ConfigurationNode actionsNode = node.node("actions");
             if (!actionsNode.empty()) {
                 try {
@@ -213,11 +208,11 @@ abstract class AbstractButton implements Button {
             return self();
         }
 
-        public @NotNull ClickHandler clickHandler() {
+        public ClickHandler clickHandler() {
             return this.clickHandler;
         }
 
-        public @NotNull B whenClicked(@NotNull ClickHandler clickHandler) {
+        public B whenClicked(@NotNull ClickHandler clickHandler) {
             this.clickHandler = clickHandler;
             return self();
         }

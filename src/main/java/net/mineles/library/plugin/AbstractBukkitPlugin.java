@@ -24,15 +24,11 @@
 
 package net.mineles.library.plugin;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.BukkitCommandExecutionContext;
-import co.aikar.commands.CommandContexts;
-import co.aikar.commands.PaperCommandManager;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.google.common.collect.ImmutableSet;
-import net.mineles.library.components.PlayerComponent;
-import net.mineles.library.components.SenderComponent;
+import net.mineles.library.command.Command;
+import net.mineles.library.command.CommandManager;
 import net.mineles.library.configuration.ConfigManager;
 import net.mineles.library.listener.InventoryListener;
 import net.mineles.library.listener.ListenerRegistry;
@@ -42,8 +38,6 @@ import net.mineles.library.metadata.store.MetadataStore;
 import net.mineles.library.plugin.scheduler.concurrent.ConcurrentTaskScheduler;
 import net.mineles.library.plugin.scheduler.concurrent.forkjoin.ForkJoinPoolBuilder;
 import org.bukkit.Server;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,17 +46,17 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public abstract class AbstractBukkitPlugin implements BukkitPlugin {
-    private final @NotNull Plugin plugin;
+    private final Plugin plugin;
 
     private ConcurrentTaskScheduler taskScheduler;
 
     private ConfigManager configManager;
     private MenuManager menuManager;
-    private PaperCommandManager commandManager;
+    private CommandManager commandManager;
     private ProtocolManager protocolManager;
     private MetadataStore metadataStore;
 
-    protected AbstractBukkitPlugin(@NotNull Plugin plugin) {
+    protected AbstractBukkitPlugin(Plugin plugin) {
         this.plugin = plugin;
     }
 
@@ -94,7 +88,7 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
         startTasks();
 
         getLogger().info("Registering commands...");
-        this.commandManager = new PaperCommandManager(this.plugin);
+        this.commandManager = new CommandManager(this.plugin);
         registerCommands();
 
         getLogger().info("Registering listeners...");
@@ -129,44 +123,32 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     }
 
     protected void registerCommands() {
-        CommandContexts<BukkitCommandExecutionContext> commandContexts = this.commandManager.getCommandContexts();
-        commandContexts.registerIssuerAwareContext(SenderComponent.class, resolver -> SenderComponent.of(resolver.getSender()));
-        commandContexts.registerIssuerAwareContext(PlayerComponent.class, resolver -> {
-            CommandSender sender = resolver.getSender();
-            if (!(sender instanceof Player)) {
-                SenderComponent.of(sender).sendMessage("<red>You must be a player to use this command.");
-                return null;
-            }
-
-            return PlayerComponent.from(this, (Player) sender);
-        });
-
         getCommands().forEach(this.commandManager::registerCommand);
     }
 
-    protected abstract @NotNull Set<BaseCommand> getCommands();
+    protected abstract @NotNull Set<Command> getCommands();
 
     protected abstract @NotNull Set<Menu> getMenus();
 
     protected abstract @NotNull Set<Class<?>> getListeners();
 
     @Override
-    public @NotNull Plugin getPlugin() {
+    public Plugin getPlugin() {
         return this.plugin;
     }
 
     @Override
-    public @NotNull Path getDataPath() {
+    public Path getDataPath() {
         return this.plugin.getDataFolder().toPath().toAbsolutePath();
     }
 
     @Override
-    public @NotNull Logger getLogger() {
+    public Logger getLogger() {
         return this.plugin.getLogger();
     }
 
     @Override
-    public @NotNull Server getServer() {
+    public Server getServer() {
         return this.plugin.getServer();
     }
 
@@ -180,32 +162,32 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     }
 
     @Override
-    public @NotNull ConcurrentTaskScheduler getTaskScheduler() {
+    public ConcurrentTaskScheduler getTaskScheduler() {
         return this.taskScheduler;
     }
 
     @Override
-    public @NotNull ConfigManager getConfigManager() {
+    public ConfigManager getConfigManager() {
         return this.configManager;
     }
 
     @Override
-    public @NotNull MenuManager getMenuManager() {
+    public MenuManager getMenuManager() {
         return this.menuManager;
     }
 
     @Override
-    public @NotNull PaperCommandManager getCommandManager() {
+    public CommandManager getCommandManager() {
         return this.commandManager;
     }
 
     @Override
-    public @NotNull ProtocolManager getProtocolManager() {
+    public ProtocolManager getProtocolManager() {
         return this.protocolManager;
     }
 
     @Override
-    public @NotNull MetadataStore getMetadataStore() {
+    public MetadataStore getMetadataStore() {
         return this.metadataStore;
     }
 }

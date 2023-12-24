@@ -50,29 +50,22 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public final class PlayerComponent {
-    private final @NotNull BukkitPlugin plugin;
+    private final BukkitPlugin plugin;
 
-    private final @NotNull UUID uniqueId;
-    private final @NotNull String name;
+    private final UUID uniqueId;
+    private final String name;
 
-    private PlayerComponent(@NotNull BukkitPlugin plugin,
-                            @NotNull UUID uniqueId,
-                            @NotNull String name) {
+    private PlayerComponent(BukkitPlugin plugin, UUID uniqueId, String name) {
         this.plugin = plugin;
         this.uniqueId = uniqueId;
         this.name = name;
     }
 
-    @NotNull
-    public static PlayerComponent of(@NotNull BukkitPlugin plugin,
-                                     @NotNull UUID uniqueId,
-                                     @NotNull String name) {
+    public static PlayerComponent of(BukkitPlugin plugin, UUID uniqueId, String name) {
         return new PlayerComponent(plugin, uniqueId, name);
     }
 
-    @NotNull
-    public static PlayerComponent from(@NotNull BukkitPlugin plugin,
-                                       @NotNull Player player) {
+    public static PlayerComponent from(BukkitPlugin plugin, Player player) {
         return of(plugin, player.getUniqueId(), player.getName());
     }
 
@@ -80,15 +73,15 @@ public final class PlayerComponent {
         return Bukkit.getPlayer(this.uniqueId);
     }
 
-    public @NotNull BukkitPlugin getPlugin() {
+    public BukkitPlugin getPlugin() {
         return this.plugin;
     }
 
-    public @NotNull UUID getUniqueId() {
+    public UUID getUniqueId() {
         return this.uniqueId;
     }
 
-    public @NotNull String getName() {
+    public String getName() {
         return this.name;
     }
 
@@ -241,7 +234,7 @@ public final class PlayerComponent {
         sync(player -> player.setFlySpeed(speed));
     }
 
-    public @NotNull InventoryView openInventory(@NotNull Inventory inventory) {
+    public InventoryView openInventory(@NotNull Inventory inventory) {
         return getHandle().openInventory(inventory);
     }
 

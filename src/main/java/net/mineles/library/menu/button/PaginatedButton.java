@@ -18,69 +18,63 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 final class PaginatedButton extends AbstractButton implements Button {
-    PaginatedButton(@NotNull ButtonProperties properties,
-                    @NotNull ItemStackFactory itemStackFactory,
-                    @NotNull ClickHandler clickHandler) {
+    PaginatedButton(ButtonProperties properties, ItemStackFactory itemStackFactory, ClickHandler clickHandler) {
         super(properties, itemStackFactory, clickHandler);
     }
 
-    PaginatedButton(@NotNull ButtonProperties properties,
-                    @NotNull ItemStackFactory itemStackFactory,
-                    @NotNull ClickHandler clickHandler,
-                    @NotNull Set<RegisteredClickAction> clickActions) {
+    PaginatedButton(ButtonProperties properties, ItemStackFactory itemStackFactory, ClickHandler clickHandler, Set<RegisteredClickAction> clickActions) {
         super(properties, itemStackFactory, clickHandler, clickActions);
     }
 
-    @NotNull
     public static <T> PaginatedButton.Builder<T> newBuilder() {
         return new Builder<>();
     }
 
     @Override
-    public @NotNull ButtonType getType() {
+    public ButtonType getType() {
         return ButtonType.PAGINATED;
     }
 
     public static final class Builder<T> extends AbstractButton.Builder<PaginatedButton, Builder<T>> {
-        private final @NotNull PaginatedItemStackFactoryBuilder<T> itemStackFactoryBuilder;
+        private final PaginatedItemStackFactoryBuilder<T> itemStackFactoryBuilder;
 
         Builder() {
             super();
             this.itemStackFactoryBuilder = new PaginatedItemStackFactoryBuilder<>();
         }
 
-        public @NotNull PaginatedButton.Builder<T> entries(@NotNull Function<OpenContext, List<T>> entries) {
+        public PaginatedButton.Builder<T> entries(@NotNull Function<OpenContext, List<T>> entries) {
             this.itemStackFactoryBuilder.entries(entries);
             return this;
         }
 
-        public @NotNull PaginatedButton.Builder<T> itemFactory(@NotNull BiFunction<OpenContext, T, ItemComponent> itemFactory) {
+        public PaginatedButton.Builder<T> itemFactory(@NotNull BiFunction<OpenContext, T, ItemComponent> itemFactory) {
             this.itemStackFactoryBuilder.itemFactory(itemFactory);
             return this;
         }
 
-        public @NotNull PaginatedButton.Builder<T> itemModifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
+        public PaginatedButton.Builder<T> itemModifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
             this.itemStackFactoryBuilder.modifier(modifier);
             return this;
         }
 
-        public @NotNull PaginatedButton.Builder<T> placeholdersPerEntry(@NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry) {
+        public PaginatedButton.Builder<T> placeholdersPerEntry(@NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry) {
             this.itemStackFactoryBuilder.placeholdersPerEntry(placeholdersPerEntry);
             return this;
         }
 
-        public @NotNull PaginatedButton.Builder<T> itemPlaceholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
+        public PaginatedButton.Builder<T> itemPlaceholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
             this.itemStackFactoryBuilder.placeholders(placeholders);
             return this;
         }
 
-        public @NotNull PaginatedButton.Builder<T> itemPlaceholders(@NotNull Map<String, String> placeholders) {
+        public PaginatedButton.Builder<T> itemPlaceholders(@NotNull Map<String, String> placeholders) {
             return itemPlaceholders(context -> placeholders);
         }
 
 
         @Override
-        public @NotNull PaginatedButton build() {
+        public PaginatedButton build() {
             return new PaginatedButton(properties().build(), this.itemStackFactoryBuilder.build(), clickHandler(), clickActions());
         }
     }
@@ -95,38 +89,38 @@ final class PaginatedButton extends AbstractButton implements Button {
             super();
         }
 
-        public @NotNull Function<OpenContext, List<T>> entries() {
+        public Function<OpenContext, List<T>> entries() {
             return this.entries;
         }
 
-        public @NotNull PaginatedItemStackFactoryBuilder<T> entries(@NotNull Function<OpenContext, List<T>> entries) {
+        public PaginatedItemStackFactoryBuilder<T> entries(@NotNull Function<OpenContext, List<T>> entries) {
             this.entries = entries;
             return this;
         }
 
-        public @NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry() {
+        public BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry() {
             return this.placeholdersPerEntry;
         }
 
-        public @NotNull PaginatedItemStackFactoryBuilder<T> placeholdersPerEntry(@NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry) {
+        public PaginatedItemStackFactoryBuilder<T> placeholdersPerEntry(@NotNull BiFunction<OpenContext, T, Map<String, String>> placeholdersPerEntry) {
             this.placeholdersPerEntry = placeholdersPerEntry;
             return this;
         }
 
-        public @NotNull BiFunction<OpenContext, T, ItemComponent> itemFactory() {
+        public BiFunction<OpenContext, T, ItemComponent> itemFactory() {
             return this.itemFactory;
         }
 
-        public @NotNull PaginatedItemStackFactoryBuilder<T> itemFactory(@NotNull BiFunction<OpenContext, T, ItemComponent> itemFactory) {
+        public PaginatedItemStackFactoryBuilder<T> itemFactory(@NotNull BiFunction<OpenContext, T, ItemComponent> itemFactory) {
             this.itemFactory = itemFactory;
             return this;
         }
 
-        public @NotNull TriConsumer<OpenContext, ItemComponent, T> modifier() {
+        public TriConsumer<OpenContext, ItemComponent, T> modifier() {
             return this.itemModifier;
         }
 
-        public @NotNull PaginatedItemStackFactoryBuilder<T> modifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
+        public PaginatedItemStackFactoryBuilder<T> modifier(@NotNull TriConsumer<OpenContext, ItemComponent, T> modifier) {
             this.itemModifier = modifier;
             return this;
         }

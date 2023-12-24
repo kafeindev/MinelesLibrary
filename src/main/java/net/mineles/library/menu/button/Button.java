@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 public interface Button {
-    static @NotNull Button fromNode(@NotNull ConfigurationNode node) {
+    static Button fromNode(@NotNull ConfigurationNode node) {
         return DefaultButton.newBuilder()
                 .node(node)
                 .propertiesFromNode()
@@ -22,21 +22,21 @@ public interface Button {
                 .build();
     }
 
-    static @NotNull DefaultButton.Builder newBuilder() {
+    static DefaultButton.Builder newBuilder() {
         return DefaultButton.newBuilder();
     }
 
-    static @NotNull <T> PaginatedButton.Builder<T> newPaginatedBuilder() {
+    static <T> PaginatedButton.Builder<T> newPaginatedBuilder() {
         return PaginatedButton.newBuilder();
     }
 
-    @NotNull Map<Integer, ItemStack> createItemStacks(@NotNull OpenContext context);
+    Map<Integer, ItemStack> createItemStacks(@NotNull OpenContext context);
 
-    @NotNull ClickResult click(@NotNull ClickContext context);
+    ClickResult click(@NotNull ClickContext context);
 
     void setClickHandler(@NotNull ClickHandler clickHandler);
 
-    @NotNull Set<RegisteredClickAction> getClickActions();
+    Set<RegisteredClickAction> getClickActions();
 
     void putClickActions(@NotNull Set<RegisteredClickAction> actions);
 
@@ -46,13 +46,13 @@ public interface Button {
 
     void clearClickActions();
 
-    @NotNull ButtonProperties getProperties();
+    ButtonProperties getProperties();
 
     @Nullable ConfigurationNode getNode();
 
-    @NotNull String getName();
+    String getName();
 
-    @NotNull ButtonType getType();
+    ButtonType getType();
 
     int[] getSlots();
 

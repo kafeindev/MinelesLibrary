@@ -24,20 +24,19 @@ import org.spongepowered.configurate.ConfigurationNode;
 import java.util.*;
 
 abstract class AbstractMenu implements Menu {
-    private final @NotNull MenuProperties properties;
-    private final @NotNull Set<Button> buttons;
-    private final @NotNull ClickActionCollection clickActions;
-    private final @NotNull ViewersHolder viewers;
+    private final MenuProperties properties;
+    private final Set<Button> buttons;
+    private final ClickActionCollection clickActions;
+    private final ViewersHolder viewers;
 
-    protected AbstractMenu(@NotNull MenuProperties properties) {
+    protected AbstractMenu(MenuProperties properties) {
         this.properties = properties;
         this.buttons = properties.getNode() == null ? Sets.newHashSet() : loadButtonsFromNode();
         this.clickActions = new ClickActionCollection();
         this.viewers = ViewersHolder.create();
     }
 
-    protected AbstractMenu(@NotNull MenuProperties properties,
-                           @NotNull Set<Button> buttons) {
+    protected AbstractMenu(MenuProperties properties, Set<Button> buttons) {
         this.properties = properties;
         this.buttons = buttons;
         this.clickActions = new ClickActionCollection();
@@ -45,17 +44,17 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer open(@NotNull PlayerComponent player) {
+    public Viewer open(@NotNull PlayerComponent player) {
         return open(player, 0);
     }
 
     @Override
-    public @NotNull Viewer open(@NotNull PlayerComponent player, int page) {
+    public Viewer open(@NotNull PlayerComponent player, int page) {
         return open(player, page, OpenCause.OPEN);
     }
 
     @Override
-    public @NotNull Viewer open(@NotNull PlayerComponent player, int page, @NotNull OpenCause cause) {
+    public Viewer open(@NotNull PlayerComponent player, int page, @NotNull OpenCause cause) {
         OpenContext context = OpenContext.create(player, this, cause, page);
 
         Inventory inventory = createInventory(context);
@@ -94,7 +93,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer nextPage(@NotNull PlayerComponent player) {
+    public Viewer nextPage(@NotNull PlayerComponent player) {
         Viewer viewer = this.viewers.getViewer(player.getUniqueId());
         if (viewer == null) {
             return open(player);
@@ -104,7 +103,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer nextPage(@NotNull Viewer viewer) {
+    public Viewer nextPage(@NotNull Viewer viewer) {
         open(viewer.getPlayer(), viewer.getPage() + 1, OpenCause.CHANGE_PAGE);
         return viewer;
     }
@@ -120,7 +119,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer previousPage(@NotNull PlayerComponent player) {
+    public Viewer previousPage(@NotNull PlayerComponent player) {
         Viewer viewer = this.viewers.getViewer(player.getUniqueId());
         if (viewer == null) {
             return open(player);
@@ -130,7 +129,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer previousPage(@NotNull Viewer viewer) {
+    public Viewer previousPage(@NotNull Viewer viewer) {
         open(viewer.getPlayer(), viewer.getPage() - 1, OpenCause.CHANGE_PAGE);
         return viewer;
     }
@@ -146,7 +145,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer refresh(@NotNull PlayerComponent player) {
+    public Viewer refresh(@NotNull PlayerComponent player) {
         Viewer viewer = this.viewers.getViewer(player.getUniqueId());
         if (viewer == null) {
             return open(player);
@@ -156,7 +155,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer refresh(@NotNull Viewer viewer) {
+    public Viewer refresh(@NotNull Viewer viewer) {
         OpenContext context = OpenContext.create(viewer.getPlayer(), this, OpenCause.REFRESH, viewer.getPage());
 
         Inventory inventory = viewer.getView().getTopInventory();
@@ -189,7 +188,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer refreshButton(@NotNull PlayerComponent player, int slot) {
+    public Viewer refreshButton(@NotNull PlayerComponent player, int slot) {
         Viewer viewer = this.viewers.getViewer(player.getUniqueId());
         if (viewer == null) {
             return open(player);
@@ -199,7 +198,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer refreshButton(@NotNull PlayerComponent player, @NotNull String buttonName) {
+    public Viewer refreshButton(@NotNull PlayerComponent player, @NotNull String buttonName) {
         Viewer viewer = this.viewers.getViewer(player.getUniqueId());
         if (viewer == null) {
             return open(player);
@@ -209,7 +208,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer refreshButton(@NotNull Viewer viewer, int slot) {
+    public Viewer refreshButton(@NotNull Viewer viewer, int slot) {
         Inventory inventory = viewer.getView().getTopInventory();
         findButton(slot).ifPresent(button -> {
             OpenContext context = OpenContext.create(viewer.getPlayer(), this, OpenCause.REFRESH, viewer.getPage());
@@ -222,7 +221,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer refreshButton(@NotNull Viewer viewer, @NotNull String buttonName) {
+    public Viewer refreshButton(@NotNull Viewer viewer, @NotNull String buttonName) {
         Inventory inventory = viewer.getView().getTopInventory();
         findButton(buttonName).ifPresent(button -> {
             OpenContext context = OpenContext.create(viewer.getPlayer(), this, OpenCause.REFRESH, viewer.getPage());
@@ -250,7 +249,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Viewer close(@NotNull Viewer viewer) {
+    public Viewer close(@NotNull Viewer viewer) {
         if (viewer.isClosed()) {
             return viewer;
         }
@@ -264,7 +263,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull ClickResult click(@NotNull ClickContext context) {
+    public ClickResult click(@NotNull ClickContext context) {
         Button button = context.getButton();
         if (button == null) {
             return ClickResult.CANCELLED;
@@ -286,17 +285,17 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull ClickResult clickEmptySlot(@NotNull ClickContext context) {
+    public ClickResult clickEmptySlot(@NotNull ClickContext context) {
         return ClickResult.CANCELLED;
     }
 
     @Override
-    public @NotNull ClickResult clickBottomInventory(@NotNull ClickContext context) {
+    public ClickResult clickBottomInventory(@NotNull ClickContext context) {
         return ClickResult.CANCELLED;
     }
 
     @Override
-    public @NotNull ClickActionCollection getClickActions() {
+    public ClickActionCollection getClickActions() {
         return this.clickActions;
     }
 
@@ -311,7 +310,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull ViewersHolder getViewers() {
+    public ViewersHolder getViewers() {
         return this.viewers;
     }
 
@@ -332,7 +331,7 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull MenuProperties getProperties() {
+    public MenuProperties getProperties() {
         return this.properties;
     }
 
@@ -342,22 +341,22 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         return this.properties.getName();
     }
 
     @Override
-    public @NotNull InventoryProperties getInventoryProperties() {
+    public InventoryProperties getInventoryProperties() {
         return this.properties.getInventoryProperties();
     }
 
     @Override
-    public @NotNull String getTitle() {
+    public String getTitle() {
         return this.properties.getTitle();
     }
 
     @Override
-    public @NotNull InventoryType getInventoryType() {
+    public InventoryType getInventoryType() {
         return this.properties.getInventoryType();
     }
 
@@ -389,19 +388,19 @@ abstract class AbstractMenu implements Menu {
     }
 
     @Override
-    public @NotNull Set<Button> getButtons() {
+    public Set<Button> getButtons() {
         return this.buttons;
     }
 
     @Override
-    public @NotNull Optional<Button> findButton(@NotNull String name) {
+    public Optional<Button> findButton(@NotNull String name) {
         return this.buttons.stream()
                 .filter(button -> button.getName().equals(name))
                 .findFirst();
     }
 
     @Override
-    public @NotNull Optional<Button> findButton(int slot) {
+    public Optional<Button> findButton(int slot) {
         return this.buttons.stream()
                 .filter(button -> button.hasSlot(slot))
                 .findFirst();

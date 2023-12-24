@@ -67,12 +67,11 @@ public final class ItemComponent {
 
     private @Nullable NBTItem nbtItem;
 
-    private ItemComponent(@NotNull ConfigurationNode node) {
+    private ItemComponent(ConfigurationNode node) {
         this(node, Map.of());
     }
 
-    private ItemComponent(@NotNull ConfigurationNode node,
-                          @NotNull Map<String, String> placeholders) {
+    private ItemComponent(ConfigurationNode node, Map<String, String> placeholders) {
         this(applyPlaceholders(node.node("material").getString(), placeholders),
                 node.node("amount").empty() ? 1 : node.node("amount").getInt());
     }
@@ -86,44 +85,34 @@ public final class ItemComponent {
         }
     }
 
-    private ItemComponent(@NotNull String materialName,
-                          int amount) {
+    private ItemComponent(String materialName, int amount) {
         this(XMaterial.matchXMaterial(materialName).orElse(XMaterial.STONE), amount);
     }
 
-    private ItemComponent(@NotNull XMaterial material,
-                          int amount) {
+    private ItemComponent(XMaterial material, int amount) {
         this.itemStack = material.parseItem();
         this.itemStack.setAmount(amount);
         this.itemMeta = this.itemStack.getItemMeta();
         this.nbtItem = new NBTItem(this.itemStack);
     }
 
-    @NotNull
-    public static ItemComponent create(@NotNull String materialName,
-                                       int amount) {
+    public static ItemComponent create(String materialName, int amount) {
         return new ItemComponent(materialName, amount);
     }
 
-    @NotNull
-    public static ItemComponent create(@NotNull XMaterial material,
-                                       int amount) {
+    public static ItemComponent create(XMaterial material, int amount) {
         return new ItemComponent(material, amount);
     }
 
-    @NotNull
     public static ItemComponent from(@Nullable ItemStack itemStack) {
         return new ItemComponent(itemStack == null ? null : itemStack.clone());
     }
 
-    @NotNull
-    public static ItemComponent from(@NotNull ConfigurationNode node) {
+    public static ItemComponent from(ConfigurationNode node) {
         return from(node, new HashMap<>());
     }
 
-    @NotNull
-    public static ItemComponent from(@NotNull ConfigurationNode node,
-                                     @NotNull Map<String, String> placeholders) {
+    public static ItemComponent from(ConfigurationNode node, Map<String, String> placeholders) {
         return new ItemComponent(node, placeholders)
                 .setCustomModel(node)
                 .setCustomModelData(node)
@@ -139,10 +128,7 @@ public final class ItemComponent {
                 .merge();
     }
 
-    @NotNull
-    public static ItemComponent from(@NotNull ConfigurationNode node,
-                                     @NotNull Map<String, String> placeholders,
-                                     @NotNull Player player) {
+    public static ItemComponent from(ConfigurationNode node, Map<String, String> placeholders, Player player) {
         return new ItemComponent(node, placeholders)
                 .setCustomModel(node)
                 .setCustomModelData(node)
@@ -173,7 +159,7 @@ public final class ItemComponent {
         return this.itemStack != null && this.itemStack.isSimilar(itemComponent.getHandle());
     }
 
-    public @NotNull String getMaterial() {
+    public String getMaterial() {
         return this.itemStack.getType().name();
     }
 
@@ -181,12 +167,12 @@ public final class ItemComponent {
         return this.itemStack.getAmount();
     }
 
-    public @NotNull ItemComponent setAmount(int amount) {
+    public ItemComponent setAmount(int amount) {
         this.itemStack.setAmount(amount);
         return this;
     }
 
-    public @NotNull ItemComponent setAmount(@NotNull ConfigurationNode node) {
+    public ItemComponent setAmount(@NotNull ConfigurationNode node) {
         ConfigurationNode amountNode = node.node("amount");
         return amountNode.empty() ? this : setAmount(amountNode.getInt());
     }
@@ -195,31 +181,31 @@ public final class ItemComponent {
         return this.itemMeta.displayName();
     }
 
-    public @NotNull ItemComponent setName(@NotNull Component name) {
-        this.itemMeta.displayName(name.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
+    public ItemComponent setName(@NotNull Component name) {
+        this.itemMeta.displayName(name.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE));
         return this;
     }
 
-    public @NotNull ItemComponent setName(@NotNull String name) {
+    public ItemComponent setName(@NotNull String name) {
         return setName(deserialize(name));
     }
 
-    public @NotNull ItemComponent setName(@NotNull String name,
+    public ItemComponent setName(@NotNull String name,
                                           @NotNull Map<String, String> placeholders) {
         return setName(applyPlaceholders(name, placeholders));
     }
 
-    public @NotNull ItemComponent setName(@NotNull ConfigurationNode node) {
+    public ItemComponent setName(@NotNull ConfigurationNode node) {
         return setName(node, new HashMap<>());
     }
 
-    public @NotNull ItemComponent setName(@NotNull ConfigurationNode node,
+    public ItemComponent setName(@NotNull ConfigurationNode node,
                                           @NotNull Map<String, String> placeholders) {
         ConfigurationNode nameNode = node.node("name");
         return nameNode.empty() ? this : setName(nameNode.getString(), placeholders);
     }
 
-    public @NotNull ItemComponent setName(@NotNull ConfigurationNode node,
+    public ItemComponent setName(@NotNull ConfigurationNode node,
                                           @NotNull Map<String, String> placeholders,
                                           @NotNull Player player) {
         ConfigurationNode nameNode = node.node("name");
@@ -234,40 +220,40 @@ public final class ItemComponent {
         return this.itemMeta.getLore();
     }
 
-    public @NotNull ItemComponent setLore(@NotNull List<Component> lore) {
+    public ItemComponent setLore(@NotNull List<Component> lore) {
         this.itemMeta.lore(lore.stream()
-                .map(c -> c.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE))
+                .map(c -> c.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE))
                 .collect(Collectors.toList()));
         return this;
     }
 
-    public @NotNull ItemComponent setLore(@NotNull Component... lore) {
+    public ItemComponent setLore(@NotNull Component... lore) {
         return setLore(Arrays.asList(lore));
     }
 
-    public @NotNull ItemComponent setLoreString(@NotNull List<String> lore) {
+    public ItemComponent setLoreString(@NotNull List<String> lore) {
         List<Component> components = lore.stream()
                 .map(ComponentSerializer::deserialize)
                 .collect(Collectors.toList());
         return setLore(components);
     }
 
-    public @NotNull ItemComponent setLoreString(@NotNull List<String> lore,
+    public ItemComponent setLoreString(@NotNull List<String> lore,
                                                 @NotNull Map<String, String> placeholders) {
         return setLoreString(lore.stream()
                 .map(s -> applyPlaceholders(s, placeholders))
                 .collect(Collectors.toList()));
     }
 
-    public @NotNull ItemComponent setLoreString(@NotNull String... lore) {
+    public ItemComponent setLoreString(@NotNull String... lore) {
         return setLoreString(Arrays.asList(lore));
     }
 
-    public @NotNull ItemComponent setLore(@NotNull ConfigurationNode node) {
+    public ItemComponent setLore(@NotNull ConfigurationNode node) {
         return setLore(node, new HashMap<>());
     }
 
-    public @NotNull ItemComponent setLore(@NotNull ConfigurationNode node,
+    public ItemComponent setLore(@NotNull ConfigurationNode node,
                                           @NotNull Map<String, String> placeholders) {
         ConfigurationNode loreNode = node.node("lore");
         try {
@@ -277,7 +263,7 @@ public final class ItemComponent {
         }
     }
 
-    public @NotNull ItemComponent setLore(@NotNull ConfigurationNode node,
+    public ItemComponent setLore(@NotNull ConfigurationNode node,
                                           @NotNull Map<String, String> placeholders,
                                           @NotNull Player player) {
         ConfigurationNode loreNode = node.node("lore");
@@ -294,28 +280,28 @@ public final class ItemComponent {
         }
     }
 
-    public @NotNull ItemComponent addLore(@NotNull List<Component> lore) {
+    public ItemComponent addLore(@NotNull List<Component> lore) {
         List<Component> loreList = hasLore() ? getLore() : new ArrayList<>();
         loreList.addAll(lore);
 
         return setLore(loreList);
     }
 
-    public @NotNull ItemComponent addLore(@NotNull Component lore) {
+    public ItemComponent addLore(@NotNull Component lore) {
         List<Component> loreList = hasLore() ? getLore() : new ArrayList<>();
         loreList.add(lore);
 
         return setLore(loreList);
     }
 
-    public @NotNull ItemComponent addLores(@NotNull List<String> lore) {
+    public ItemComponent addLores(@NotNull List<String> lore) {
         List<String> loreList = hasLore() ? getLoreString() : new ArrayList<>();
         loreList.addAll(lore);
 
         return setLoreString(loreList);
     }
 
-    public @NotNull ItemComponent addLores(@NotNull List<String> lore,
+    public ItemComponent addLores(@NotNull List<String> lore,
                                            @NotNull Map<String, String> placeholders) {
         List<String> loreList = hasLore() ? getLoreString() : new ArrayList<>();
         loreList.addAll(lore.stream()
@@ -325,14 +311,14 @@ public final class ItemComponent {
         return setLoreString(loreList);
     }
 
-    public @NotNull ItemComponent addLore(@NotNull String lore) {
+    public ItemComponent addLore(@NotNull String lore) {
         List<String> loreList = hasLore() ? getLoreString() : new ArrayList<>();
         loreList.add(lore);
 
         return setLoreString(loreList);
     }
 
-    public @NotNull ItemComponent removeLore(@NotNull Component lore) {
+    public ItemComponent removeLore(@NotNull Component lore) {
         if (hasLore()) {
             List<Component> loreList = getLore();
             loreList.remove(lore);
@@ -343,11 +329,11 @@ public final class ItemComponent {
         return this;
     }
 
-    public @NotNull ItemComponent removeLore(@NotNull String lore) {
+    public ItemComponent removeLore(@NotNull String lore) {
         return removeLore(deserialize(lore));
     }
 
-    public @NotNull ItemComponent clearLore() {
+    public ItemComponent clearLore() {
         return setLore(new ArrayList<>());
     }
 
@@ -368,12 +354,12 @@ public final class ItemComponent {
                 .collect(HashMap::new, (map, entry) -> map.put(entry.getKey().getKey().getKey(), entry.getValue()), HashMap::putAll);
     }
 
-    public @NotNull ItemComponent setEnchantments(@NotNull Map<String, Integer> enchantments) {
+    public ItemComponent setEnchantments(@NotNull Map<String, Integer> enchantments) {
         enchantments.entrySet().forEach(entry -> XEnchantment.matchXEnchantment(entry.getKey()).get().getEnchant());
         return this;
     }
 
-    public @NotNull ItemComponent setEnchantments(@NotNull ConfigurationNode node) {
+    public ItemComponent setEnchantments(@NotNull ConfigurationNode node) {
         ConfigurationNode enchantmentsNode = node.node("enchantments");
         if (enchantmentsNode.empty()) return this;
 
@@ -387,18 +373,18 @@ public final class ItemComponent {
         }
     }
 
-    public @NotNull ItemComponent addEnchantment(@NotNull String enchantment,
+    public ItemComponent addEnchantment(@NotNull String enchantment,
                                                  int level) {
         this.itemMeta.addEnchant(XEnchantment.matchXEnchantment(enchantment).get().getEnchant(), level, true);
         return this;
     }
 
-    public @NotNull ItemComponent removeEnchantment(@NotNull String enchantment) {
+    public ItemComponent removeEnchantment(@NotNull String enchantment) {
         this.itemMeta.removeEnchant(XEnchantment.matchXEnchantment(enchantment).get().getEnchant());
         return this;
     }
 
-    public @NotNull ItemComponent clearEnchantments() {
+    public ItemComponent clearEnchantments() {
         this.itemMeta.getEnchants().clear();
         return this;
     }
@@ -415,14 +401,14 @@ public final class ItemComponent {
         return !this.itemMeta.getEnchants().isEmpty();
     }
 
-    public @NotNull ItemComponent glow(boolean glow) {
+    public ItemComponent glow(boolean glow) {
         if (!hasEnchantments()) {
             addEnchantment("DURABILITY", 1);
         }
         return addFlag(ItemFlag.HIDE_ENCHANTS.name());
     }
 
-    public @NotNull ItemComponent glow(@NotNull ConfigurationNode node) {
+    public ItemComponent glow(@NotNull ConfigurationNode node) {
         ConfigurationNode glowNode = node.node("glow");
         return glowNode.empty() ? this : glow(glowNode.getBoolean());
     }
@@ -431,7 +417,7 @@ public final class ItemComponent {
         return this.itemMeta.hasItemFlag(ItemFlag.HIDE_ENCHANTS);
     }
 
-    public @NotNull ItemComponent setSkullOwner(@NotNull String owner) {
+    public ItemComponent setSkullOwner(@NotNull String owner) {
         if (this.itemStack.getType() == Material.PLAYER_HEAD) {
             SkullMeta skullMeta = (SkullMeta) this.itemMeta;
             skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
@@ -439,18 +425,18 @@ public final class ItemComponent {
         return this;
     }
 
-    public @NotNull ItemComponent setSkullOwner(@NotNull ConfigurationNode node) {
+    public ItemComponent setSkullOwner(@NotNull ConfigurationNode node) {
         ConfigurationNode skullOwnerNode = node.node("skull-owner");
         return skullOwnerNode.empty() ? this : setSkullOwner(skullOwnerNode.getString());
     }
 
-    public @NotNull ItemComponent setSkullOwner(@NotNull ConfigurationNode node,
+    public ItemComponent setSkullOwner(@NotNull ConfigurationNode node,
                                                 @NotNull Map<String, String> placeholders) {
         ConfigurationNode skullOwnerNode = node.node("skull-owner");
         return skullOwnerNode.empty() ? this : setSkullOwner(applyPlaceholders(skullOwnerNode.getString(), placeholders));
     }
 
-    public @NotNull ItemComponent setHeadTexture(@NotNull String texture) {
+    public ItemComponent setHeadTexture(@NotNull String texture) {
         if (this.itemStack.getType() != Material.PLAYER_HEAD) {
             return this;
         }
@@ -467,29 +453,29 @@ public final class ItemComponent {
         }
     }
 
-    public @NotNull ItemComponent setHeadTexture(@NotNull ConfigurationNode node) {
+    public ItemComponent setHeadTexture(@NotNull ConfigurationNode node) {
         ConfigurationNode headTextureNode = node.node("head-texture");
         return headTextureNode.empty() ? this : setHeadTexture(headTextureNode.getString());
     }
 
-    public @NotNull ItemComponent setHeadTexture(@NotNull ConfigurationNode node,
+    public ItemComponent setHeadTexture(@NotNull ConfigurationNode node,
                                                  @NotNull Map<String, String> placeholders) {
         ConfigurationNode headTextureNode = node.node("head-texture");
         return headTextureNode.empty() ? this : setHeadTexture(applyPlaceholders(headTextureNode.getString(), placeholders));
     }
 
-    public @NotNull Set<String> getFlags() {
+    public Set<String> getFlags() {
         return itemMeta.getItemFlags().stream()
                 .map(ItemFlag::name)
                 .collect(Collectors.toSet());
     }
 
-    public @NotNull ItemComponent setFlags(@NotNull Set<String> flags) {
+    public ItemComponent setFlags(@NotNull Set<String> flags) {
         flags.forEach(flag -> this.itemMeta.addItemFlags(ItemFlag.valueOf(flag)));
         return this;
     }
 
-    public @NotNull ItemComponent setFlags(@NotNull ConfigurationNode node) {
+    public ItemComponent setFlags(@NotNull ConfigurationNode node) {
         ConfigurationNode flagsNode = node.node("flags");
         if (flagsNode.empty()) return this;
 
@@ -503,17 +489,17 @@ public final class ItemComponent {
         }
     }
 
-    public @NotNull ItemComponent addFlag(@NotNull String flag) {
+    public ItemComponent addFlag(@NotNull String flag) {
         this.itemMeta.addItemFlags(ItemFlag.valueOf(flag));
         return this;
     }
 
-    public @NotNull ItemComponent removeFlag(@NotNull String flag) {
+    public ItemComponent removeFlag(@NotNull String flag) {
         this.itemMeta.removeItemFlags(ItemFlag.valueOf(flag));
         return this;
     }
 
-    public @NotNull ItemComponent clearFlags() {
+    public ItemComponent clearFlags() {
         this.itemMeta.getItemFlags().clear();
         return this;
     }
@@ -522,12 +508,12 @@ public final class ItemComponent {
         return this.itemMeta.hasItemFlag(ItemFlag.valueOf(flag));
     }
 
-    public @NotNull ItemComponent setUnbreakable(boolean unbreakable) {
+    public ItemComponent setUnbreakable(boolean unbreakable) {
         this.itemMeta.setUnbreakable(unbreakable);
         return this;
     }
 
-    public @NotNull ItemComponent setUnbreakable(@NotNull ConfigurationNode node) {
+    public ItemComponent setUnbreakable(@NotNull ConfigurationNode node) {
         ConfigurationNode unbreakableNode = node.node("unbreakable");
         return unbreakableNode.empty() ? this : setUnbreakable(unbreakableNode.getBoolean());
     }
@@ -536,7 +522,7 @@ public final class ItemComponent {
         return this.itemMeta.isUnbreakable();
     }
 
-    public @NotNull ItemComponent setCustomModel(@NotNull String model) {
+    public ItemComponent setCustomModel(@NotNull String model) {
         if (!Compatibility.ITEMS_ADDER.isCompatible()) {
             return this;
         }
@@ -545,17 +531,17 @@ public final class ItemComponent {
         return setCustomModelData(modelData);
     }
 
-    public @NotNull ItemComponent setCustomModel(@NotNull ConfigurationNode node) {
+    public ItemComponent setCustomModel(@NotNull ConfigurationNode node) {
         ConfigurationNode customModelNode = node.node("custom-model");
         return customModelNode.empty() ? this : setCustomModel(customModelNode.getString());
     }
 
-    public @NotNull ItemComponent setCustomModelData(int customModelData) {
+    public ItemComponent setCustomModelData(int customModelData) {
         this.itemMeta.setCustomModelData(customModelData);
         return this;
     }
 
-    public @NotNull ItemComponent setCustomModelData(@NotNull ConfigurationNode node) {
+    public ItemComponent setCustomModelData(@NotNull ConfigurationNode node) {
         ConfigurationNode customModelDataNode = node.node("model-data");
         return customModelDataNode.empty() ? this : setCustomModelData(customModelDataNode.getInt());
     }
@@ -576,27 +562,27 @@ public final class ItemComponent {
         return this.nbtItem != null && this.nbtItem.hasTag(nbt);
     }
 
-    public @NotNull ItemComponent setNbt(@NotNull String nbt, @NotNull String value) {
+    public ItemComponent setNbt(@NotNull String nbt, @NotNull String value) {
         this.nbtItem.setString(nbt, value);
         return this;
     }
 
-    public @NotNull ItemComponent setNbt(@NotNull String nbt, int value) {
+    public ItemComponent setNbt(@NotNull String nbt, int value) {
         this.nbtItem.setInteger(nbt, value);
         return this;
     }
 
-    public @NotNull ItemComponent setNbt(@NotNull String nbt, double value) {
+    public ItemComponent setNbt(@NotNull String nbt, double value) {
         this.nbtItem.setDouble(nbt, value);
         return this;
     }
 
-    public @NotNull ItemComponent setNbt(@NotNull String nbt, boolean value) {
+    public ItemComponent setNbt(@NotNull String nbt, boolean value) {
         this.nbtItem.setBoolean(nbt, value);
         return this;
     }
 
-    public @NotNull ItemComponent setNbt(@NotNull ConfigurationNode node) {
+    public ItemComponent setNbt(@NotNull ConfigurationNode node) {
         ConfigurationNode nbtNode = node.node("nbt");
         if (nbtNode.empty()) return this;
 
@@ -614,7 +600,7 @@ public final class ItemComponent {
         return this;
     }
 
-    public @NotNull ItemComponent merge() {
+    public ItemComponent merge() {
         if (this.itemStack == null) {
             return this;
         }
@@ -626,7 +612,7 @@ public final class ItemComponent {
         return this;
     }
 
-    public @NotNull ItemComponent clone() {
+    public ItemComponent clone() {
         merge();
         return ItemComponent.from(this.itemStack.clone());
     }

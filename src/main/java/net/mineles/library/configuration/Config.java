@@ -1,6 +1,5 @@
 package net.mineles.library.configuration;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 
@@ -8,21 +7,21 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 public final class Config {
-    private final @NotNull ConfigType type;
-    private final @NotNull ConfigurationNode node;
+    private final ConfigType type;
+    private final ConfigurationNode node;
     private final @Nullable Path path;
 
-    public Config(@NotNull ConfigType type, @NotNull ConfigurationNode node, @Nullable Path path) {
+    public Config(ConfigType type, ConfigurationNode node, @Nullable Path path) {
         this.node = node;
         this.type = type;
         this.path = path;
     }
 
-    public @NotNull ConfigType getType() {
+    public ConfigType getType() {
         return this.type;
     }
 
-    public @NotNull ConfigurationNode getNode() {
+    public ConfigurationNode getNode() {
         return this.node;
     }
 

@@ -9,33 +9,27 @@ import org.spongepowered.configurate.serialize.SerializationException;
 public final class ButtonProperties {
     private final @Nullable ConfigurationNode node;
 
-    private final @NotNull String name;
+    private final String name;
     private final int[] slots;
 
     private XSound clickSound;
 
-    ButtonProperties(@Nullable ConfigurationNode node,
-                     @NotNull String name,
-                     int[] slots,
-                     @Nullable XSound clickSound) {
+    ButtonProperties(@Nullable ConfigurationNode node, String name, int[] slots, @Nullable XSound clickSound) {
         this.node = node;
         this.name = name;
         this.slots = slots;
         this.clickSound = clickSound;
     }
 
-    @NotNull
-    public static ButtonProperties of(@NotNull String name, int[] slots) {
+    public static ButtonProperties of(String name, int[] slots) {
         return new ButtonProperties(null, name, slots, null);
     }
 
-    @NotNull
-    public static ButtonProperties of(@NotNull String name, int[] slots, @Nullable XSound clickSound) {
+    public static ButtonProperties of(String name, int[] slots, @Nullable XSound clickSound) {
         return new ButtonProperties(null, name, slots, clickSound);
     }
 
-    @NotNull
-    public static ButtonProperties fromNode(@NotNull ConfigurationNode node) {
+    public static ButtonProperties fromNode(ConfigurationNode node) {
         return new Builder()
                 .node(node)
                 .name((String) node.key())
@@ -48,7 +42,7 @@ public final class ButtonProperties {
         return this.node;
     }
 
-    public @NotNull String getName() {
+    public String getName() {
         return this.name;
     }
 
@@ -64,7 +58,7 @@ public final class ButtonProperties {
         this.clickSound = clickSound;
     }
 
-    public static @NotNull Builder newBuilder() {
+    public static Builder newBuilder() {
         return new Builder();
     }
 
@@ -82,17 +76,17 @@ public final class ButtonProperties {
             return this.node;
         }
 
-        public @NotNull Builder node(@NotNull ConfigurationNode node) {
+        public Builder node(@NotNull ConfigurationNode node) {
             this.node = node;
             return this;
         }
 
-        public @NotNull Builder name(@NotNull String name) {
+        public Builder name(@NotNull String name) {
             this.name = name;
             return this;
         }
 
-        public @NotNull Builder slots(int @NotNull [] slots) {
+        public Builder slots(int @NotNull [] slots) {
             this.slots = slots;
             return this;
         }
@@ -112,19 +106,19 @@ public final class ButtonProperties {
             return this;
         }
 
-        public @NotNull Builder clickSound(@NotNull XSound clickSound) {
+        public Builder clickSound(@NotNull XSound clickSound) {
             this.clickSound = clickSound;
             return this;
         }
 
-        public @NotNull Builder clickSound(@Nullable String clickSound) {
+        public Builder clickSound(@Nullable String clickSound) {
             if (clickSound != null) {
                 this.clickSound = XSound.matchXSound(clickSound).orElse(null);
             }
             return this;
         }
 
-        public @NotNull Builder copy(@NotNull ButtonProperties properties) {
+        public Builder copy(@NotNull ButtonProperties properties) {
             this.node = properties.node;
             this.name = properties.name;
             this.slots = properties.slots;
@@ -132,7 +126,7 @@ public final class ButtonProperties {
             return this;
         }
 
-        public @NotNull Builder copy(@NotNull Builder builder) {
+        public Builder copy(@NotNull Builder builder) {
             this.node = builder.node;
             this.name = builder.name;
             this.slots = builder.slots;
@@ -140,7 +134,7 @@ public final class ButtonProperties {
             return this;
         }
 
-        public @NotNull ButtonProperties build() {
+        public ButtonProperties build() {
             return new ButtonProperties(this.node, this.name, this.slots, this.clickSound);
         }
     }

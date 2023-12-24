@@ -20,33 +20,33 @@ public final class ClickActionCollection {
                 .build();
     }
 
-    private final @NotNull Map<String, ClickAction> actions;
+    private final Map<String, ClickAction> actions;
 
     public ClickActionCollection() {
         this(ClickActionCollection.DEFAULTS);
     }
 
-    public ClickActionCollection(@NotNull ClickActionCollection collection) {
+    public ClickActionCollection(ClickActionCollection collection) {
         this(collection.getActions());
     }
 
-    public ClickActionCollection(@NotNull Map<String, ClickAction> actions) {
+    public ClickActionCollection(Map<String, ClickAction> actions) {
         this.actions = actions;
     }
 
-    public @NotNull Map<String, ClickAction> getActions() {
+    public Map<String, ClickAction> getActions() {
         return this.actions;
     }
 
-    public @NotNull Set<String> getActionNames() {
+    public Set<String> getActionNames() {
         return this.actions.keySet();
     }
 
-    public @NotNull Optional<ClickAction> findAction(@NotNull String key) {
+    public Optional<ClickAction> findAction(@NotNull String key) {
         return Optional.ofNullable(this.actions.get(key));
     }
 
-    public @NotNull Optional<ClickAction> findAction(@NotNull RegisteredClickAction action) {
+    public Optional<ClickAction> findAction(@NotNull RegisteredClickAction action) {
         return this.findAction(action.getKey());
     }
 
@@ -82,47 +82,46 @@ public final class ClickActionCollection {
         return this.actions.size();
     }
 
-    public @NotNull Builder toBuilder() {
+    public Builder toBuilder() {
         return new Builder(this);
     }
 
-    @NotNull
     public static Builder newBuilder() {
         return new Builder();
     }
 
     public static final class Builder {
-        private final @NotNull ClickActionCollection collection;
+        private final ClickActionCollection collection;
 
         public Builder() {
             this.collection = new ClickActionCollection(Maps.newHashMap());
         }
 
-        public Builder(@NotNull ClickActionCollection collection) {
+        public Builder(ClickActionCollection collection) {
             this.collection = new ClickActionCollection(collection);
         }
 
-        public @NotNull Builder registerAction(@NotNull String key, @NotNull ClickAction action) {
+        public Builder registerAction(@NotNull String key, @NotNull ClickAction action) {
             this.collection.registerAction(key, action);
             return this;
         }
 
-        public @NotNull Builder unregisterAction(@NotNull String key) {
+        public Builder unregisterAction(@NotNull String key) {
             this.collection.unregisterAction(key);
             return this;
         }
 
-        public @NotNull Builder unregisterAction(@NotNull ClickAction action) {
+        public Builder unregisterAction(@NotNull ClickAction action) {
             this.collection.unregisterAction(action);
             return this;
         }
 
-        public @NotNull Builder unregisterAll() {
+        public Builder unregisterAll() {
             this.collection.unregisterAll();
             return this;
         }
 
-        public @NotNull ClickActionCollection build() {
+        public ClickActionCollection build() {
             return this.collection;
         }
     }

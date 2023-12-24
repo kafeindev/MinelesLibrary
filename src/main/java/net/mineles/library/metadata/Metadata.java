@@ -24,34 +24,30 @@
 
 package net.mineles.library.metadata;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 
 public final class Metadata<T> {
-    private final @NotNull String key;
-    private final @NotNull T value;
+    private final String key;
+    private final T value;
 
-    private Metadata(@NotNull String key, @NotNull T value) {
+    private Metadata(String key, T value) {
         this.key = key;
         this.value = value;
     }
 
-    @NotNull
-    public static <T> Metadata<T> create(@NotNull String key, @NotNull T value) {
+    public static <T> Metadata<T> create(String key, T value) {
         return new Metadata<>(key, value);
     }
 
-    @NotNull
-    public static <T> Metadata<T> create(@NotNull Enum<?> key, @NotNull T value) {
+    public static <T> Metadata<T> create(Enum<?> key, T value) {
         return new Metadata<>(key.name(), value);
     }
 
-    public @NotNull String getKey() {
+    public String getKey() {
         return this.key;
     }
 
-    public @NotNull T getValue() {
+    public T getValue() {
         return this.value;
     }
 

@@ -37,12 +37,10 @@ public final class AttributeMap {
         this.attributes = Maps.newHashMap();
     }
 
-    @NotNull
     public static AttributeMap create() {
         return new AttributeMap();
     }
 
-    @NotNull
     public static AttributeMap create(@NotNull Attribute<?>... attributes) {
         AttributeMap attributeMap = new AttributeMap();
         attributeMap.set(attributes);
@@ -50,7 +48,6 @@ public final class AttributeMap {
         return attributeMap;
     }
 
-    @NotNull
     public static AttributeMap create(@NotNull Map<String, Attribute<?>> attributes) {
         AttributeMap attributeMap = new AttributeMap();
         attributeMap.set(attributes);
@@ -58,7 +55,6 @@ public final class AttributeMap {
         return attributeMap;
     }
 
-    @NotNull
     public static AttributeMap create(@NotNull String key, @Nullable Object value) {
         AttributeMap attributeMap = new AttributeMap();
         attributeMap.set(key, value);
@@ -66,7 +62,6 @@ public final class AttributeMap {
         return attributeMap;
     }
 
-    @NotNull
     public static AttributeMap create(@NotNull Enum<?> key, @Nullable Object value) {
         return create(key.name(), value);
     }

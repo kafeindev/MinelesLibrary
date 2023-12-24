@@ -22,23 +22,23 @@ public interface BungeePlugin {
 
     void loadConfigs();
 
-    @NotNull Plugin getPlugin();
+    Plugin getPlugin();
 
-    @NotNull Path getDataPath();
+    Path getDataPath();
 
-    @NotNull Logger getLogger();
+    Logger getLogger();
 
-    @NotNull ProxyServer getServer();
+    ProxyServer getServer();
 
-    @NotNull TaskScheduler getTaskScheduler();
+    TaskScheduler getTaskScheduler();
 
-    @NotNull ConfigManager getConfigManager();
+    ConfigManager getConfigManager();
 
-    @NotNull BungeeCommandManager getCommandManager();
+    BungeeCommandManager getCommandManager();
 
-    @NotNull MetadataStore getMetadataStore();
+    MetadataStore getMetadataStore();
 
-    default @NotNull <T extends BungeePlugin> T getAs(@NotNull Class<T> clazz) {
+    default <T extends BungeePlugin> T getAs(@NotNull Class<T> clazz) {
         return clazz.cast(this);
     }
 }

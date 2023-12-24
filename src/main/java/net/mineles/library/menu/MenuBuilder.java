@@ -28,65 +28,65 @@ public final class MenuBuilder {
         return new MenuBuilder();
     }
 
-    public @NotNull MenuType type() {
+    public MenuType type() {
         return this.type;
     }
 
-    public @NotNull MenuBuilder type(@NotNull MenuType type) {
+    public MenuBuilder type(@NotNull MenuType type) {
         this.type = type;
         return this;
     }
 
-    public @NotNull MenuProperties.Builder properties() {
+    public MenuProperties.Builder properties() {
         return this.propertiesBuilder;
     }
 
-    public @NotNull MenuBuilder properties(@NotNull MenuProperties.Builder propertiesBuilder) {
+    public MenuBuilder properties(@NotNull MenuProperties.Builder propertiesBuilder) {
         this.propertiesBuilder = propertiesBuilder;
         return this;
     }
 
-    public @NotNull MenuBuilder properties(@NotNull MenuProperties properties) {
+    public MenuBuilder properties(@NotNull MenuProperties properties) {
         this.propertiesBuilder = properties.toBuilder();
         return this;
     }
 
-    public @NotNull MenuBuilder propertiesFromNode(@NotNull ConfigurationNode node) {
+    public MenuBuilder propertiesFromNode(@NotNull ConfigurationNode node) {
         checkNotNull(this.propertiesBuilder.name(), "Name must be set before loading properties from node");
         return properties(MenuProperties.fromNode(this.propertiesBuilder.name(), node));
     }
 
-    public @NotNull MenuBuilder node(@NotNull ConfigurationNode node) {
+    public MenuBuilder node(@NotNull ConfigurationNode node) {
         this.propertiesBuilder.node(node);
         return this;
     }
 
-    public @NotNull MenuBuilder name(@NotNull String name) {
+    public MenuBuilder name(@NotNull String name) {
         this.propertiesBuilder.name(name);
         return this;
     }
 
-    public @NotNull MenuBuilder inventoryTitle(@NotNull String title) {
+    public MenuBuilder inventoryTitle(@NotNull String title) {
         this.propertiesBuilder.title(title);
         return this;
     }
 
-    public @NotNull MenuBuilder inventorySize(int size) {
+    public MenuBuilder inventorySize(int size) {
         this.propertiesBuilder.size(size);
         return this;
     }
 
-    public @NotNull MenuBuilder inventoryType(@NotNull InventoryType type) {
+    public MenuBuilder inventoryType(@NotNull InventoryType type) {
         this.propertiesBuilder.type(type);
         return this;
     }
 
-    public @NotNull MenuBuilder openSound(@NotNull XSound openSound) {
+    public MenuBuilder openSound(@NotNull XSound openSound) {
         this.propertiesBuilder.openSound(openSound);
         return this;
     }
 
-    public @NotNull MenuBuilder closeSound(@NotNull XSound closeSound) {
+    public MenuBuilder closeSound(@NotNull XSound closeSound) {
         this.propertiesBuilder.closeSound(closeSound);
         return this;
     }
@@ -95,17 +95,17 @@ public final class MenuBuilder {
         return this.buttons;
     }
 
-    public @NotNull MenuBuilder buttons(@NotNull Set<Button> buttons) {
+    public MenuBuilder buttons(@NotNull Set<Button> buttons) {
         this.buttons = buttons;
         return this;
     }
 
-    public @NotNull MenuBuilder buttonsFromNode() {
+    public MenuBuilder buttonsFromNode() {
         ConfigurationNode parent = checkNotNull(this.propertiesBuilder.node(), "node");
         return buttonsFromNode(parent.node("menu", "buttons"));
     }
 
-    public @NotNull MenuBuilder buttonsFromNode(@NotNull ConfigurationNode parent) {
+    public MenuBuilder buttonsFromNode(@NotNull ConfigurationNode parent) {
         for (ConfigurationNode node : parent.childrenMap().values()) {
             Button button = Button.fromNode(node);
             this.buttons.add(button);
@@ -114,12 +114,12 @@ public final class MenuBuilder {
         return this;
     }
 
-    public @NotNull MenuBuilder button(@NotNull Button button) {
+    public MenuBuilder button(@NotNull Button button) {
         this.buttons.add(button);
         return this;
     }
 
-    public @NotNull Menu build() {
+    public Menu build() {
         MenuProperties properties = this.propertiesBuilder.build();
         checkNotNull(properties.getName(), "name");
         checkNotNull(properties.getTitle(), "title");

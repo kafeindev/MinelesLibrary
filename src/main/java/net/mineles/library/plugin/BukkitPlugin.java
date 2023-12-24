@@ -24,8 +24,8 @@
 
 package net.mineles.library.plugin;
 
-import co.aikar.commands.PaperCommandManager;
 import com.comphenix.protocol.ProtocolManager;
+import net.mineles.library.command.CommandManager;
 import net.mineles.library.configuration.ConfigManager;
 import net.mineles.library.menu.MenuManager;
 import net.mineles.library.metadata.store.MetadataStore;
@@ -50,27 +50,27 @@ public interface BukkitPlugin {
 
     void loadMenus();
 
-    @NotNull Plugin getPlugin();
+    Plugin getPlugin();
 
-    @NotNull Path getDataPath();
+    Path getDataPath();
 
-    @NotNull Logger getLogger();
+    Logger getLogger();
 
-    @NotNull Server getServer();
+    Server getServer();
 
-    @NotNull TaskScheduler getTaskScheduler();
+    TaskScheduler getTaskScheduler();
 
-    @NotNull ConfigManager getConfigManager();
+    ConfigManager getConfigManager();
 
-    @NotNull MenuManager getMenuManager();
+    MenuManager getMenuManager();
 
-    @NotNull PaperCommandManager getCommandManager();
+    CommandManager getCommandManager();
 
-    @NotNull ProtocolManager getProtocolManager();
+    ProtocolManager getProtocolManager();
 
-    @NotNull MetadataStore getMetadataStore();
+    MetadataStore getMetadataStore();
 
-    default @NotNull <T extends BukkitPlugin> T getAs(@NotNull Class<T> clazz) {
+    default <T extends BukkitPlugin> T getAs(@NotNull Class<T> clazz) {
         return clazz.cast(this);
     }
 }

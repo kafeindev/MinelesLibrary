@@ -6,7 +6,6 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Collection;
 
 final class KeyInjector {
@@ -35,8 +34,8 @@ final class KeyInjector {
             ConfigKey<?> key = (ConfigKey<?>) field.get(null);
             Class<?> type = key.getValue().getClass();
 
-            ConfigurationNode child = node.node(Arrays.asList(key.getPath()));
-            if (child.empty()) {
+            ConfigurationNode child = node.node(key.getPath());
+            if (child.isNull()) {
                 return;
             }
 

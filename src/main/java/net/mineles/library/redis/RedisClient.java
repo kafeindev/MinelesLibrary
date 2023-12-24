@@ -12,22 +12,22 @@ import redis.clients.jedis.JedisPool;
 import java.util.Map;
 
 public final class RedisClient {
-    private final @NotNull RedisCredentials credentials;
-    private final @NotNull RedisCache cache;
-    private final @NotNull RedisOperations operations;
-    private final @NotNull DecoderCollection decoders;
+    private final RedisCredentials credentials;
+    private final RedisCache cache;
+    private final RedisOperations operations;
+    private final DecoderCollection decoders;
 
     private JedisPool jedisPool;
     private boolean closed;
 
-    public RedisClient(@NotNull RedisCredentials credentials) {
+    public RedisClient(RedisCredentials credentials) {
         this.credentials = credentials;
         this.cache = new RedisCache(this);
         this.operations = new RedisOperations(this);
         this.decoders = new DecoderCollection();
     }
 
-    public @NotNull RedisCredentials getCredentials() {
+    public RedisCredentials getCredentials() {
         return this.credentials;
     }
 
@@ -41,7 +41,7 @@ public final class RedisClient {
         this.jedisPool.close();
     }
 
-    public @NotNull JedisPool getJedisPool() {
+    public JedisPool getJedisPool() {
         return this.jedisPool;
     }
 
@@ -49,11 +49,11 @@ public final class RedisClient {
         return this.closed;
     }
 
-    public @NotNull RedisCache getCache() {
+    public RedisCache getCache() {
         return this.cache;
     }
 
-    public @NotNull RedisOperations getOperations() {
+    public RedisOperations getOperations() {
         return this.operations;
     }
 
@@ -114,7 +114,7 @@ public final class RedisClient {
         this.operations.unregisterListener(channel, key);
     }
 
-    public @NotNull DecoderCollection getDecoders() {
+    public DecoderCollection getDecoders() {
         return this.decoders;
     }
 

@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 @FunctionalInterface
 interface ItemStackFactory {
-    @NotNull Map<Integer, ItemStack> createItemStacks(@NotNull OpenContext context, @NotNull Button button);
+    Map<Integer, ItemStack> createItemStacks(@NotNull OpenContext context, @NotNull Button button);
 
     abstract class Builder<T extends Builder<T>> {
         protected Function<OpenContext, Map<String, String>> placeholders;
@@ -29,15 +29,15 @@ interface ItemStackFactory {
             return this.placeholders;
         }
 
-        public @NotNull T placeholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
+        public T placeholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
             this.placeholders = placeholders;
             return self();
         }
 
-        public @NotNull T placeholders(@NotNull Map<String, String> placeholders) {
+        public T placeholders(@NotNull Map<String, String> placeholders) {
             return placeholders(context -> placeholders);
         }
 
-        abstract @NotNull ItemStackFactory build();
+        abstract ItemStackFactory build();
     }
 }

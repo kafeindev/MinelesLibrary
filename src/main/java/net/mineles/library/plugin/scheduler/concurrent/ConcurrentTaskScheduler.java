@@ -37,21 +37,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public final class ConcurrentTaskScheduler extends AbstractTaskExecutor<ScheduledThreadPoolExecutor> implements TaskScheduler {
-    public ConcurrentTaskScheduler(@NotNull Logger logger,
-                                   @NotNull String name) {
+    public ConcurrentTaskScheduler(Logger logger, String name) {
         super(logger, name);
     }
 
-    public ConcurrentTaskScheduler(@NotNull Logger logger,
-                                   @NotNull String name,
-                                   @NotNull ThreadFactory threadFactory) {
+    public ConcurrentTaskScheduler(Logger logger, String name, ThreadFactory threadFactory) {
         super(logger, name, threadFactory);
     }
 
-    public ConcurrentTaskScheduler(@NotNull Logger logger,
-                                   @NotNull String name,
-                                   @NotNull ThreadFactory threadFactory,
-                                   int poolSize) {
+    public ConcurrentTaskScheduler(Logger logger, String name, ThreadFactory threadFactory, int poolSize) {
         super(logger, name, threadFactory, poolSize);
     }
 
@@ -65,7 +59,7 @@ public final class ConcurrentTaskScheduler extends AbstractTaskExecutor<Schedule
     }
 
     @Override
-    public @NotNull ScheduledTask schedule(@NotNull BukkitPlugin plugin,
+    public ScheduledTask schedule(@NotNull BukkitPlugin plugin,
                                            @NotNull Runnable task,
                                            long delay,
                                            boolean async,
@@ -77,7 +71,7 @@ public final class ConcurrentTaskScheduler extends AbstractTaskExecutor<Schedule
     }
 
     @Override
-    public @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+    public ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
                                                     @NotNull Runnable task,
                                                     long delay,
                                                     long period,

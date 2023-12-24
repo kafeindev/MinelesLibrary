@@ -16,58 +16,52 @@ import java.util.function.Function;
 import static com.google.common.base.Preconditions.checkArgument;
 
 final class DefaultButton extends AbstractButton {
-    DefaultButton(@NotNull ButtonProperties properties,
-                  @NotNull ItemStackFactory itemStackFactory,
-                  @NotNull ClickHandler clickHandler) {
+    DefaultButton(ButtonProperties properties, ItemStackFactory itemStackFactory, ClickHandler clickHandler) {
         super(properties, itemStackFactory, clickHandler);
     }
 
-    DefaultButton(@NotNull ButtonProperties properties,
-                  @NotNull ItemStackFactory itemStackFactory,
-                  @NotNull ClickHandler clickHandler,
-                  @NotNull Set<RegisteredClickAction> clickActions) {
+    DefaultButton(ButtonProperties properties, ItemStackFactory itemStackFactory, ClickHandler clickHandler, Set<RegisteredClickAction> clickActions) {
         super(properties, itemStackFactory, clickHandler, clickActions);
     }
 
-    @NotNull
     public static DefaultButton.Builder newBuilder() {
         return new Builder();
     }
 
     @Override
-    public @NotNull ButtonType getType() {
+    public ButtonType getType() {
         return ButtonType.DEFAULT;
     }
 
     public static final class Builder extends AbstractButton.Builder<DefaultButton, Builder> {
-        private final @NotNull DefaultItemStackFactoryBuilder itemStackFactoryBuilder;
+        private final DefaultItemStackFactoryBuilder itemStackFactoryBuilder;
 
         Builder() {
             super();
             this.itemStackFactoryBuilder = new DefaultItemStackFactoryBuilder();
         }
 
-        public @NotNull DefaultButton.Builder itemFactory(@NotNull Function<OpenContext, ItemComponent> factory) {
+        public DefaultButton.Builder itemFactory(@NotNull Function<OpenContext, ItemComponent> factory) {
             this.itemStackFactoryBuilder.itemFactory(factory);
             return this;
         }
 
-        public @NotNull DefaultButton.Builder itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
+        public DefaultButton.Builder itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
             this.itemStackFactoryBuilder.itemModifier(modifier);
             return this;
         }
 
-        public @NotNull DefaultButton.Builder itemPlaceholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
+        public DefaultButton.Builder itemPlaceholders(@NotNull Function<OpenContext, Map<String, String>> placeholders) {
             this.itemStackFactoryBuilder.placeholders(placeholders);
             return this;
         }
 
-        public @NotNull DefaultButton.Builder itemPlaceholders(@NotNull Map<String, String> placeholders) {
+        public DefaultButton.Builder itemPlaceholders(@NotNull Map<String, String> placeholders) {
             return itemPlaceholders(context -> placeholders);
         }
 
         @Override
-        public @NotNull DefaultButton build() {
+        public DefaultButton build() {
             return new DefaultButton(properties().build(), this.itemStackFactoryBuilder.build(), clickHandler(), clickActions());
         }
     }
@@ -84,7 +78,7 @@ final class DefaultButton extends AbstractButton {
             return this.itemFactory;
         }
 
-        public @NotNull DefaultItemStackFactoryBuilder itemFactory(@NotNull Function<OpenContext, ItemComponent> factory) {
+        public DefaultItemStackFactoryBuilder itemFactory(@NotNull Function<OpenContext, ItemComponent> factory) {
             this.itemFactory = factory;
             return this;
         }
@@ -93,7 +87,7 @@ final class DefaultButton extends AbstractButton {
             return this.itemModifier;
         }
 
-        public @NotNull DefaultItemStackFactoryBuilder itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
+        public DefaultItemStackFactoryBuilder itemModifier(@NotNull BiConsumer<OpenContext, ItemComponent> modifier) {
             this.itemModifier = modifier;
             return this;
         }

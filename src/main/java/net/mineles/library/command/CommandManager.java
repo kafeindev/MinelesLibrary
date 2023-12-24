@@ -22,59 +22,36 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.property;
+package net.mineles.library.command;
 
+import net.mineles.library.command.context.CommandContext;
+import net.mineles.library.command.context.CommandContextMap;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+public final class CommandManager {
+    private final CommandRegistrar commandRegistrar;
+    private final CommandContextMap commandContextMap;
 
-public final class Attribute<T> {
-    private final @NotNull String key;
-    private final @Nullable T value;
-
-    public Attribute(@NotNull String key, @Nullable T value) {
-        this.key = key;
-        this.value = value;
+    public CommandManager(Plugin plugin) {
+        this.commandRegistrar = new CommandRegistrar(plugin);
+        this.commandContextMap = new CommandContextMap();
     }
 
-    public static <T> Attribute<T> of(@NotNull String key, @Nullable T value) {
-        return new Attribute<>(key, value);
+    public void registerCommand(@NotNull Command command) {
+        this.commandRegistrar.registerCommand(command);
     }
 
-    public @NotNull String getKey() {
-        return this.key;
+    public CommandContextMap getCommandContextMap() {
+        return this.commandContextMap;
     }
 
-    public @Nullable T getValue() {
-        return this.value;
+    public <T> @Nullable CommandContext<T> getCommandContext(@NotNull Class<T> clazz) {
+        return this.commandContextMap.getCommandContext(clazz);
     }
 
-    public <U> @Nullable U getAs(@NotNull Class<U> type) {
-        return type.cast(this.value);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Attribute)) {
-            return false;
-        }
-
-        Attribute<?> attribute = (Attribute<?>) obj;
-        return Objects.equals(this.key, attribute.key) &&
-                Objects.equals(this.value, attribute.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.key, this.value);
-    }
-
-    @Override
-    public String toString() {
-        return "Attribute{" +
-                "key='" + this.key + '\'' +
-                ", value=" + this.value +
-                '}';
+    public <T> void registerCommandContext(@NotNull Class<T> clazz, @NotNull CommandContext<T> commandContext) {
+        this.commandContextMap.register(clazz, commandContext);
     }
 }

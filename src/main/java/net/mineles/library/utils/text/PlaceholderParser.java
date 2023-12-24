@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public final class PlaceholderParser {
-    @NotNull
     public static String applyPlaceholders(@NotNull String message,
                                            @NotNull Map<String, String> placeholders) {
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {

@@ -6,17 +6,15 @@ import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.menu.Menu;
 import net.mineles.library.menu.button.Button;
 import net.mineles.library.plugin.BukkitPlugin;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.jetbrains.annotations.NotNull;
 
 public final class ClickContext implements Context {
-    private final @NotNull BukkitPlugin plugin;
-    private final @NotNull Menu menu;
-    private final @NotNull PlayerComponent player;
-    private final @NotNull InventoryClickEvent event;
+    private final BukkitPlugin plugin;
+    private final Menu menu;
+    private final PlayerComponent player;
+    private final InventoryClickEvent event;
 
     private final Button button;
     private final ItemComponent item;
@@ -26,10 +24,10 @@ public final class ClickContext implements Context {
     private final InventoryType.SlotType slotType;
     private final int slot;
 
-    public ClickContext(@NotNull BukkitPlugin plugin,
-                        @NotNull Menu menu,
-                        @NotNull PlayerComponent player,
-                        @NotNull InventoryClickEvent event,
+    public ClickContext(BukkitPlugin plugin,
+                        Menu menu,
+                        PlayerComponent player,
+                        InventoryClickEvent event,
                         Button button,
                         ItemComponent item,
                         ItemComponent cursor,
@@ -48,11 +46,10 @@ public final class ClickContext implements Context {
         this.slot = slot;
     }
 
-    @NotNull
-    public static ClickContext create(@NotNull BukkitPlugin plugin,
-                                      @NotNull Menu menu,
-                                      @NotNull PlayerComponent player,
-                                      @NotNull InventoryClickEvent event,
+    public static ClickContext create(BukkitPlugin plugin,
+                                      Menu menu,
+                                      PlayerComponent player,
+                                      InventoryClickEvent event,
                                       Button button,
                                       ItemComponent item,
                                       ItemComponent cursor,
@@ -62,11 +59,10 @@ public final class ClickContext implements Context {
         return new ClickContext(plugin, menu, player, event, button, item, cursor, clickType, slotType, slot);
     }
 
-    @NotNull
-    public static ClickContext from(@NotNull BukkitPlugin plugin,
-                                    @NotNull Menu menu,
-                                    @NotNull PlayerComponent player,
-                                    @NotNull InventoryClickEvent event) {
+    public static ClickContext from(BukkitPlugin plugin,
+                                    Menu menu,
+                                    PlayerComponent player,
+                                    InventoryClickEvent event) {
         Button button = menu.findButton(event.getSlot()).orElse(null);
 
         ItemComponent item = event.getCurrentItem() == null ? null
@@ -81,19 +77,19 @@ public final class ClickContext implements Context {
         return create(plugin, menu, player, event, button, item, cursor, clickType, slotType, slot);
     }
 
-    public @NotNull BukkitPlugin getPlugin() {
+    public BukkitPlugin getPlugin() {
         return this.plugin;
     }
 
-    public @NotNull Menu getMenu() {
+    public Menu getMenu() {
         return this.menu;
     }
 
-    public @NotNull PlayerComponent getPlayer() {
+    public PlayerComponent getPlayer() {
         return this.player;
     }
 
-    public @NotNull InventoryClickEvent getEvent() {
+    public InventoryClickEvent getEvent() {
         return this.event;
     }
 

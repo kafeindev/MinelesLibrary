@@ -30,35 +30,35 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Duration;
 
 public interface TaskScheduler {
-    default @NotNull ScheduledTask schedule(@NotNull BukkitPlugin plugin,
-                                            @NotNull Runnable task,
-                                            @NotNull Duration delay) {
+    default ScheduledTask schedule(@NotNull BukkitPlugin plugin,
+                                   @NotNull Runnable task,
+                                   @NotNull Duration delay) {
         return schedule(plugin, task, delay, false);
     }
 
-    default @NotNull ScheduledTask schedule(@NotNull BukkitPlugin plugin,
-                                            @NotNull Runnable task,
-                                            @NotNull Duration delay,
-                                            boolean async) {
+    default ScheduledTask schedule(@NotNull BukkitPlugin plugin,
+                                   @NotNull Runnable task,
+                                   @NotNull Duration delay,
+                                   boolean async) {
         return schedule(plugin, task, delay.toMillis(), async);
     }
 
-    default @NotNull ScheduledTask schedule(@NotNull BukkitPlugin plugin,
-                                            @NotNull Runnable task,
-                                            @NotNull Duration delay,
-                                            boolean async, boolean bukkit) {
+    default ScheduledTask schedule(@NotNull BukkitPlugin plugin,
+                                   @NotNull Runnable task,
+                                   @NotNull Duration delay,
+                                   boolean async, boolean bukkit) {
         return schedule(plugin, task, delay.toMillis(), async, bukkit);
     }
 
-    default @NotNull ScheduledTask schedule(@NotNull BukkitPlugin plugin,
-                                            @NotNull Runnable task,
-                                            long delay) {
+    default ScheduledTask schedule(@NotNull BukkitPlugin plugin,
+                                   @NotNull Runnable task,
+                                   long delay) {
         return schedule(plugin, task, delay, false);
     }
 
-    default @NotNull ScheduledTask schedule(@NotNull BukkitPlugin plugin,
-                                            @NotNull Runnable task,
-                                            long delay, boolean async) {
+    default ScheduledTask schedule(@NotNull BukkitPlugin plugin,
+                                   @NotNull Runnable task,
+                                   long delay, boolean async) {
         return schedule(plugin, task, delay, async, false);
     }
 
@@ -67,79 +67,79 @@ public interface TaskScheduler {
                                     long delay,
                                     boolean async, boolean bukkit);
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     @NotNull Duration period) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            @NotNull Duration period) {
         return scheduleRepeating(plugin, task, period, false);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     @NotNull Duration period,
-                                                     boolean async) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            @NotNull Duration period,
+                                            boolean async) {
         return scheduleRepeating(plugin, task, Duration.ZERO, period, async);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     @NotNull Duration period,
-                                                     boolean async, boolean bukkit) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            @NotNull Duration period,
+                                            boolean async, boolean bukkit) {
         return scheduleRepeating(plugin, task, Duration.ZERO, period, async, bukkit);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     @NotNull Duration delay,
-                                                     @NotNull Duration period) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            @NotNull Duration delay,
+                                            @NotNull Duration period) {
         return scheduleRepeating(plugin, task, delay, period, false);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     @NotNull Duration delay,
-                                                     @NotNull Duration period,
-                                                     boolean async) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            @NotNull Duration delay,
+                                            @NotNull Duration period,
+                                            boolean async) {
         return scheduleRepeating(plugin, task, delay.toMillis(), period.toMillis(), async);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     @NotNull Duration delay,
-                                                     @NotNull Duration period,
-                                                     boolean async, boolean bukkit) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            @NotNull Duration delay,
+                                            @NotNull Duration period,
+                                            boolean async, boolean bukkit) {
         return scheduleRepeating(plugin, task, delay.toMillis(), period.toMillis(), async, bukkit);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     long period) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            long period) {
         return scheduleRepeating(plugin, task, period, false);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     long period,
-                                                     boolean async) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            long period,
+                                            boolean async) {
         return scheduleRepeating(plugin, task, 0L, period, async);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     long period,
-                                                     boolean async, boolean bukkit) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            long period,
+                                            boolean async, boolean bukkit) {
         return scheduleRepeating(plugin, task, 0L, period, async, bukkit);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     long delay, long period) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            long delay, long period) {
         return scheduleRepeating(plugin, task, delay, period, false);
     }
 
-    default @NotNull ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
-                                                     @NotNull Runnable task,
-                                                     long delay, long period,
-                                                     boolean async) {
+    default ScheduledTask scheduleRepeating(@NotNull BukkitPlugin plugin,
+                                            @NotNull Runnable task,
+                                            long delay, long period,
+                                            boolean async) {
         return scheduleRepeating(plugin, task, delay, period, async, false);
     }
 

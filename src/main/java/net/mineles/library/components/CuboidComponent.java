@@ -47,16 +47,10 @@ public final class CuboidComponent {
         this.maxZ = maxZ;
     }
 
-    @NotNull
-    public static CuboidComponent of(int minX, int maxX,
-                                     int minY, int maxY,
-                                     int minZ, int maxZ) {
+    public static CuboidComponent of(int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
         return new CuboidComponent(minX, maxX, minY, maxY, minZ, maxZ);
     }
-
-    @NotNull
-    public static CuboidComponent from(@NotNull LocationComponent min,
-                                       @NotNull LocationComponent max) {
+    public static CuboidComponent from(LocationComponent min, LocationComponent max) {
         return of((int) min.getX(), (int) max.getX(),
                 (int) min.getY(), (int) max.getY(),
                 (int) min.getZ(), (int) max.getZ());

@@ -23,35 +23,26 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface Menu {
-    static @NotNull Menu fromConfig(@NotNull String name,
-                                    @NotNull Config config) {
+    static Menu fromConfig(String name, Config config) {
         return fromNode(name, config.getNode(), MenuType.DYNAMIC);
     }
 
-    static @NotNull Menu fromConfig(@NotNull String name,
-                                    @NotNull Config config,
-                                    @NotNull MenuType type) {
+    static Menu fromConfig(String name, Config config, MenuType type) {
         return fromNode(name, config.getNode(), type);
     }
 
-    static @NotNull Menu fromConfig(@NotNull String name,
-                                    @NotNull Class<?> clazz,
-                                    @NotNull String resource,
-                                    @NotNull String... path) {
+    static Menu fromConfig(String name, Class<?> clazz, String resource, String... path) {
         Config config = ConfigBuilder.builder(path)
                 .resource(clazz, resource)
                 .build();
         return fromConfig(name, config);
     }
 
-    static @NotNull Menu fromNode(@NotNull String name,
-                                  @NotNull ConfigurationNode node) {
+    static Menu fromNode(String name, ConfigurationNode node) {
         return fromNode(name, node, MenuType.DYNAMIC);
     }
 
-    static @NotNull Menu fromNode(@NotNull String name,
-                                  @NotNull ConfigurationNode node,
-                                  @NotNull MenuType type) {
+    static Menu fromNode(String name, ConfigurationNode node, MenuType type) {
         return new MenuBuilder()
                 .name(name)
                 .node(node)
@@ -61,33 +52,33 @@ public interface Menu {
                 .build();
     }
 
-    static @NotNull MenuBuilder newBuilder() {
+    static MenuBuilder newBuilder() {
         return new MenuBuilder();
     }
 
-    @NotNull Viewer open(@NotNull PlayerComponent player);
+    Viewer open(@NotNull PlayerComponent player);
 
-    @NotNull Viewer open(@NotNull PlayerComponent player, int page);
+    Viewer open(@NotNull PlayerComponent player, int page);
 
-    @NotNull Viewer open(@NotNull PlayerComponent player, int page, @NotNull OpenCause cause);
+    Viewer open(@NotNull PlayerComponent player, int page, @NotNull OpenCause cause);
 
     @Nullable Viewer nextPage(@NotNull UUID uniqueId);
 
-    @NotNull Viewer nextPage(@NotNull PlayerComponent player);
+    Viewer nextPage(@NotNull PlayerComponent player);
 
-    @NotNull Viewer nextPage(@NotNull Viewer viewer);
+    Viewer nextPage(@NotNull Viewer viewer);
 
     @Nullable Viewer previousPage(@NotNull UUID uniqueId);
 
-    @NotNull Viewer previousPage(@NotNull PlayerComponent player);
+    Viewer previousPage(@NotNull PlayerComponent player);
 
-    @NotNull Viewer previousPage(@NotNull Viewer viewer);
+    Viewer previousPage(@NotNull Viewer viewer);
 
     @Nullable Viewer refresh(@NotNull UUID uniqueId);
 
-    @NotNull Viewer refresh(@NotNull PlayerComponent player);
+    Viewer refresh(@NotNull PlayerComponent player);
 
-    @NotNull Viewer refresh(@NotNull Viewer viewer);
+    Viewer refresh(@NotNull Viewer viewer);
 
     @Nullable Viewer refreshButton(@NotNull UUID uniqueId, int slot);
 
@@ -97,29 +88,29 @@ public interface Menu {
 
     @Nullable Viewer refreshButton(@NotNull PlayerComponent player, @NotNull String buttonName);
 
-    @NotNull Viewer refreshButton(@NotNull Viewer viewer, int slot);
+    Viewer refreshButton(@NotNull Viewer viewer, int slot);
 
-    @NotNull Viewer refreshButton(@NotNull Viewer viewer, @NotNull String buttonName);
+    Viewer refreshButton(@NotNull Viewer viewer, @NotNull String buttonName);
 
     @Nullable Viewer close(@NotNull UUID uniqueId);
 
     @Nullable Viewer close(@NotNull PlayerComponent player);
 
-    @NotNull Viewer close(@NotNull Viewer viewer);
+    Viewer close(@NotNull Viewer viewer);
 
-    @NotNull ClickResult click(@NotNull ClickContext context);
+    ClickResult click(@NotNull ClickContext context);
 
-    @NotNull ClickResult clickEmptySlot(@NotNull ClickContext context);
+    ClickResult clickEmptySlot(@NotNull ClickContext context);
 
-    @NotNull ClickResult clickBottomInventory(@NotNull ClickContext context);
+    ClickResult clickBottomInventory(@NotNull ClickContext context);
 
-    @NotNull ClickActionCollection getClickActions();
+    ClickActionCollection getClickActions();
 
     void registerClickAction(@NotNull String key, @NotNull ClickAction action);
 
     void unregisterClickAction(@NotNull String key);
 
-    @NotNull ViewersHolder getViewers();
+    ViewersHolder getViewers();
 
     boolean isViewing(@NotNull PlayerComponent player);
 
@@ -127,19 +118,19 @@ public interface Menu {
 
     void stopViewing();
 
-    @NotNull MenuProperties getProperties();
+    MenuProperties getProperties();
 
     @Nullable ConfigurationNode getNode();
 
-    @NotNull String getName();
+    String getName();
 
-    @NotNull MenuType getType();
+    MenuType getType();
 
-    @NotNull InventoryProperties getInventoryProperties();
+    InventoryProperties getInventoryProperties();
 
-    @NotNull String getTitle();
+    String getTitle();
 
-    @NotNull InventoryType getInventoryType();
+    InventoryType getInventoryType();
 
     int getSize();
 
@@ -147,11 +138,11 @@ public interface Menu {
 
     @Nullable Set<Button> loadButtonsFromNode(@NotNull ConfigurationNode node);
 
-    @NotNull Set<Button> getButtons();
+    Set<Button> getButtons();
 
-    @NotNull Optional<Button> findButton(@NotNull String name);
+    Optional<Button> findButton(@NotNull String name);
 
-    @NotNull Optional<Button> findButton(int slot);
+    Optional<Button> findButton(int slot);
 
     void putButtons(@NotNull Button... buttons);
 

@@ -3,7 +3,10 @@ package net.mineles.library.configuration;
 import net.mineles.library.components.CuboidComponent;
 import net.mineles.library.components.ItemComponent;
 import net.mineles.library.components.LocationComponent;
-import net.mineles.library.configuration.serializers.*;
+import net.mineles.library.configuration.serializers.CuboidComponentAdapter;
+import net.mineles.library.configuration.serializers.ItemComponentAdapter;
+import net.mineles.library.configuration.serializers.LocationComponentAdapter;
+import net.mineles.library.configuration.serializers.RedisCredentialsAdapter;
 import net.mineles.library.manager.AbstractManager;
 import net.mineles.library.redis.RedisCredentials;
 import org.jetbrains.annotations.NotNull;
@@ -15,11 +18,11 @@ import java.lang.reflect.Field;
 import java.nio.file.Path;
 
 public final class ConfigManager extends AbstractManager<String, Config> {
-    private final @NotNull Path dataFolder;
-    private final @NotNull KeyInjector keyInjector;
-    private final @NotNull ConfigurationOptions options;
+    private final Path dataFolder;
+    private final KeyInjector keyInjector;
+    private final ConfigurationOptions options;
 
-    public ConfigManager(@NotNull Path dataFolder) {
+    public ConfigManager(Path dataFolder) {
         this.dataFolder = dataFolder;
         this.keyInjector = new KeyInjector();
         this.options = ConfigurationOptions.defaults()
@@ -32,18 +35,18 @@ public final class ConfigManager extends AbstractManager<String, Config> {
                 });
     }
 
-    public @NotNull Config register(@NotNull String name, @NotNull Config config) {
+    public Config register(@NotNull String name, @NotNull Config config) {
         return put(name, config);
     }
 
-    public @NotNull Config register(@NotNull String name, @NotNull Path path) {
+    public Config register(@NotNull String name, @NotNull Path path) {
         Config config = ConfigBuilder.builder(path)
                 .options(this.options)
                 .build();
         return put(name, config);
     }
 
-    public @NotNull Config register(@NotNull String name, @NotNull Path path, @NotNull InputStream stream) {
+    public Config register(@NotNull String name, @NotNull Path path, @NotNull InputStream stream) {
         Config config = ConfigBuilder.builder(path)
                 .options(this.options)
                 .resource(stream)
@@ -51,7 +54,7 @@ public final class ConfigManager extends AbstractManager<String, Config> {
         return put(name, config);
     }
 
-    public @NotNull Config register(@NotNull String name, @NotNull Path path, @NotNull Class<?> clazz, @NotNull String resource) {
+    public Config register(@NotNull String name, @NotNull Path path, @NotNull Class<?> clazz, @NotNull String resource) {
         Config config = ConfigBuilder.builder(path)
                 .options(this.options)
                 .resource(clazz, resource)
@@ -59,14 +62,14 @@ public final class ConfigManager extends AbstractManager<String, Config> {
         return put(name, config);
     }
 
-    public @NotNull Config register(@NotNull String name, @NotNull String... path) {
+    public Config register(@NotNull String name, @NotNull String... path) {
         Config config = ConfigBuilder.builder(this.dataFolder, path)
                 .options(this.options)
                 .build();
         return put(name, config);
     }
 
-    public @NotNull Config register(@NotNull String name, @NotNull InputStream stream, @NotNull String... path) {
+    public Config register(@NotNull String name, @NotNull InputStream stream, @NotNull String... path) {
         Config config = ConfigBuilder.builder(this.dataFolder, path)
                 .options(this.options)
                 .resource(stream)
@@ -74,7 +77,7 @@ public final class ConfigManager extends AbstractManager<String, Config> {
         return put(name, config);
     }
 
-    public @NotNull Config register(@NotNull String name, @NotNull Class<?> clazz, @NotNull String resource, @NotNull String... path) {
+    public Config register(@NotNull String name, @NotNull Class<?> clazz, @NotNull String resource, @NotNull String... path) {
         Config config = ConfigBuilder.builder(this.dataFolder, path)
                 .options(this.options)
                 .resource(clazz, resource)
@@ -102,15 +105,15 @@ public final class ConfigManager extends AbstractManager<String, Config> {
         this.keyInjector.inject(field, node);
     }
 
-    public @NotNull Path getDataFolder() {
+    public Path getDataFolder() {
         return this.dataFolder;
     }
 
-    public @NotNull KeyInjector getKeyInjector() {
+    public KeyInjector getKeyInjector() {
         return this.keyInjector;
     }
 
-    public @NotNull ConfigurationOptions getOptions() {
+    public ConfigurationOptions getOptions() {
         return this.options;
     }
 }

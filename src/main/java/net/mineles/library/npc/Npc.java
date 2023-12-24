@@ -39,11 +39,11 @@ public interface Npc {
 
     void destroy(@NotNull Iterable<? extends Player> players);
 
-    @NotNull String getName();
+    String getName();
 
     void setName(@NotNull String name);
 
-    @NotNull String getDisplayName();
+    String getDisplayName();
 
     void setDisplayName(@NotNull String displayName);
 
@@ -51,7 +51,7 @@ public interface Npc {
 
     void setLocation(@NotNull LocationComponent location);
 
-    @NotNull Map<EquipmentSlot, ItemStack> getEquipments();
+    Map<EquipmentSlot, ItemStack> getEquipments();
 
     @Nullable ItemStack getEquipment(@NotNull EquipmentSlot equipmentSlot);
 
@@ -61,7 +61,7 @@ public interface Npc {
 
     boolean isEveryoneCanSee();
 
-    @NotNull Set<UUID> getViewers();
+    Set<UUID> getViewers();
 
     boolean isViewing(@NotNull UUID uuid);
 

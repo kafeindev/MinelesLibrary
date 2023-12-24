@@ -13,12 +13,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.jetbrains.annotations.NotNull;
 
 public final class InventoryListener implements Listener {
-    private final @NotNull BukkitPlugin plugin;
+    private final BukkitPlugin plugin;
 
-    public InventoryListener(@NotNull BukkitPlugin plugin) {
+    public InventoryListener(BukkitPlugin plugin) {
         this.plugin = plugin;
     }
 

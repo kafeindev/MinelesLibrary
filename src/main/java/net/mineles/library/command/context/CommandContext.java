@@ -22,34 +22,12 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.utils.text;
+package net.mineles.library.command.context;
 
-import net.md_5.bungee.api.ChatColor;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.command.CommandSender;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.function.BiFunction;
 
-public final class LegacyTextSerializer {
-    private static final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
-
-    public static String deserialize(@NotNull String text) {
-        Matcher matcher = HEX_PATTERN.matcher(text);
-        while (matcher.find()) {
-            String hexCode = text.substring(matcher.start(), matcher.end());
-            String replaceSharp = hexCode.replace('#', 'x');
-
-            StringBuilder builder = new StringBuilder();
-            for (char c : replaceSharp.toCharArray()) {
-                builder.append("&").append(c);
-            }
-
-            text = text.replace(hexCode, builder.toString());
-            matcher = HEX_PATTERN.matcher(text);
-        }
-
-        return ChatColor.translateAlternateColorCodes('&', text);
-    }
-
-    private LegacyTextSerializer() {}
+@FunctionalInterface
+public interface CommandContext<T> extends BiFunction<CommandSender, String, T> {
 }

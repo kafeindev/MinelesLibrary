@@ -13,58 +13,54 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public final class InventoryProperties {
-    private final @NotNull String title;
-    private final @NotNull InventoryType type;
+    private final String title;
+    private final InventoryType type;
     private final int size;
 
-    InventoryProperties(@NotNull String title,
-                        @NotNull InventoryType type,
-                        int size) {
+    InventoryProperties(String title, InventoryType type, int size) {
         this.title = title;
         this.type = type;
         this.size = size;
     }
 
-    InventoryProperties(@NotNull String title,
-                        @NotNull InventoryType type) {
+    InventoryProperties(String title, InventoryType type) {
         this(title, type, type.getDefaultSize());
     }
 
-    InventoryProperties(@NotNull String title,
-                        int size) {
+    InventoryProperties(String title, int size) {
         this(title, InventoryType.CHEST, size);
     }
 
-    InventoryProperties(@NotNull String title) {
+    InventoryProperties(String title) {
         this(title, InventoryType.CHEST);
     }
 
-    public @NotNull Inventory createInventory() {
+    public Inventory createInventory() {
         return createInventory(ComponentSerializer.deserialize(getTitle(), Maps.newHashMap()));
     }
 
-    public @NotNull Inventory createInventory(@NotNull Map<String, String> placeholders) {
+    public Inventory createInventory(@NotNull Map<String, String> placeholders) {
         Component title = ComponentSerializer.deserialize(getTitle(), placeholders);
         return createInventory(title);
     }
 
-    public @NotNull Inventory createInventory(@NotNull Player player,
-                                              @NotNull Map<String, String> placeholders) {
+    public Inventory createInventory(@NotNull Player player,
+                                     @NotNull Map<String, String> placeholders) {
         Component title = ComponentSerializer.deserialize(player, getTitle(), placeholders);
         return createInventory(title);
     }
 
-    public @NotNull Inventory createInventory(@NotNull Component parsedTitle) {
+    public Inventory createInventory(@NotNull Component parsedTitle) {
         return this.type == InventoryType.CHEST
                 ? Bukkit.createInventory(null, this.size, parsedTitle)
                 : Bukkit.createInventory(null, this.type, parsedTitle);
     }
 
-    public @NotNull String getTitle() {
+    public String getTitle() {
         return this.title;
     }
 
-    public @NotNull InventoryType getType() {
+    public InventoryType getType() {
         return this.type;
     }
 
@@ -72,7 +68,7 @@ public final class InventoryProperties {
         return this.size;
     }
 
-    public static @NotNull Builder newBuilder() {
+    public static Builder newBuilder() {
         return new Builder();
     }
 
@@ -81,13 +77,14 @@ public final class InventoryProperties {
         private InventoryType type;
         private int size;
 
-        private Builder() {}
+        private Builder() {
+        }
 
         public @Nullable String title() {
             return this.title;
         }
 
-        public @NotNull Builder title(@NotNull String title) {
+        public Builder title(@NotNull String title) {
             this.title = title;
             return this;
         }
@@ -96,12 +93,12 @@ public final class InventoryProperties {
             return this.type;
         }
 
-        public @NotNull Builder type(@NotNull InventoryType type) {
+        public Builder type(@NotNull InventoryType type) {
             this.type = type;
             return this;
         }
 
-        public @NotNull Builder type(@Nullable String type) {
+        public Builder type(@Nullable String type) {
             if (type != null) {
                 this.type = InventoryType.valueOf(type);
             }
@@ -112,12 +109,12 @@ public final class InventoryProperties {
             return this.size;
         }
 
-        public  @NotNull Builder size(int size) {
+        public @NotNull Builder size(int size) {
             this.size = size;
             return this;
         }
 
-        public @NotNull InventoryProperties build() {
+        public InventoryProperties build() {
             if (this.type == null) {
                 this.type = InventoryType.CHEST;
             }

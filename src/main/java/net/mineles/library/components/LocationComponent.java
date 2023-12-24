@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public final class LocationComponent implements Cloneable {
     public static final net.mineles.library.serializer.Serializer<LocationComponent, String> SERIALIZER = new Serializer();
 
-    private final @NotNull String worldName;
+    private final String worldName;
 
     private double x;
     private double y;
@@ -42,9 +42,7 @@ public final class LocationComponent implements Cloneable {
     private float yaw;
     private float pitch;
 
-    private LocationComponent(@NotNull String worldName,
-                              double x, double y, double z,
-                              float yaw, float pitch) {
+    private LocationComponent(String worldName, double x, double y, double z, float yaw, float pitch) {
         this.worldName = worldName;
         this.x = x;
         this.y = y;
@@ -53,29 +51,25 @@ public final class LocationComponent implements Cloneable {
         this.pitch = pitch;
     }
 
-    @NotNull
-    public static LocationComponent of(@NotNull String worldName,
-                                       double x, double y, double z,
-                                       float yaw, float pitch) {
+    public static LocationComponent of(String worldName, double x, double y, double z, float yaw, float pitch) {
         return new LocationComponent(worldName, x, y, z, yaw, pitch);
     }
 
-    @NotNull
-    public static LocationComponent from(@NotNull Location location) {
+    public static LocationComponent from(Location location) {
         return new LocationComponent(location.getWorld().getName(),
                 location.getX(), location.getY(), location.getZ(),
                 location.getYaw(), location.getPitch());
     }
 
-    public @NotNull Location getAsBukkitLocation() {
+    public Location getAsBukkitLocation() {
         return new Location(Bukkit.getWorld(this.worldName), this.x, this.y, this.z, this.yaw, this.pitch);
     }
 
-    public @NotNull Vector getAsBukkitVector() {
+    public Vector getAsBukkitVector() {
         return new Vector(this.x, this.y, this.z);
     }
 
-    public @NotNull String getWorldName() {
+    public String getWorldName() {
         return this.worldName;
     }
 
@@ -245,18 +239,18 @@ public final class LocationComponent implements Cloneable {
                 this.yaw == other.yaw && this.pitch == other.pitch;
     }
 
-    public @NotNull String toString() {
+    public String toString() {
         return SERIALIZER.serialize(this);
     }
 
-    public @NotNull String toStringFormatted() {
+    public String toStringFormatted() {
         return String.format("%s, %s, %s",
                 String.format("%.2f", this.x),
                 String.format("%.2f", this.y),
                 String.format("%.2f", this.z));
     }
 
-    public @NotNull String toStringFormattedDirection() {
+    public String toStringFormattedDirection() {
         return String.format("%s, %s",
                 String.format("%.2f", this.yaw),
                 String.format("%.2f", this.pitch));
@@ -264,21 +258,19 @@ public final class LocationComponent implements Cloneable {
 
     @Override
     public LocationComponent clone() {
-        return of(this.worldName,
-                this.x, this.y, this.z,
-                this.yaw, this.pitch);
+        return of(this.worldName, this.x, this.y, this.z, this.yaw, this.pitch);
     }
 
     private static class Serializer implements net.mineles.library.serializer.Serializer<LocationComponent, String> {
         @Override
-        public @NotNull String serialize(@NotNull LocationComponent locationComponent) {
+        public String serialize(@NotNull LocationComponent locationComponent) {
             return locationComponent.getWorldName() + ";" +
                     locationComponent.getX() + ";" + locationComponent.getY() + ";" + locationComponent.getZ() + ";" +
                     locationComponent.getYaw() + ";" + locationComponent.getPitch();
         }
 
         @Override
-        public @NotNull LocationComponent deserialize(@NotNull String serialized) {
+        public LocationComponent deserialize(@NotNull String serialized) {
             String[] split = serialized.split(";");
 
             return LocationComponent.of(split[0],

@@ -34,21 +34,18 @@ import java.util.Set;
 public final class ListenerRegistry {
     private ListenerRegistry() {}
 
-    public static void register(@NotNull BukkitPlugin plugin,
-                                @NotNull Set<Class<?>> listenerClasses) {
+    public static void register(@NotNull BukkitPlugin plugin, @NotNull Set<Class<?>> listenerClasses) {
         BukkitRegistry.register(plugin, listenerClasses);
     }
 
-    public static void register(@NotNull BungeePlugin plugin,
-                                @NotNull Set<Class<?>> listenerClasses) {
+    public static void register(@NotNull BungeePlugin plugin, @NotNull Set<Class<?>> listenerClasses) {
         BungeeRegistry.register(plugin, listenerClasses);
     }
 
     private static final class BukkitRegistry {
         private BukkitRegistry() {}
 
-        public static void register(@NotNull BukkitPlugin plugin,
-                                    @NotNull Set<Class<?>> listenerClasses) {
+        public static void register(@NotNull BukkitPlugin plugin, @NotNull Set<Class<?>> listenerClasses) {
             org.bukkit.plugin.Plugin handle = plugin.getPlugin();
             org.bukkit.plugin.PluginManager pluginManager = handle.getServer().getPluginManager();
 
@@ -59,8 +56,7 @@ public final class ListenerRegistry {
             }
         }
 
-        private static org.bukkit.event.Listener cast(@NotNull BukkitPlugin plugin,
-                                     @NotNull Class<?> clazz) {
+        private static org.bukkit.event.Listener cast(@NotNull BukkitPlugin plugin, @NotNull Class<?> clazz) {
             try {
                 if (clazz.getConstructors()[0].getParameterCount() == 0) {
                     return (org.bukkit.event.Listener) clazz
@@ -80,8 +76,7 @@ public final class ListenerRegistry {
     private static final class BungeeRegistry {
         private BungeeRegistry() {}
 
-        public static void register(@NotNull BungeePlugin plugin,
-                                    @NotNull Set<Class<?>> listenerClasses) {
+        public static void register(@NotNull BungeePlugin plugin, @NotNull Set<Class<?>> listenerClasses) {
             net.md_5.bungee.api.plugin.Plugin handle = plugin.getPlugin();
             net.md_5.bungee.api.plugin.PluginManager pluginManager = handle.getProxy().getPluginManager();
 
@@ -92,8 +87,7 @@ public final class ListenerRegistry {
             }
         }
 
-        private static net.md_5.bungee.api.plugin.Listener cast(@NotNull BungeePlugin plugin,
-                                                                @NotNull Class<?> clazz) {
+        private static net.md_5.bungee.api.plugin.Listener cast(@NotNull BungeePlugin plugin, @NotNull Class<?> clazz) {
             try {
                 if (clazz.getConstructors()[0].getParameterCount() == 0) {
                     return (net.md_5.bungee.api.plugin.Listener) clazz

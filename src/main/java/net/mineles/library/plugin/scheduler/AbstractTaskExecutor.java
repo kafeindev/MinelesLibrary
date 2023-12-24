@@ -40,36 +40,28 @@ import java.util.logging.Logger;
 public abstract class AbstractTaskExecutor<E extends ExecutorService> {
     private static final int DEFAULT_POOL_SIZE = 1;
 
-    private final @NotNull Logger logger;
-    private final @NotNull String name;
-    private final @NotNull E executor;
+    private final Logger logger;
+    private final String name;
+    private final E executor;
 
     private int awaitTerminationSeconds = 60;
     private ForkJoinPool workerPool;
 
-    protected AbstractTaskExecutor(@NotNull Logger logger,
-                                   @NotNull String name) {
+    protected AbstractTaskExecutor(Logger logger, String name) {
         this(logger, name, new ConcurrentThreadFactory(name, true));
     }
 
-    protected AbstractTaskExecutor(@NotNull Logger logger,
-                                   @NotNull String name,
-                                   @NotNull ThreadFactory threadFactory) {
+    protected AbstractTaskExecutor(Logger logger, String name, ThreadFactory threadFactory) {
         this(logger, name, threadFactory, DEFAULT_POOL_SIZE);
     }
 
-    protected AbstractTaskExecutor(@NotNull Logger logger,
-                                   @NotNull String name,
-                                   @NotNull ThreadFactory threadFactory,
-                                   int poolSize) {
+    protected AbstractTaskExecutor(Logger logger, String name, ThreadFactory threadFactory, int poolSize) {
         this.logger = logger;
         this.name = name;
         this.executor = createExecutor(threadFactory, poolSize);
     }
 
-    protected AbstractTaskExecutor(@NotNull Logger logger,
-                                   @NotNull String name,
-                                   @NotNull E executor) {
+    protected AbstractTaskExecutor(Logger logger, String name, E executor) {
         this.logger = logger;
         this.name = name;
         this.executor = executor;
@@ -92,7 +84,7 @@ public abstract class AbstractTaskExecutor<E extends ExecutorService> {
         }
     }
 
-    public @NotNull E getExecutor() {
+    public E getExecutor() {
         return this.executor;
     }
 
@@ -100,7 +92,7 @@ public abstract class AbstractTaskExecutor<E extends ExecutorService> {
         this.awaitTerminationSeconds = awaitTerminationSeconds;
     }
 
-    public @NotNull ForkJoinPoolBuilder createWorkerPoolBuilder() {
+    public ForkJoinPoolBuilder createWorkerPoolBuilder() {
         return new ForkJoinPoolBuilder(this.logger, this.name);
     }
 

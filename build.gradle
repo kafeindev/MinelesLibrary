@@ -8,8 +8,8 @@ plugins {
 group = 'net.mineles'
 version = '1.0.0'
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -25,6 +25,7 @@ repositories {
     maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
     maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url = 'https://mvn.lumine.io/repository/maven-public/' }
+    maven { url = 'https://repo.minebench.de/' }
 }
 
 dependencies {
@@ -47,24 +48,26 @@ dependencies {
     }
 
     implementation 'org.mongodb:mongodb-driver-sync:4.10.2'
+
     implementation('redis.clients:jedis:4.4.3') {
         exclude(module: 'gson')
         exclude(module: 'json')
         exclude(module: 'slf4j-api')
     }
 
-    implementation 'com.github.cryptomorin:XSeries:9.2.0'
-    implementation 'co.aikar:acf-paper:0.5.1-SNAPSHOT'
+    implementation 'de.themoep:minedown:1.7.1-SNAPSHOT'
+    implementation 'com.github.cryptomorin:XSeries:9.8.0'
     implementation 'co.aikar:acf-bungee:0.5.1-SNAPSHOT'
     implementation 'de.tr7zw:item-nbt-api-plugin:2.11.3'
 
     compileOnly 'net.md-5:bungeecord-api:1.20-R0.1'
-    compileOnly 'io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT'
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'net.kyori:adventure-platform-bungeecord:4.3.1'
     compileOnly 'com.mojang:authlib:1.5.25'
 
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.2.5'
-    compileOnly 'com.ticxo.modelengine:ModelEngine:R4.0.2'
+    //compileOnly 'com.ticxo.modelengine:ModelEngine:R4.0.4'
     compileOnly 'me.clip:placeholderapi:2.11.3'
 
     compileOnly 'org.jetbrains:annotations:24.0.0'
@@ -77,6 +80,8 @@ shadowJar {
     relocate 'org.spongepowered.configurate', project.group + '.libs.configurate'
     relocate 'io.leangen.geantyref', project.group + '.libs.geantyref'
 
+    //relocate 'net.kyori', project.group + '.libs.adventure'
+
     //relocate 'com.github.dockerjava', project.group + '.libs.dockerjava'
     //relocate 'reactor', project.group + '.libs.reactor'
 
@@ -85,6 +90,8 @@ shadowJar {
 
     relocate 'redis.clients.jedis', project.group + '.libs.jedis'
     relocate 'org.apache.commons.pool2', project.group + '.libs.commons-pool2'
+
+    relocate 'de.themoep.minedown', project.group + '.libs.minedown'
 
     relocate 'co.aikar.commands', project.group + '.libs.commands'
     relocate 'co.aikar.locales', project.group + '.libs.locales'

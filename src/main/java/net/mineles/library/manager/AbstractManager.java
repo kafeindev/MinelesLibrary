@@ -49,22 +49,22 @@ public abstract class AbstractManager<K, V> implements Manager<K, V> {
     }
 
     @Override
-    public @NotNull Map<K, V> getMap() {
+    public Map<K, V> getMap() {
         return this.map;
     }
 
     @Override
-    public @NotNull Collection<K> getKeys() {
+    public Collection<K> getKeys() {
         return this.map.keySet();
     }
 
     @Override
-    public @NotNull Collection<V> getValues() {
+    public Collection<V> getValues() {
         return this.map.values();
     }
 
     @Override
-    public @NotNull Optional<V> find(@NotNull K key) {
+    public Optional<V> find(@NotNull K key) {
         return Optional.ofNullable(this.map.get(key));
     }
 
@@ -79,7 +79,7 @@ public abstract class AbstractManager<K, V> implements Manager<K, V> {
     }
 
     @Override
-    public @NotNull V put(@NotNull K key, @NotNull V value) {
+    public V put(@NotNull K key, @NotNull V value) {
         this.map.put(key, value);
 
         return value;

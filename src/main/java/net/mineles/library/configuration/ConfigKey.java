@@ -1,40 +1,36 @@
 package net.mineles.library.configuration;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 import java.util.Objects;
 
 public final class ConfigKey<T> {
-    private final @NotNull String[] path;
-    private final @NotNull String key;
-    private final @NotNull T value;
+    private final String[] path;
+    private final String key;
+    private final T value;
 
-    public ConfigKey(@NotNull String[] path, @NotNull String key, @NotNull T defaultValue) {
+    public ConfigKey(String[] path, String key, T defaultValue) {
         this.path = path;
         this.key = key;
         this.value = defaultValue;
     }
 
-    @NotNull
-    public static <T> ConfigKey<T> of(@NotNull T defaultValue, @NotNull String... path) {
+    public static <T> ConfigKey<T> of(T defaultValue, String... path) {
         return new ConfigKey<>(path, path[path.length - 1], defaultValue);
     }
 
-    @NotNull
-    public static <T> ConfigKey<T> of(@NotNull T defaultValue, @NotNull String[] path, @NotNull String key) {
+    public static <T> ConfigKey<T> of(T defaultValue, String[] path, String key) {
         return new ConfigKey<>(path, key, defaultValue);
     }
 
-    public @NotNull String[] getPath() {
+    public String[] getPath() {
         return this.path;
     }
 
-    public @NotNull String getKey() {
+    public String getKey() {
         return this.key;
     }
 
-    public @NotNull T getValue() {
+    public T getValue() {
         return this.value;
     }
 

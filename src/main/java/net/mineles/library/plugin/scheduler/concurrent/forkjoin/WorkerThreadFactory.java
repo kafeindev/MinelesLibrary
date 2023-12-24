@@ -25,15 +25,14 @@
 package net.mineles.library.plugin.scheduler.concurrent.forkjoin;
 
 import net.mineles.library.plugin.scheduler.TaskThreadFactory;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 
 public final class WorkerThreadFactory extends TaskThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
-    private final @NotNull String name;
+    private final String name;
 
-    public WorkerThreadFactory(@NotNull String name, boolean daemon) {
+    public WorkerThreadFactory(String name, boolean daemon) {
         super(daemon);
         this.name = name;
     }

@@ -24,37 +24,31 @@ import java.util.UUID;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class AbstractNpc implements Npc {
-    private final @NotNull Set<UUID> viewers;
-    private final @NotNull Map<EquipmentSlot, ItemStack> equipments;
+    private final Set<UUID> viewers;
+    private final Map<EquipmentSlot, ItemStack> equipments;
 
     private String name;
     private String displayName;
     private LocationComponent location;
     private boolean canEveryoneSee;
 
-    protected AbstractNpc(@NotNull Npc npc) {
+    protected AbstractNpc(Npc npc) {
         this(npc.getName(), npc.getDisplayName(), npc.getLocation(), npc.getEquipments());
     }
 
-    protected AbstractNpc(@NotNull String name) {
+    protected AbstractNpc(String name) {
         this(name, name);
     }
 
-    protected AbstractNpc(@NotNull String name,
-                          @NotNull String displayName) {
+    protected AbstractNpc(String name, String displayName) {
         this(name, displayName, null);
     }
 
-    protected AbstractNpc(@NotNull String name,
-                          @NotNull String displayName,
-                          @Nullable LocationComponent location) {
+    protected AbstractNpc(String name, String displayName, @Nullable LocationComponent location) {
         this(name, displayName, location, null);
     }
 
-    protected AbstractNpc(@NotNull String name,
-                          @NotNull String displayName,
-                          @Nullable LocationComponent location,
-                          @Nullable Map<EquipmentSlot, ItemStack> equipments) {
+    protected AbstractNpc(String name, String displayName, @Nullable LocationComponent location, @Nullable Map<EquipmentSlot, ItemStack> equipments) {
         this.viewers = Sets.newHashSet();
         this.equipments = equipments == null ? Maps.newHashMap() : equipments;
         this.name = name;
@@ -62,14 +56,14 @@ public abstract class AbstractNpc implements Npc {
         this.location = location;
     }
 
-    protected AbstractNpc(@NotNull Path path) throws ConfigurateException {
+    protected AbstractNpc(Path path) throws ConfigurateException {
         this(GsonConfigurationLoader.builder()
                 .path(path)
                 .build()
                 .load());
     }
 
-    protected AbstractNpc(@NotNull ConfigurationNode node) throws ConfigurateException {
+    protected AbstractNpc(ConfigurationNode node) throws ConfigurateException {
         this(
                 checkNotNull(node.node("name").getString(), "name"),
                 checkNotNull(node.node("displayName").getString(), "displayName"),
@@ -129,7 +123,7 @@ public abstract class AbstractNpc implements Npc {
     }
 
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         return this.name;
     }
 
@@ -139,7 +133,7 @@ public abstract class AbstractNpc implements Npc {
     }
 
     @Override
-    public @NotNull String getDisplayName() {
+    public String getDisplayName() {
         return this.displayName;
     }
 
@@ -159,7 +153,7 @@ public abstract class AbstractNpc implements Npc {
     }
 
     @Override
-    public @NotNull Map<EquipmentSlot, ItemStack> getEquipments() {
+    public Map<EquipmentSlot, ItemStack> getEquipments() {
         return this.equipments;
     }
 
@@ -186,7 +180,7 @@ public abstract class AbstractNpc implements Npc {
     }
 
     @Override
-    public @NotNull Set<UUID> getViewers() {
+    public Set<UUID> getViewers() {
         return this.viewers;
     }
 

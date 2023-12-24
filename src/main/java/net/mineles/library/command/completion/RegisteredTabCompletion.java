@@ -22,59 +22,54 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.property;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+package net.mineles.library.command.completion;
 
 import java.util.Objects;
 
-public final class Attribute<T> {
-    private final @NotNull String key;
-    private final @Nullable T value;
+public final class RegisteredTabCompletion {
+    private final int index;
+    private final TabCompletion tabCompletion;
 
-    public Attribute(@NotNull String key, @Nullable T value) {
-        this.key = key;
-        this.value = value;
+    public RegisteredTabCompletion(int index, TabCompletion tabCompletion) {
+        this.index = index;
+        this.tabCompletion = tabCompletion;
     }
 
-    public static <T> Attribute<T> of(@NotNull String key, @Nullable T value) {
-        return new Attribute<>(key, value);
+    public static RegisteredTabCompletion of(int index, TabCompletion tabCompletion) {
+        return new RegisteredTabCompletion(index, tabCompletion);
     }
 
-    public @NotNull String getKey() {
-        return this.key;
+    public int getIndex() {
+        return this.index;
     }
 
-    public @Nullable T getValue() {
-        return this.value;
-    }
-
-    public <U> @Nullable U getAs(@NotNull Class<U> type) {
-        return type.cast(this.value);
+    public TabCompletion getTabCompletion() {
+        return this.tabCompletion;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Attribute)) {
+        if (!(obj instanceof RegisteredTabCompletion)) {
             return false;
         }
+        if (obj == this) {
+            return true;
+        }
 
-        Attribute<?> attribute = (Attribute<?>) obj;
-        return Objects.equals(this.key, attribute.key) &&
-                Objects.equals(this.value, attribute.value);
+        RegisteredTabCompletion other = (RegisteredTabCompletion) obj;
+        return Objects.equals(this.index, other.index) && Objects.equals(this.tabCompletion, other.tabCompletion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.key, this.value);
+        return Objects.hash(this.index, this.tabCompletion);
     }
 
     @Override
     public String toString() {
-        return "Attribute{" +
-                "key='" + this.key + '\'' +
-                ", value=" + this.value +
-                '}';
+        return "RegisteredTabCompletion{" +
+                "index=" + this.index +
+                ", tabCompletion=" + this.tabCompletion +
+                "}";
     }
 }

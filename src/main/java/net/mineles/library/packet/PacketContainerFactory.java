@@ -28,6 +28,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.*;
 import net.mineles.library.components.LocationComponent;
+import net.mineles.library.utils.ProtocolVersion;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -38,13 +39,12 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class PacketContainerFactory {
-    private static WatcherApplier WATCHER_APPLIER;
+    private static final WatcherApplier WATCHER_APPLIER;
 
     static {
-        try {
-            Class.forName("com.comphenix.protocol.wrappers.WrappedDataValue");
+        if (ProtocolVersion.getVersion() >= 19) {
             WATCHER_APPLIER = new NewerWatcherApplier();
-        } catch (ClassNotFoundException e) {
+        } else {
             WATCHER_APPLIER = new OlderWatcherApplier();
         }
     }
@@ -52,14 +52,12 @@ public final class PacketContainerFactory {
     private PacketContainerFactory() {
     }
 
-    @NotNull
     public static PacketContainer spawnEntity(int id,
                                               @NotNull EntityType entityType,
                                               @NotNull LocationComponent location) {
         return spawnEntity(id, UUID.randomUUID(), entityType, location);
     }
 
-    @NotNull
     public static PacketContainer spawnEntity(int id,
                                               @NotNull UUID uniqueId,
                                               @NotNull EntityType entityType,
@@ -80,7 +78,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer collectItem(int id, int collectorId) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.COLLECT);
         packet.getIntegers()
@@ -89,7 +86,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer animation(int id, int animationId) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ANIMATION);
         packet.getIntegers()
@@ -98,7 +94,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer entityEquipment(int id, @NotNull Pair<EnumWrappers.ItemSlot, ItemStack>... items) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_EQUIPMENT);
         packet.getIntegers().write(0, id);
@@ -107,21 +102,22 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer destroyEntity(int id) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-        packet.getIntLists().write(0, List.of(new Integer[]{id}));
+        if (ProtocolVersion.getVersion() >= 17) {
+            packet.getIntLists().write(0, List.of(new Integer[]{id}));
+        } else {
+            packet.getIntegerArrays().write(0, new int[]{id});
+        }
         return packet;
     }
 
-    @NotNull
     public static PacketContainer spectateEntity(int id) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.CAMERA);
         packet.getIntegers().write(0, id);
         return packet;
     }
 
-    @NotNull
     public static PacketContainer mountEntity(int id, int... passengers) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.MOUNT);
         packet.getIntegers().write(0, id);
@@ -129,7 +125,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer teleportEntity(int id, double x, double y, double z, float yaw, float pitch) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_TELEPORT);
         packet.getIntegers().write(0, id);
@@ -144,7 +139,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer applyVelocity(int id, double x, double y, double z) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_VELOCITY);
         packet.getIntegers().write(0, id)
@@ -155,7 +149,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer moveEntity(int id, double x, double y, double z, float yaw, float pitch) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.REL_ENTITY_MOVE_LOOK);
         packet.getIntegers().write(0, id);
@@ -170,7 +163,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer position(int id, double x, double y, double z, float yaw, float pitch) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.POSITION);
         packet.getIntegers().write(0, id);
@@ -184,7 +176,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer entityLook(int id, float yaw, float pitch) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_LOOK);
         packet.getIntegers().write(0, id);
@@ -195,7 +186,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer headRotation(int id, float headYaw) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_HEAD_ROTATION);
         packet.getIntegers().write(0, id);
@@ -203,7 +193,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer applyEffect(int id, int effectId, int amplifier, int duration, boolean particles) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_EFFECT);
         packet.getIntegers()
@@ -216,7 +205,6 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer updateAttributes(int id, @NotNull List<WrappedAttribute> attributes) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.UPDATE_ATTRIBUTES);
         packet.getIntegers().write(0, id);
@@ -224,14 +212,15 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
-    public static PacketContainer walkingSpeed(int id, float speed) {
+    public static PacketContainer createAbilities(float walkSpeed, float flySpeed, boolean canFly, boolean flying) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ABILITIES);
-        packet.getFloat().write(1, speed);
+        packet.getFloat().write(0, flySpeed);
+        packet.getFloat().write(1, walkSpeed);
+        packet.getBooleans().write(1, flying);
+        packet.getBooleans().write(2, canFly);
         return packet;
     }
 
-    @NotNull
     public static PacketContainer changeGameState(int reason, float value) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.GAME_STATE_CHANGE);
         packet.getGameStateIDs().write(0, reason);
@@ -239,49 +228,41 @@ public final class PacketContainerFactory {
         return packet;
     }
 
-    @NotNull
     public static PacketContainer createAndApplyMetaData(int id, int index, @NotNull Object value) {
         return createAndApplyMetaData(id, index, value, false);
     }
 
-    @NotNull
     public static PacketContainer createAndApplyMetaData(int id, int index, @NotNull Object value, boolean optional) {
         WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(value.getClass(), optional);
         return createAndApplyMetaData(id, index, value, serializer);
     }
 
-    @NotNull
     public static PacketContainer createAndApplyMetaData(int id, int index, @NotNull Object value,
                                                          @NotNull WrappedDataWatcher.Serializer serializer) {
         return WATCHER_APPLIER.createAndApplyMetaData(id, index, value, serializer);
     }
 
-    @NotNull
     public static PacketContainer createAndApplyMetaData(int id, @NotNull Map<Integer, Object> data) {
         return WATCHER_APPLIER.createAndApplyMetaData(id, data);
     }
 
-    @NotNull
     public static PacketContainer applyMetadata(int id, @NotNull WrappedDataWatcher watcher) {
         return WATCHER_APPLIER.applyMetadata(id, watcher);
     }
 
     private interface WatcherApplier {
-        @NotNull
         PacketContainer createAndApplyMetaData(int id, int index, @NotNull Object value,
                                                @NotNull WrappedDataWatcher.Serializer serializer);
 
-        @NotNull
         PacketContainer createAndApplyMetaData(int id, @NotNull Map<Integer, Object> data);
 
-        @NotNull
         PacketContainer applyMetadata(int id, @NotNull WrappedDataWatcher watcher);
     }
 
     private static final class OlderWatcherApplier implements WatcherApplier {
         @Override
-        public @NotNull PacketContainer createAndApplyMetaData(int id, int index, @NotNull Object value,
-                                                               WrappedDataWatcher.@NotNull Serializer serializer) {
+        public PacketContainer createAndApplyMetaData(int id, int index, @NotNull Object value,
+                                                      WrappedDataWatcher.@NotNull Serializer serializer) {
             WrappedDataWatcher watcher = new WrappedDataWatcher();
             watcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(index, serializer), value);
 
@@ -289,7 +270,7 @@ public final class PacketContainerFactory {
         }
 
         @Override
-        public @NotNull PacketContainer createAndApplyMetaData(int id, @NotNull Map<Integer, Object> data) {
+        public PacketContainer createAndApplyMetaData(int id, @NotNull Map<Integer, Object> data) {
             WrappedDataWatcher watcher = new WrappedDataWatcher();
 
             for (Map.Entry<Integer, Object> entry : data.entrySet()) {
@@ -301,7 +282,7 @@ public final class PacketContainerFactory {
         }
 
         @Override
-        public @NotNull PacketContainer applyMetadata(int id, @NotNull WrappedDataWatcher watcher) {
+        public PacketContainer applyMetadata(int id, @NotNull WrappedDataWatcher watcher) {
             PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
             packet.getIntegers().write(0, id);
             packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
@@ -312,13 +293,13 @@ public final class PacketContainerFactory {
 
     private static final class NewerWatcherApplier implements WatcherApplier {
         @Override
-        public @NotNull PacketContainer createAndApplyMetaData(int id, int index, @NotNull Object value,
-                                                               WrappedDataWatcher.@NotNull Serializer serializer) {
+        public PacketContainer createAndApplyMetaData(int id, int index, @NotNull Object value,
+                                                      WrappedDataWatcher.@NotNull Serializer serializer) {
             return applyMetadata(id, List.of(new WrappedDataValue(index, serializer, value)));
         }
 
         @Override
-        public @NotNull PacketContainer createAndApplyMetaData(int id, @NotNull Map<Integer, Object> data) {
+        public PacketContainer createAndApplyMetaData(int id, @NotNull Map<Integer, Object> data) {
             List<WrappedDataValue> values = new ArrayList<>(data.size());
 
             for (Map.Entry<Integer, Object> entry : data.entrySet()) {
@@ -330,7 +311,7 @@ public final class PacketContainerFactory {
         }
 
         @Override
-        public @NotNull PacketContainer applyMetadata(int id, @NotNull WrappedDataWatcher watcher) {
+        public PacketContainer applyMetadata(int id, @NotNull WrappedDataWatcher watcher) {
             List<WrappedDataValue> values = watcher.getWatchableObjects().stream()
                     .map(entry -> {
                         WrappedDataWatcher.WrappedDataWatcherObject object = entry.getWatcherObject();
@@ -340,7 +321,6 @@ public final class PacketContainerFactory {
             return applyMetadata(id, values);
         }
 
-        @NotNull
         private static PacketContainer applyMetadata(int id, @NotNull List<WrappedDataValue> values) {
             PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
             packet.getIntegers().write(0, id);

@@ -26,67 +26,40 @@ package net.mineles.library.utils.text;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import de.themoep.minedown.MineDown;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class ComponentSerializer {
-    private static final LegacyComponentSerializer LEGACY_COMPONENT_SERIALIZER = LegacyComponentSerializer.builder()
-            .hexColors()
-            .useUnusualXRepeatedCharacterHexFormat()
-            .build();
-    private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
-
+    private static final BungeeComponentSerializer SERIALIZER = BungeeComponentSerializer.get();
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%(.*?)%|\\{(.*?)\\}|:(.*?):");
 
-    @NotNull
     public static Component deserialize(@NotNull String message) {
         return deserialize(message, Maps.newHashMap());
     }
 
-    @NotNull
-    public static Component deserialize(@NotNull String message,
-                                        @NotNull Map<String, String> placeholders) {
-        message = LegacyTextConverter.convert(message);
-        message = convertPlaceholderKeys(message, placeholders.keySet());
+    public static Component deserialize(@NotNull String message, @NotNull Map<String, String> placeholders) {
+        //message = LegacyTextConverter.convert(message);
+        message = PlaceholderParser.applyPlaceholders(message, placeholders);
 
-        TagResolver.Single[] tagResolvers = placeholders.entrySet().stream()
-                .map(entry -> {
-                    String key = convertKeys(entry.getKey());
-                    String value = entry.getValue();
-
-                    try {
-                        return Placeholder.component(key, MINI_MESSAGE.deserialize(value));
-                    } catch (Exception e) {
-                        return Placeholder.component(key, LEGACY_COMPONENT_SERIALIZER.deserialize(value));
-                    }
-                })
-                .toArray(TagResolver.Single[]::new);
-
-        return MINI_MESSAGE.deserialize(message, tagResolvers);
+        BaseComponent[] baseComponent = new MineDown(message).toComponent();
+        return SERIALIZER.deserialize(baseComponent);
     }
 
-    @NotNull
-    public static Component deserialize(@NotNull OfflinePlayer player,
-                                        @NotNull String message) {
+    public static Component deserialize(@NotNull OfflinePlayer player, @NotNull String message) {
         return deserialize(player, message, Maps.newHashMap());
     }
 
-    @NotNull
-    public static Component deserialize(@NotNull OfflinePlayer player,
-                                        @NotNull String message,
-                                        @NotNull Map<String, String> placeholders) {
+    public static Component deserialize(@NotNull OfflinePlayer player, @NotNull String message, @NotNull Map<String, String> placeholders) {
         Map<String, String> newPlaceholders = new ImmutableMap.Builder<String, String>()
                 .putAll(placeholders)
                 .putAll(PLACEHOLDER_PATTERN.matcher(message).results()
@@ -101,7 +74,7 @@ public final class ComponentSerializer {
         return deserialize(message, newPlaceholders);
     }
 
-    @NotNull
+/*
     static String convertPlaceholderKeys(@NotNull String message,
                                          @NotNull Collection<String> placeholderKeys) {
         for (String placeholderKey : placeholderKeys) {
@@ -116,7 +89,6 @@ public final class ComponentSerializer {
         return message;
     }
 
-    @NotNull
     static String convertKeys(@NotNull String message) {
         if (message.startsWith("%") || message.startsWith("{") || message.startsWith(":")) {
             message = message.substring(1);
@@ -125,6 +97,7 @@ public final class ComponentSerializer {
 
         return message;
     }
+*/
 
     private ComponentSerializer() {}
 }

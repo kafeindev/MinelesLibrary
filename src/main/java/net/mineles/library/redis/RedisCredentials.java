@@ -10,7 +10,6 @@ public record RedisCredentials(@NotNull HostAndPort hostAndPort,
                                @NotNull String password,
                                boolean useSsl) {
 
-    @NotNull
     public static RedisCredentials fromNode(@NotNull ConfigurationNode node) {
         return new RedisCredentials(
                 HostAndPort.from(node.node("host").getString()),
@@ -20,7 +19,6 @@ public record RedisCredentials(@NotNull HostAndPort hostAndPort,
         );
     }
 
-    @NotNull
     public static RedisCredentials empty() {
         return new RedisCredentials(
                 HostAndPort.from("localhost:6379"),

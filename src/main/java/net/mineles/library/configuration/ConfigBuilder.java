@@ -16,76 +16,76 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 public final class ConfigBuilder {
-    private final @NotNull Path path;
+    private final Path path;
 
     private ConfigType type = ConfigType.YAML;
     private ConfigurationOptions options = ConfigurationOptions.defaults();
     private InputStream resource;
 
-    public ConfigBuilder(@NotNull Path path) {
+    public ConfigBuilder(Path path) {
         this.path = path;
     }
 
-    public ConfigBuilder(@NotNull String... path) {
+    public ConfigBuilder(String... path) {
         this.path = Path.of(String.join("/", path));
     }
 
-    public ConfigBuilder(@NotNull Path dataFolder, @NotNull String... path) {
+    public ConfigBuilder(Path dataFolder, String... path) {
         this.path = dataFolder.resolve(String.join("/", path));
     }
 
-    public ConfigBuilder(@NotNull File file) {
+    public ConfigBuilder(File file) {
         this.path = file.toPath();
     }
 
-    public static @NotNull ConfigBuilder builder(@NotNull Path path) {
+    public static ConfigBuilder builder(@NotNull Path path) {
         return new ConfigBuilder(path);
     }
 
-    public static @NotNull ConfigBuilder builder(@NotNull String... path) {
+    public static ConfigBuilder builder(@NotNull String... path) {
         return new ConfigBuilder(path);
     }
 
-    public static @NotNull ConfigBuilder builder(@NotNull Path dataFolder, @NotNull String... path) {
+    public static ConfigBuilder builder(@NotNull Path dataFolder, @NotNull String... path) {
         return new ConfigBuilder(dataFolder, path);
     }
 
-    public static @NotNull ConfigBuilder builder(@NotNull File file) {
+    public static ConfigBuilder builder(@NotNull File file) {
         return new ConfigBuilder(file);
     }
 
-    public @NotNull Path path() {
+    public Path path() {
         return this.path;
     }
 
-    public @NotNull ConfigType type() {
+    public ConfigType type() {
         return this.type;
     }
 
-    public @NotNull ConfigBuilder type(@NotNull ConfigType type) {
+    public ConfigBuilder type(@NotNull ConfigType type) {
         this.type = type;
         return this;
     }
 
-    public @NotNull ConfigurationOptions options() {
+    public ConfigurationOptions options() {
         return this.options;
     }
 
-    public @NotNull ConfigBuilder options(@NotNull ConfigurationOptions options) {
+    public ConfigBuilder options(@NotNull ConfigurationOptions options) {
         this.options = options;
         return this;
     }
 
-    public @NotNull InputStream resource() {
+    public InputStream resource() {
         return this.resource;
     }
 
-    public @NotNull ConfigBuilder resource(@NotNull Class<?> clazz, @NotNull String resource) {
+    public ConfigBuilder resource(@NotNull Class<?> clazz, @NotNull String resource) {
         this.resource = clazz.getResourceAsStream(resource);
         return this;
     }
 
-    public @NotNull ConfigBuilder resource(@NotNull InputStream inputStream) {
+    public ConfigBuilder resource(@NotNull InputStream inputStream) {
         this.resource = inputStream;
         return this;
     }

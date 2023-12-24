@@ -54,7 +54,6 @@ public final class LegacyTextConverter {
             .put("r", "reset")
             .build();
 
-    @NotNull
     public static String convert(@NotNull String message) {
         for (Map.Entry<String, String> entry : COLOR_MAP.entrySet()) {
             message = message.replaceAll(AMPERSAND_CHAR + entry.getKey(), "<" + entry.getValue() + ">");

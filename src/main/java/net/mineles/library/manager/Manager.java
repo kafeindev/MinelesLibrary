@@ -37,19 +37,19 @@ public interface Manager<K, V> {
 
     void shutdown();
 
-    @NotNull Map<K, V> getMap();
+    Map<K, V> getMap();
 
-    @NotNull Collection<K> getKeys();
+    Collection<K> getKeys();
 
-    @NotNull Collection<V> getValues();
+    Collection<V> getValues();
 
-    @NotNull Optional<V> find(@NotNull K key);
+    Optional<V> find(@NotNull K key);
 
     @Nullable V get(@NotNull K key);
 
     void putAll(@NotNull Map<K, V> map);
 
-    @NotNull V put(@NotNull K key, @NotNull V value);
+    V put(@NotNull K key, @NotNull V value);
 
     void remove(@NotNull K key);
 

@@ -22,34 +22,41 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.utils.text;
+package net.mineles.library.command;
 
-import net.md_5.bungee.api.ChatColor;
+import net.mineles.library.command.completion.RegisteredTabCompletion;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
-public final class LegacyTextSerializer {
-    private static final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
+public interface Command {
+    CommandProperties getProperties();
 
-    public static String deserialize(@NotNull String text) {
-        Matcher matcher = HEX_PATTERN.matcher(text);
-        while (matcher.find()) {
-            String hexCode = text.substring(matcher.start(), matcher.end());
-            String replaceSharp = hexCode.replace('#', 'x');
+    String getName();
 
-            StringBuilder builder = new StringBuilder();
-            for (char c : replaceSharp.toCharArray()) {
-                builder.append("&").append(c);
-            }
+    List<String> getAliases();
 
-            text = text.replace(hexCode, builder.toString());
-            matcher = HEX_PATTERN.matcher(text);
-        }
+    boolean isAlias(@NotNull String alias);
 
-        return ChatColor.translateAlternateColorCodes('&', text);
-    }
+    String getDescription();
 
-    private LegacyTextSerializer() {}
+    String getUsage();
+
+    @Nullable String getPermission();
+
+    List<Command> getSubCommands();
+
+    Command findSubCommand(@NotNull String sub);
+
+    Command findSubCommand(@NotNull String... subs);
+
+    int findSubCommandIndex(@NotNull String... subs);
+
+    List<RegisteredTabCompletion> getTabCompletions();
+
+    List<RegisteredTabCompletion> getTabCompletions(int index);
+
+    void execute(@NotNull CommandSender sender, @NotNull String[] args);
 }

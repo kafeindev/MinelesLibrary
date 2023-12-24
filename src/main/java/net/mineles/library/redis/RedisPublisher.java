@@ -9,11 +9,10 @@ import redis.clients.jedis.Jedis;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 final class RedisPublisher {
-    private final @NotNull RedisOperations pubSub;
-    private final @NotNull String channel;
+    private final RedisOperations pubSub;
+    private final String channel;
 
-    RedisPublisher(@NotNull RedisOperations pubSub,
-                   @NotNull String channel) {
+    RedisPublisher(RedisOperations pubSub, String channel) {
         this.pubSub = pubSub;
         this.channel = channel;
     }

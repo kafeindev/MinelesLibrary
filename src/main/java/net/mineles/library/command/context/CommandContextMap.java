@@ -22,59 +22,64 @@
  * SOFTWARE.
  */
 
-package net.mineles.library.property;
+package net.mineles.library.command.context;
 
+import com.google.common.collect.Maps;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.Map;
 
-public final class Attribute<T> {
-    private final @NotNull String key;
-    private final @Nullable T value;
+public final class CommandContextMap {
+    private final Map<Class<?>, CommandContext<?>> commandContexts;
 
-    public Attribute(@NotNull String key, @Nullable T value) {
-        this.key = key;
-        this.value = value;
+    public CommandContextMap() {
+        this(Maps.newHashMap());
     }
 
-    public static <T> Attribute<T> of(@NotNull String key, @Nullable T value) {
-        return new Attribute<>(key, value);
+    public CommandContextMap(Map<Class<?>, CommandContext<?>> commandContexts) {
+        this.commandContexts = commandContexts;
     }
 
-    public @NotNull String getKey() {
-        return this.key;
+    public Map<Class<?>, CommandContext<?>> getCommandContexts() {
+        return this.commandContexts;
     }
 
-    public @Nullable T getValue() {
-        return this.value;
+    @SuppressWarnings("unchecked")
+    public <T> @Nullable CommandContext<T> getCommandContext(@NotNull Class<T> clazz) {
+        return (CommandContext<T>) this.commandContexts.get(clazz);
     }
 
-    public <U> @Nullable U getAs(@NotNull Class<U> type) {
-        return type.cast(this.value);
+    public <T> void register(@NotNull Class<T> clazz, @NotNull CommandContext<T> commandContext) {
+        this.commandContexts.put(clazz, commandContext);
+    }
+
+    public <T> void unregister(@NotNull Class<T> clazz) {
+        this.commandContexts.remove(clazz);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Attribute)) {
+        if (!(obj instanceof CommandContextMap)) {
             return false;
         }
+        if (obj == this) {
+            return true;
+        }
 
-        Attribute<?> attribute = (Attribute<?>) obj;
-        return Objects.equals(this.key, attribute.key) &&
-                Objects.equals(this.value, attribute.value);
+        CommandContextMap other = (CommandContextMap) obj;
+        return this.commandContexts.equals(other.commandContexts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.key, this.value);
+        return this.commandContexts.hashCode();
     }
 
     @Override
     public String toString() {
-        return "Attribute{" +
-                "key='" + this.key + '\'' +
-                ", value=" + this.value +
-                '}';
+        return "CommandContextMap{" +
+                "commandContexts=" + this.commandContexts +
+                "}";
     }
 }

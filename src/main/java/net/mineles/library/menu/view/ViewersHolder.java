@@ -9,31 +9,29 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class ViewersHolder {
-    private final @NotNull Map<UUID, Viewer> viewers;
+    private final Map<UUID, Viewer> viewers;
 
     public ViewersHolder() {
         this.viewers = Maps.newHashMap();
     }
 
-    public ViewersHolder(@NotNull Map<UUID, Viewer> viewers) {
+    public ViewersHolder(Map<UUID, Viewer> viewers) {
         this.viewers = viewers;
     }
 
-    @NotNull
     public static ViewersHolder create() {
         return new ViewersHolder();
     }
 
-    @NotNull
-    public static ViewersHolder create(@NotNull Map<UUID, Viewer> viewers) {
+    public static ViewersHolder create(Map<UUID, Viewer> viewers) {
         return new ViewersHolder(viewers);
     }
 
-    public @NotNull Map<UUID, Viewer> getViewers() {
+    public Map<UUID, Viewer> getViewers() {
         return this.viewers;
     }
 
-    public @NotNull Map<UUID, Viewer> getViewersSafe() {
+    public Map<UUID, Viewer> getViewersSafe() {
         return Maps.newHashMap(this.viewers);
     }
 
@@ -41,7 +39,7 @@ public final class ViewersHolder {
         return this.viewers.get(uuid);
     }
 
-    public @NotNull Viewer addViewer(@NotNull Viewer viewer) {
+    public Viewer addViewer(@NotNull Viewer viewer) {
         this.viewers.put(viewer.getUniqueId(), viewer);
         return viewer;
     }
@@ -74,7 +72,7 @@ public final class ViewersHolder {
         return this.viewers.size();
     }
 
-    public @NotNull Map<UUID, Viewer> toMap() {
+    public Map<UUID, Viewer> toMap() {
         return Maps.newHashMap(this.viewers);
     }
 }

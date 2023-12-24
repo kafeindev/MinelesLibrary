@@ -17,25 +17,25 @@ public final class DecoderCollection {
                 .build();
     }
 
-    private final @NotNull Map<Class<?>, Decoder<?>> decoders;
+    private final Map<Class<?>, Decoder<?>> decoders;
 
     public DecoderCollection() {
         this(DecoderCollection.DEFAULTS);
     }
 
-    public DecoderCollection(@NotNull DecoderCollection collection) {
+    public DecoderCollection(DecoderCollection collection) {
         this(collection.getDecoders());
     }
 
-    public DecoderCollection(@NotNull Map<Class<?>, Decoder<?>> decoders) {
+    public DecoderCollection(Map<Class<?>, Decoder<?>> decoders) {
         this.decoders = decoders;
     }
 
-    public @NotNull Map<Class<?>, Decoder<?>> getDecoders() {
+    public Map<Class<?>, Decoder<?>> getDecoders() {
         return this.decoders;
     }
 
-    public @NotNull Set<Class<?>> getKeys() {
+    public Set<Class<?>> getKeys() {
         return this.decoders.keySet();
     }
 
@@ -56,7 +56,6 @@ public final class DecoderCollection {
         this.decoders.remove(type);
     }
 
-    @NotNull
     public static Builder newBuilder() {
         return new DecoderCollection.Builder();
     }
@@ -68,17 +67,17 @@ public final class DecoderCollection {
             this.decoders = Maps.newHashMap();
         }
 
-        public @NotNull Builder registerDecoder(@NotNull Class<?> type, @NotNull Decoder<?> decoder) {
+        public Builder registerDecoder(@NotNull Class<?> type, @NotNull Decoder<?> decoder) {
             this.decoders.put(type, decoder);
             return this;
         }
 
-        public @NotNull Builder unregisterDecoder(@NotNull Class<?> type) {
+        public Builder unregisterDecoder(@NotNull Class<?> type) {
             this.decoders.remove(type);
             return this;
         }
 
-        public @NotNull DecoderCollection build() {
+        public DecoderCollection build() {
             return new DecoderCollection(this.decoders);
         }
     }

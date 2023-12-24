@@ -15,15 +15,14 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class RedisOperations {
-    private final @NotNull RedisClient client;
-    private final @NotNull Map<String, RedisSubscription> subscriptions;
+    private final RedisClient client;
+    private final Map<String, RedisSubscription> subscriptions;
 
-    public RedisOperations(@NotNull RedisClient client) {
+    public RedisOperations(RedisClient client) {
         this(client, Maps.newConcurrentMap());
     }
 
-    public RedisOperations(@NotNull RedisClient client,
-                           @NotNull Map<String, RedisSubscription> subscriptions) {
+    public RedisOperations(RedisClient client, Map<String, RedisSubscription> subscriptions) {
         this.client = client;
         this.subscriptions = subscriptions;
     }

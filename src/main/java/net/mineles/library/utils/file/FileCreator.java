@@ -9,29 +9,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class FileCreator {
-    private final @NotNull Path path;
+    private final Path path;
 
-    public FileCreator(@NotNull Path path) {
+    public FileCreator(Path path) {
         this.path = path;
     }
 
-    @NotNull
-    public static FileCreator of(@NotNull Path path) {
+    public static FileCreator of(Path path) {
         return new FileCreator(path);
     }
 
-    @NotNull
-    public static FileCreator of(@NotNull String... path) {
+    public static FileCreator of(String... path) {
         return new FileCreator(Path.of(String.join("/", path)));
     }
 
-    @NotNull
-    public static FileCreator of(@NotNull Path dataFolder, @NotNull String... path) {
+    public static FileCreator of(Path dataFolder, String... path) {
         return new FileCreator(dataFolder.resolve(String.join("/", path)));
     }
 
-    @NotNull
-    public static FileCreator of(@NotNull File file) {
+    public static FileCreator of(File file) {
         return new FileCreator(file.toPath());
     }
 

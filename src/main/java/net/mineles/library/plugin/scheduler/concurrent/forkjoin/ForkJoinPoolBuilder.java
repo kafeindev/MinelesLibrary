@@ -24,22 +24,19 @@
 
 package net.mineles.library.plugin.scheduler.concurrent.forkjoin;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Logger;
 
 public final class ForkJoinPoolBuilder {
-    private final @NotNull Logger logger;
-    private final @NotNull String name;
+    private final Logger logger;
+    private final String name;
 
     private int parallelism = 16;
 
     private boolean asyncMode;
     private boolean daemon;
 
-    public ForkJoinPoolBuilder(@NotNull Logger logger,
-                               @NotNull String name) {
+    public ForkJoinPoolBuilder(Logger logger, String name) {
         this.logger = logger;
         this.name = name;
     }

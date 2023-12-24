@@ -9,9 +9,9 @@ import java.time.Duration;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class RedisCache {
-    private final @NotNull RedisClient client;
+    private final RedisClient client;
 
-    public RedisCache(@NotNull RedisClient client) {
+    public RedisCache(RedisClient client) {
         this.client = client;
     }
 

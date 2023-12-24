@@ -1,65 +1,51 @@
 package net.mineles.library.teleport;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
 
 public final class Teleport {
-    private final @NotNull UUID player;
-    private final @NotNull UUID target;
-    private final @NotNull TeleportType type;
+    private final UUID player;
+    private final UUID target;
+    private final TeleportType type;
 
-    public Teleport(@NotNull UUID player,
-                    @NotNull UUID target,
-                    @NotNull TeleportType type) {
+    public Teleport(UUID player, UUID target, TeleportType type) {
         this.player = player;
         this.target = target;
         this.type = type;
     }
 
-    @NotNull
-    public static Teleport of(@NotNull UUID player,
-                              @NotNull UUID target,
-                              @NotNull TeleportType type) {
+    public static Teleport of(UUID player, UUID target, TeleportType type) {
         return new Teleport(player, target, type);
     }
 
-    @NotNull
-    public static Teleport of(@NotNull String player,
-                              @NotNull String target,
-                              @NotNull String type) {
+    public static Teleport of(String player, String target, String type) {
         return new Teleport(UUID.fromString(player), UUID.fromString(target), TeleportType.valueOf(type));
     }
 
-    @NotNull
-    public static Teleport request(@NotNull UUID player, @NotNull UUID target) {
+    public static Teleport request(UUID player, UUID target) {
         return new Teleport(player, target, TeleportType.REQUEST);
     }
 
-    @NotNull
-    public static Teleport accept(@NotNull UUID player, @NotNull UUID target) {
+    public static Teleport accept(UUID player, UUID target) {
         return new Teleport(player, target, TeleportType.ACCEPT);
     }
 
-    @NotNull
-    public static Teleport deny(@NotNull UUID player, @NotNull UUID target) {
+    public static Teleport deny(UUID player, UUID target) {
         return new Teleport(player, target, TeleportType.DENY);
     }
 
-    @NotNull
-    public static Teleport cancel(@NotNull UUID player, @NotNull UUID target) {
+    public static Teleport cancel(UUID player, UUID target) {
         return new Teleport(player, target, TeleportType.CANCEL);
     }
 
-    public @NotNull UUID getPlayer() {
+    public UUID getPlayer() {
         return this.player;
     }
 
-    public @NotNull UUID getTarget() {
+    public UUID getTarget() {
         return this.target;
     }
 
-    public @NotNull TeleportType getType() {
+    public TeleportType getType() {
         return this.type;
     }
 

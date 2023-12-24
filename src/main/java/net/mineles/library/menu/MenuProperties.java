@@ -13,19 +13,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public final class MenuProperties {
     private final @Nullable ConfigurationNode node;
 
-    private final @NotNull String name;
-    private final @NotNull InventoryProperties inventoryProperties;
+    private final String name;
+    private final InventoryProperties inventoryProperties;
 
     //private long cooldown;
 
     private XSound openSound;
     private XSound closeSound;
 
-    public MenuProperties(@Nullable ConfigurationNode node,
-                          @NotNull String name,
-                          @NotNull InventoryProperties inventoryProperties,
-                          @Nullable XSound openSound,
-                          @Nullable XSound closeSound) {
+    public MenuProperties(@Nullable ConfigurationNode node, String name, InventoryProperties inventoryProperties, @Nullable XSound openSound, @Nullable XSound closeSound) {
         this.node = node;
         this.name = name;
         this.inventoryProperties = inventoryProperties;
@@ -33,26 +29,18 @@ public final class MenuProperties {
         this.closeSound = closeSound;
     }
 
-    @NotNull
-    public static MenuProperties fromConfig(@NotNull String name,
-                                            @NotNull Config config) {
+    public static MenuProperties fromConfig(String name, Config config) {
         return fromNode(name, config.getNode().node("menu"));
     }
 
-    @NotNull
-    public static MenuProperties fromConfig(@NotNull String name,
-                                            @NotNull Class<?> clazz,
-                                            @NotNull String resource,
-                                            @NotNull String... path) {
+    public static MenuProperties fromConfig(String name, Class<?> clazz, String resource, String... path) {
         Config config = ConfigBuilder.builder(path)
                 .resource(clazz, resource)
                 .build();
         return fromNode(name, config.getNode().node("menu"));
     }
 
-    @NotNull
-    public static MenuProperties fromNode(@NotNull String name,
-                                          @NotNull ConfigurationNode node) {
+    public static MenuProperties fromNode(String name, ConfigurationNode node) {
         return new Builder()
                 .node(node)
                 .name(name)
@@ -68,15 +56,15 @@ public final class MenuProperties {
         return this.node;
     }
 
-    public @NotNull String getName() {
+    public String getName() {
         return this.name;
     }
 
-    public @NotNull InventoryProperties getInventoryProperties() {
+    public InventoryProperties getInventoryProperties() {
         return this.inventoryProperties;
     }
 
-    public @NotNull String getTitle() {
+    public String getTitle() {
         return this.inventoryProperties.getTitle();
     }
 
@@ -84,7 +72,7 @@ public final class MenuProperties {
         return this.inventoryProperties.getSize();
     }
 
-    public @NotNull InventoryType getInventoryType() {
+    public InventoryType getInventoryType() {
         return this.inventoryProperties.getType();
     }
 
@@ -115,7 +103,6 @@ public final class MenuProperties {
                 .closeSound(this.closeSound);
     }
 
-    @NotNull
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -133,11 +120,11 @@ public final class MenuProperties {
             this.inventoryPropertiesBuilder = InventoryProperties.newBuilder();
         }
 
-        public @NotNull ConfigurationNode node() {
+        public ConfigurationNode node() {
             return checkNotNull(this.node, "node");
         }
 
-        public @NotNull Builder node(@Nullable ConfigurationNode node) {
+        public Builder node(@Nullable ConfigurationNode node) {
             this.node = node;
             return this;
         }
@@ -146,7 +133,7 @@ public final class MenuProperties {
             return this.name;
         }
 
-        public @NotNull Builder name(@NotNull String name) {
+        public Builder name(@NotNull String name) {
             this.name = name;
             return this;
         }
@@ -155,7 +142,7 @@ public final class MenuProperties {
             return this.inventoryPropertiesBuilder.title();
         }
 
-        public @NotNull Builder title(@NotNull String title) {
+        public Builder title(@NotNull String title) {
             this.inventoryPropertiesBuilder.title(title);
             return this;
         }
@@ -164,7 +151,7 @@ public final class MenuProperties {
             return this.inventoryPropertiesBuilder.size();
         }
 
-        public @NotNull Builder size(int size) {
+        public Builder size(int size) {
             this.inventoryPropertiesBuilder.size(size);
             return this;
         }
@@ -173,12 +160,12 @@ public final class MenuProperties {
             return this.inventoryPropertiesBuilder.type();
         }
 
-        public @NotNull Builder type(@NotNull InventoryType type) {
+        public Builder type(@NotNull InventoryType type) {
             this.inventoryPropertiesBuilder.type(type);
             return this;
         }
 
-        public @NotNull Builder type(@Nullable String type) {
+        public Builder type(@Nullable String type) {
             this.inventoryPropertiesBuilder.type(type);
             return this;
         }
@@ -187,12 +174,12 @@ public final class MenuProperties {
             return this.openSound;
         }
 
-        public @NotNull Builder openSound(@Nullable XSound openSound) {
+        public Builder openSound(@Nullable XSound openSound) {
             this.openSound = openSound;
             return this;
         }
 
-        public @NotNull Builder openSound(@Nullable String openSound) {
+        public Builder openSound(@Nullable String openSound) {
             if (openSound != null) {
                 this.openSound = XSound.matchXSound(openSound).orElse(null);
             }
@@ -203,19 +190,19 @@ public final class MenuProperties {
             return this.closeSound;
         }
 
-        public @NotNull Builder closeSound(@Nullable XSound closeSound) {
+        public Builder closeSound(@Nullable XSound closeSound) {
             this.closeSound = closeSound;
             return this;
         }
 
-        public @NotNull Builder closeSound(@Nullable String closeSound) {
+        public Builder closeSound(@Nullable String closeSound) {
             if (closeSound != null) {
                 this.closeSound = XSound.matchXSound(closeSound).orElse(null);
             }
             return this;
         }
 
-        public @NotNull MenuProperties build() {
+        public MenuProperties build() {
             return new MenuProperties(this.node, this.name, this.inventoryPropertiesBuilder.build(), this.openSound, this.closeSound);
         }
     }

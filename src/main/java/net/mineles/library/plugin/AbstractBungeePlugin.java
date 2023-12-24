@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public abstract class AbstractBungeePlugin implements BungeePlugin {
-    private final @NotNull Plugin plugin;
+    private final Plugin plugin;
 
     private ConcurrentTaskScheduler taskScheduler;
 
@@ -25,7 +25,7 @@ public abstract class AbstractBungeePlugin implements BungeePlugin {
     private BungeeCommandManager commandManager;
     private MetadataStore metadataStore;
 
-    protected AbstractBungeePlugin(@NotNull Plugin plugin) {
+    protected AbstractBungeePlugin(Plugin plugin) {
         this.plugin = plugin;
     }
 
@@ -84,22 +84,22 @@ public abstract class AbstractBungeePlugin implements BungeePlugin {
     protected abstract @NotNull Set<Class<?>> getListeners();
 
     @Override
-    public @NotNull Plugin getPlugin() {
+    public Plugin getPlugin() {
         return this.plugin;
     }
 
     @Override
-    public @NotNull Path getDataPath() {
+    public Path getDataPath() {
         return this.plugin.getDataFolder().toPath().toAbsolutePath();
     }
 
     @Override
-    public @NotNull Logger getLogger() {
+    public Logger getLogger() {
         return this.plugin.getLogger();
     }
 
     @Override
-    public @NotNull ProxyServer getServer() {
+    public ProxyServer getServer() {
         return this.plugin.getProxy();
     }
 
@@ -113,22 +113,22 @@ public abstract class AbstractBungeePlugin implements BungeePlugin {
     }
 
     @Override
-    public @NotNull ConcurrentTaskScheduler getTaskScheduler() {
+    public ConcurrentTaskScheduler getTaskScheduler() {
         return this.taskScheduler;
     }
 
     @Override
-    public @NotNull ConfigManager getConfigManager() {
+    public ConfigManager getConfigManager() {
         return this.configManager;
     }
 
     @Override
-    public @NotNull BungeeCommandManager getCommandManager() {
+    public BungeeCommandManager getCommandManager() {
         return this.commandManager;
     }
 
     @Override
-    public @NotNull MetadataStore getMetadataStore() {
+    public MetadataStore getMetadataStore() {
         return this.metadataStore;
     }
 }
