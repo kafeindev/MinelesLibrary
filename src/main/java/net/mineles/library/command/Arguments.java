@@ -35,4 +35,8 @@ public final class Arguments {
 
         return commandContext.apply(this.sender, arg);
     }
+
+    public int getSize() {
+        return this.args.length;
+    }
 }
