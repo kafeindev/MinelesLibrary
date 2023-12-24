@@ -29,6 +29,7 @@ import net.mineles.library.command.completion.RegisteredTabCompletion;
 import net.mineles.library.command.completion.TabCompletion;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -54,7 +55,7 @@ final class CommandAdapter extends BukkitCommand {
         }
 
         if (args.length == 0) {
-            this.command.execute(sender, args);
+            this.command.execute(sender, new Arguments(sender, args));
         } else {
             Command subCommand = this.command.findSubCommand(args);
             if (subCommand.getPermission() != null && !sender.hasPermission(subCommand.getPermission())) {
@@ -63,7 +64,7 @@ final class CommandAdapter extends BukkitCommand {
             }
 
             String[] subCommandArgs = Arrays.copyOfRange(args, this.command.findSubCommandIndex(args), args.length);
-            subCommand.execute(sender, subCommandArgs);
+            subCommand.execute(sender, new Arguments(sender, subCommandArgs));
         }
 
         return true;

@@ -58,5 +58,5 @@ public interface Command {
 
     List<RegisteredTabCompletion> getTabCompletions(int index);
 
-    void execute(@NotNull CommandSender sender, @NotNull String[] args);
+    void execute(@NotNull CommandSender sender, @NotNull Arguments arguments);
 }

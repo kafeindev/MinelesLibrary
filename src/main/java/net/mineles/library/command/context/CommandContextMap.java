@@ -25,12 +25,25 @@
 package net.mineles.library.command.context;
 
 import com.google.common.collect.Maps;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
 public final class CommandContextMap {
+    private static final CommandContextMap DEFAULTS;
+
+    static {
+        DEFAULTS = new CommandContextMap();
+        DEFAULTS.register(String.class, (sender, s) -> s);
+        DEFAULTS.register(Integer.class, DefaultCommandContexts.INTEGER);
+        DEFAULTS.register(Double.class, DefaultCommandContexts.DOUBLE);
+        DEFAULTS.register(Float.class, DefaultCommandContexts.FLOAT);
+        DEFAULTS.register(Long.class, DefaultCommandContexts.LONG);
+        DEFAULTS.register(Player.class, DefaultCommandContexts.PLAYER);
+    }
+
     private final Map<Class<?>, CommandContext<?>> commandContexts;
 
     public CommandContextMap() {
@@ -56,6 +69,10 @@ public final class CommandContextMap {
 
     public <T> void unregister(@NotNull Class<T> clazz) {
         this.commandContexts.remove(clazz);
+    }
+
+    public static CommandContextMap getDefaults() {
+        return DEFAULTS;
     }
 
     @Override

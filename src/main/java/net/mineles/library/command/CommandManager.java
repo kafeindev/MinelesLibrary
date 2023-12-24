@@ -24,34 +24,18 @@
 
 package net.mineles.library.command;
 
-import net.mineles.library.command.context.CommandContext;
-import net.mineles.library.command.context.CommandContextMap;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class CommandManager {
     private final CommandRegistrar commandRegistrar;
-    private final CommandContextMap commandContextMap;
 
     public CommandManager(Plugin plugin) {
         this.commandRegistrar = new CommandRegistrar(plugin);
-        this.commandContextMap = new CommandContextMap();
     }
 
     public void registerCommand(@NotNull Command command) {
         this.commandRegistrar.registerCommand(command);
     }
 
-    public CommandContextMap getCommandContextMap() {
-        return this.commandContextMap;
-    }
-
-    public <T> @Nullable CommandContext<T> getCommandContext(@NotNull Class<T> clazz) {
-        return this.commandContextMap.getCommandContext(clazz);
-    }
-
-    public <T> void registerCommandContext(@NotNull Class<T> clazz, @NotNull CommandContext<T> commandContext) {
-        this.commandContextMap.register(clazz, commandContext);
-    }
 }
