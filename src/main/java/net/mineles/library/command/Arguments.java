@@ -22,7 +22,7 @@ public final class Arguments {
         return this.args.length <= index ? null : this.args[index];
     }
 
-    public <T> T get(int index, Class<T> tClass) {
+    public <T> @Nullable T get(int index, Class<T> tClass) {
         String arg = get(index);
         if (arg == null) {
             return null;

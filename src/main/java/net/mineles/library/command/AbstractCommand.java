@@ -105,12 +105,12 @@ public abstract class AbstractCommand implements Command {
 
     @Override
     public Command findSubCommand(@NotNull String... subs) {
-        checkArgument(subs.length > 0, "Sub commands cannot be empty.");
-
-        if (subs.length == 1) {
+        if (subs.length == 0) {
+            return this;
+        } else if (subs.length == 1) {
             return findSubCommand(subs[0]);
         } else {
-            String[] newSubs = Arrays.copyOfRange(subs, 1, subs.length);
+            String[] newSubs = Arrays.copyOfRange(subs, 1, subs.length - 1);
             return findSubCommand(subs[0]).findSubCommand(newSubs);
         }
     }
@@ -119,12 +119,26 @@ public abstract class AbstractCommand implements Command {
     public int findSubCommandIndex(@NotNull String... subs) {
         checkArgument(subs.length > 0, "Sub commands cannot be empty.");
 
-        for (int i = 0; i < subs.length; i++) {
-            if (!this.isAlias(subs[i])) {
-                return i;
+        int counter = 0;
+        return findSubCommandIndexInternal(counter, subs);
+    }
+
+    private int findSubCommandIndexInternal(int counter, @NotNull String... subs) {
+        if (subs.length == 0) {
+            return counter;
+        } else {
+            Command target = findSubCommand(subs[0]);
+            if (target == this) {
+                return counter;
             }
+
+            if (subs.length == 1) {
+                return ++counter;
+            }
+
+            String[] newSubs = Arrays.copyOfRange(subs, 1, subs.length - 1);
+            return ((AbstractCommand) target).findSubCommandIndexInternal(++counter, newSubs);
         }
-        return subs.length;
     }
 
     @Override

@@ -25,11 +25,12 @@
 package net.mineles.library.command;
 
 import com.google.common.collect.ImmutableList;
+import net.kyori.adventure.text.Component;
 import net.mineles.library.command.completion.RegisteredTabCompletion;
 import net.mineles.library.command.completion.TabCompletion;
+import net.mineles.library.utils.text.ComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -40,15 +41,12 @@ final class CommandAdapter extends BukkitCommand {
 
     CommandAdapter(Command command) {
         super(command.getName(), command.getDescription(), command.getUsage(), command.getAliases());
+        setPermission(command.getPermission());
         this.command = command;
     }
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-        if (!getAliases().contains(commandLabel)) {
-            return false;
-        }
-
         if (this.command.getPermission() != null && !sender.hasPermission(this.command.getPermission())) {
             //TODO: Send message
             return true;
@@ -63,7 +61,15 @@ final class CommandAdapter extends BukkitCommand {
                 return true;
             }
 
-            String[] subCommandArgs = Arrays.copyOfRange(args, this.command.findSubCommandIndex(args), args.length);
+            int index = this.command.findSubCommandIndex(args);
+            int length = args.length;
+/*            if (index == length) {
+                Component component = ComponentSerializer.deserialize(subCommand.getUsage());
+                sender.sendMessage(component);
+                return true;
+            }*/
+
+            String[] subCommandArgs = Arrays.copyOfRange(args, index, length);
             subCommand.execute(sender, new Arguments(sender, subCommandArgs));
         }
 
@@ -93,6 +99,10 @@ final class CommandAdapter extends BukkitCommand {
         ImmutableList.Builder<String> builder = ImmutableList.builder();
 
         for (Command subCommand : command.getSubCommands()) {
+            if (subCommand.getPermission() != null && !commandSender.hasPermission(subCommand.getPermission())) {
+                return ImmutableList.of();
+            }
+
             builder.addAll(subCommand.getAliases());
         }
         for (RegisteredTabCompletion registeredTabCompletion : command.getTabCompletions(index)) {

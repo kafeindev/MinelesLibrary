@@ -56,8 +56,12 @@ public final class CommandProperties {
         this.name = name;
         this.aliases = aliases;
         this.description = description;
-        this.usage = usage;
+        this.usage = usage == null || usage.isEmpty() ? "/" + name : usage;
         this.permission = permission;
+
+        if (!aliases.contains(name)) {
+            aliases.add(name);
+        }
     }
 
     public String getName() {
