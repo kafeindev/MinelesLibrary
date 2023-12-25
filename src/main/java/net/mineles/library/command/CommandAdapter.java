@@ -48,7 +48,6 @@ final class CommandAdapter extends BukkitCommand {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         if (this.command.getPermission() != null && !sender.hasPermission(this.command.getPermission())) {
-            //TODO: Send message
             return true;
         }
 
@@ -57,19 +56,10 @@ final class CommandAdapter extends BukkitCommand {
         } else {
             Command subCommand = this.command.findSubCommand(args);
             if (subCommand.getPermission() != null && !sender.hasPermission(subCommand.getPermission())) {
-                //TODO: Send message
                 return true;
             }
 
-            int index = this.command.findSubCommandIndex(args);
-            int length = args.length;
-/*            if (index == length) {
-                Component component = ComponentSerializer.deserialize(subCommand.getUsage());
-                sender.sendMessage(component);
-                return true;
-            }*/
-
-            String[] subCommandArgs = Arrays.copyOfRange(args, index, length);
+            String[] subCommandArgs = Arrays.copyOfRange(args, this.command.findSubCommandIndex(args), args.length);
             subCommand.execute(sender, new Arguments(sender, subCommandArgs));
         }
 
