@@ -11,6 +11,15 @@ public final class HostAndPort {
         this.port = port;
     }
 
+    public static HostAndPort of(String hostAndPort) {
+        String[] split = hostAndPort.split(":");
+        if (split.length < 2) {
+            throw new RuntimeException();
+        }
+
+        return new HostAndPort(split[0], Integer.parseInt(split[1]));
+    }
+
     public String getHost() {
         return this.host;
     }
