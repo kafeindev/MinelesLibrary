@@ -1,6 +1,11 @@
 package net.mineles.library.menu.action;
 
+import com.google.common.collect.ImmutableMap;
+import net.kyori.adventure.text.Component;
+import net.mineles.library.components.PlayerComponent;
+import net.mineles.library.menu.Menu;
 import net.mineles.library.plugin.BukkitPlugin;
+import net.mineles.library.utils.text.ComponentSerializer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -40,6 +45,30 @@ final class DefaultClickActions {
                 "%player%", player.getName(),
                 "%menu%", clickContext.getMenu().getName()
         )));
+    };
+
+    static ClickAction CHAT = (clickContext, registeredClickAction) -> {
+        String message = registeredClickAction.getValue();
+        checkNotNull(message, "Message cannot be null");
+
+        PlayerComponent playerComponent = clickContext.getPlayer();
+
+        Component deserialized = ComponentSerializer.deserialize(message, ImmutableMap.of(
+                "%player%", playerComponent.getName()
+        ));
+        playerComponent.sendMessage(deserialized);
+    };
+
+    static ClickAction ACTIONBAR = (clickContext, registeredClickAction) -> {
+        String message = registeredClickAction.getValue();
+        checkNotNull(message, "Message cannot be null");
+
+        PlayerComponent playerComponent = clickContext.getPlayer();
+
+        Component deserialized = ComponentSerializer.deserialize(message, ImmutableMap.of(
+                "%player%", playerComponent.getName()
+        ));
+        playerComponent.sendActionBar(deserialized);
     };
 
     static ClickAction SERVER = (clickContext, registeredClickAction) -> {

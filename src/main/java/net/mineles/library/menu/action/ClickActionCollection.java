@@ -16,6 +16,10 @@ public final class ClickActionCollection {
                 .registerAction("OPEN", DefaultClickActions.OPEN)
                 .registerAction("CONSOLE", DefaultClickActions.COMMAND_CONSOLE)
                 .registerAction("PLAYER", DefaultClickActions.COMMAND_PLAYER)
+                .registerAction("CHAT", DefaultClickActions.CHAT)
+                .registerAction("MESSAGE", DefaultClickActions.CHAT)
+                .registerAction("ACTIONBAR", DefaultClickActions.CHAT)
+                .registerAction("ACTION_BAR", DefaultClickActions.ACTIONBAR)
                 .registerAction("SERVER", DefaultClickActions.SERVER)
                 .build();
     }
