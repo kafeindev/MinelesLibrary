@@ -57,10 +57,14 @@ dependencies {
 
     implementation 'de.themoep:minedown:1.7.1-SNAPSHOT'
     implementation 'com.github.cryptomorin:XSeries:9.8.0'
-    implementation 'co.aikar:acf-bungee:0.5.1-SNAPSHOT'
     implementation 'de.tr7zw:item-nbt-api-plugin:2.11.3'
 
-    compileOnly 'net.md-5:bungeecord-api:1.20-R0.1'
+    implementation 'io.projectreactor:reactor-core:3.5.8'
+
+    implementation 'com.github.docker-java:docker-java-transport-httpclient5:3.3.2'
+    implementation 'com.github.docker-java:docker-java-core:3.3.2'
+
+    compileOnly 'com.velocitypowered:velocity-api:3.2.0-SNAPSHOT'
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'net.kyori:adventure-platform-bungeecord:4.3.1'
     compileOnly 'com.mojang:authlib:1.5.25'
@@ -82,8 +86,8 @@ shadowJar {
 
     //relocate 'net.kyori', project.group + '.libs.adventure'
 
-    //relocate 'com.github.dockerjava', project.group + '.libs.dockerjava'
-    //relocate 'reactor', project.group + '.libs.reactor'
+    relocate 'com.github.dockerjava', project.group + '.libs.dockerjava'
+    relocate 'reactor', project.group + '.libs.reactor'
 
     relocate 'com.mongodb', project.group + '.libs.mongodb'
     relocate 'org.bson', project.group + '.libs.bson'
@@ -93,8 +97,10 @@ shadowJar {
 
     relocate 'de.themoep.minedown', project.group + '.libs.minedown'
 
+/*
     relocate 'co.aikar.commands', project.group + '.libs.commands'
     relocate 'co.aikar.locales', project.group + '.libs.locales'
+*/
 
     relocate 'com.cryptomorin.xseries', project.group + '.libs.xseries'
     relocate 'de.tr7zw', project.group + '.libs.nbtapi'
