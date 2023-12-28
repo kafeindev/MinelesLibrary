@@ -1,8 +1,0 @@
-name: MinelesLibrary
-version: '${version}'
-author: Mineles
-load: STARTUP
-main: net.mineles.library.loader.MinelesLibraryBungeeLoader
-api-version: '1.13'
-libraries:
-  - net.kyori:adventure-platform-bungeecord:4.3.1

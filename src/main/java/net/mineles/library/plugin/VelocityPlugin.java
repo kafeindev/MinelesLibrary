@@ -1,17 +1,14 @@
 package net.mineles.library.plugin;
 
-import co.aikar.commands.BungeeCommandManager;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.plugin.Plugin;
+import com.velocitypowered.api.proxy.ProxyServer;
 import net.mineles.library.configuration.ConfigManager;
 import net.mineles.library.metadata.store.MetadataStore;
-import net.mineles.library.plugin.scheduler.task.TaskScheduler;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.nio.file.Path;
-import java.util.logging.Logger;
 
-public interface BungeePlugin {
+public interface VelocityPlugin {
     void load();
 
     void enable();
@@ -22,23 +19,17 @@ public interface BungeePlugin {
 
     void loadConfigs();
 
-    Plugin getPlugin();
-
     Path getDataPath();
 
     Logger getLogger();
 
     ProxyServer getServer();
 
-    TaskScheduler getTaskScheduler();
-
     ConfigManager getConfigManager();
-
-    BungeeCommandManager getCommandManager();
 
     MetadataStore getMetadataStore();
 
-    default <T extends BungeePlugin> T getAs(@NotNull Class<T> clazz) {
+    default <T extends VelocityPlugin> T getAs(@NotNull Class<T> clazz) {
         return clazz.cast(this);
     }
 }
