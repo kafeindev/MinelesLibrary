@@ -1,0 +1,9 @@
+{
+  "id": "mineleslibrary",
+  "name": "MinelesLibrary",
+  "description": "Library for Mineles Network.",
+  "version": "1.0.0",
+  "authors": [ "Mineles" ],
+  "dependencies": [],
+  "main": "net.mineles.library.loader.MinelesLibraryVelocityLoader"
+}
