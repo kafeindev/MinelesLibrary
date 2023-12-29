@@ -41,6 +41,10 @@ public abstract class Cluster {
         return getStrategy().check(this);
     }
 
+    public boolean checkAvailableHalfQuarter() { // for balancing
+        return getStrategy().checkHalfQuarter(this);
+    }
+
     public boolean checkHealthy() {
         return this.retryCount <= 0;
     }

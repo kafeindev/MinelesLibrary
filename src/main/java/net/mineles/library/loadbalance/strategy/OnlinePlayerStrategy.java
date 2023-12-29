@@ -13,4 +13,9 @@ final class OnlinePlayerStrategy implements BalancingStrategy {
     public boolean check(@NotNull Cluster cluster) {
         return cluster.getPlayers().size() < MAX_PLAYER;
     }
+
+    @Override
+    public boolean checkHalfQuarter(@NotNull Cluster cluster) {
+        return cluster.getPlayers().size() <= (MAX_PLAYER / 4) * 3;
+    }
 }
