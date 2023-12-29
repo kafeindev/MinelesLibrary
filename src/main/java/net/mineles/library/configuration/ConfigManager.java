@@ -3,10 +3,8 @@ package net.mineles.library.configuration;
 import net.mineles.library.components.CuboidComponent;
 import net.mineles.library.components.ItemComponent;
 import net.mineles.library.components.LocationComponent;
-import net.mineles.library.configuration.serializers.CuboidComponentAdapter;
-import net.mineles.library.configuration.serializers.ItemComponentAdapter;
-import net.mineles.library.configuration.serializers.LocationComponentAdapter;
-import net.mineles.library.configuration.serializers.RedisCredentialsAdapter;
+import net.mineles.library.configuration.serializers.*;
+import net.mineles.library.docker.config.DockerConfig;
 import net.mineles.library.manager.AbstractManager;
 import net.mineles.library.redis.RedisCredentials;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +26,7 @@ public final class ConfigManager extends AbstractManager<String, Config> {
         this.options = ConfigurationOptions.defaults()
                 .serializers(builder -> {
                     builder.register(RedisCredentials.class, RedisCredentialsAdapter.INSTANCE);
+                    builder.register(DockerConfig.class, DockerConfigAdapter.INSTANCE);
                     builder.register(LocationComponent.class, LocationComponentAdapter.INSTANCE);
                     builder.register(CuboidComponent.class, CuboidComponentAdapter.INSTANCE);
                     builder.register(ItemComponent.class, ItemComponentAdapter.INSTANCE);
