@@ -1,30 +1,37 @@
 package net.mineles.library.redis;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.mineles.library.redis.codec.Decoder;
 import net.mineles.library.redis.codec.DecoderCollection;
 import net.mineles.library.redis.message.Message;
 import net.mineles.library.redis.message.MessageListener;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class RedisClient {
     private final RedisCredentials credentials;
     private final RedisCache cache;
     private final RedisOperations operations;
     private final DecoderCollection decoders;
+    private final ExecutorService executorService;
 
     private JedisPool jedisPool;
     private boolean closed;
 
-    public RedisClient(RedisCredentials credentials) {
+    public RedisClient(RedisCredentials credentials, String executorName) {
         this.credentials = credentials;
         this.cache = new RedisCache(this);
         this.operations = new RedisOperations(this);
         this.decoders = new DecoderCollection();
+        this.executorService = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
+                .setNameFormat(executorName + "-redis-%d")
+                .setDaemon(true)
+                .build());
     }
 
     public RedisCredentials getCredentials() {
@@ -84,15 +91,13 @@ public final class RedisClient {
         this.operations.publish(channel, key, message);
     }
 
-    public void subscribe(@NotNull Plugin plugin,
-                          @NotNull String channel) {
-        this.operations.subscribe(plugin, channel);
+    public void subscribe(@NotNull String channel) {
+        this.operations.subscribe(this.executorService, channel);
     }
 
-    public void subscribe(@NotNull Plugin plugin,
-                          @NotNull String channel,
+    public void subscribe(@NotNull String channel,
                           @NotNull Map<String, MessageListener> listeners) {
-        this.operations.subscribe(plugin, channel, listeners);
+        this.operations.subscribe(this.executorService, channel, listeners);
     }
 
     public void unsubscribe(@NotNull String channel) {
