@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +49,7 @@ public final class LoadBalancer {
         return this.clusterMap;
     }
 
-    public Collection<Cluster> getAvailableClusters(@NotNull ClusterKey key) {
+    public List<Cluster> getAvailableClusters(@NotNull ClusterKey key) {
         return this.clusterMap.getClusters(key).stream()
                 .filter(Cluster::checkAvailable)
                 .collect(Collectors.toList());
