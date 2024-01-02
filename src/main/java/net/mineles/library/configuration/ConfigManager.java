@@ -4,7 +4,7 @@ import net.mineles.library.components.CuboidComponent;
 import net.mineles.library.components.ItemComponent;
 import net.mineles.library.components.LocationComponent;
 import net.mineles.library.configuration.serializers.*;
-import net.mineles.library.docker.config.DockerConfig;
+import net.mineles.library.cluster.config.DockerConfig;
 import net.mineles.library.manager.AbstractManager;
 import net.mineles.library.redis.RedisCredentials;
 import org.jetbrains.annotations.NotNull;

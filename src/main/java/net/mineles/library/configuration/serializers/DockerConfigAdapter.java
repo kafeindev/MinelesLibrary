@@ -1,6 +1,6 @@
 package net.mineles.library.configuration.serializers;
 
-import net.mineles.library.docker.config.DockerConfig;
+import net.mineles.library.cluster.config.DockerConfig;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
