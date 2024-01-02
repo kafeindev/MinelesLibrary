@@ -8,8 +8,8 @@ plugins {
 group = 'net.mineles'
 version = '1.0.0'
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -57,7 +57,7 @@ dependencies {
 
     implementation 'de.themoep:minedown:1.7.1-SNAPSHOT'
     implementation 'com.github.cryptomorin:XSeries:9.8.0'
-    implementation 'de.tr7zw:item-nbt-api-plugin:2.11.3'
+    implementation 'de.tr7zw:item-nbt-api-plugin:2.12.2'
 
     implementation 'io.projectreactor:reactor-core:3.5.8'
 
