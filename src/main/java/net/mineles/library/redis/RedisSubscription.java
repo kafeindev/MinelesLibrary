@@ -38,6 +38,7 @@ public final class RedisSubscription extends JedisPubSub implements Runnable {
         this.operations = operations;
         this.channel = channel;
         this.listeners = listeners;
+        subscribe(channel);
     }
 
     RedisSubscription(@NotNull RedisOperations operations,
@@ -48,6 +49,7 @@ public final class RedisSubscription extends JedisPubSub implements Runnable {
         this.channel = channel;
         this.listeners = listeners;
         this.mainListener = mainListener;
+        subscribe(channel);
     }
 
     @Override
