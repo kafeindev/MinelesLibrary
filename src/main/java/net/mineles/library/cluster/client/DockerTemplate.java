@@ -3,6 +3,7 @@ package net.mineles.library.cluster.client;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.Bind;
+import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
@@ -161,26 +162,30 @@ public class DockerTemplate {
         return Mono.fromCallable(() -> createContainerCmd.exec().getId());
     }
 
-    public Flux<DockerContainerProperties> listContainers(@NotNull ContainerListOptions... options) {
+    public Flux<Container> listContainers(@NotNull ContainerListOptions... options) {
         ListContainersCmd listContainersCmd = dockerClient.listContainersCmd();
 
         for (ContainerListOptions option : options) {
             listContainersCmd = option.apply(listContainersCmd);
         }
 
-        return Flux.fromIterable(listContainersCmd.exec()).map(DockerContainerProperties::fromContainer);
+        return Flux.fromIterable(listContainersCmd.exec());
+    }
+
+    public Flux<DockerContainerProperties> listContainerProperties(@NotNull ContainerListOptions... options) {
+        return listContainers(options).map(DockerContainerProperties::fromContainer);
     }
 
     public Flux<DockerContainerProperties> findByImage(@NotNull String image) {
-        return listContainers().filter(container -> container.image().equals(image));
+        return listContainerProperties().filter(container -> container.image().equals(image));
     }
 
     public Mono<DockerContainerProperties> findByContainerId(@NotNull String containerId) {
-        return listContainers().filter(container -> container.id().equals(containerId)).next();
+        return listContainerProperties().filter(container -> container.id().equals(containerId)).next();
     }
 
     public Mono<DockerContainerProperties> findByContainerName(@NotNull String containerName) {
-        return listContainers().filter(container -> container.names().contains(containerName)).next();
+        return listContainerProperties().filter(container -> container.names().contains(containerName)).next();
     }
 
     public Mono<Void> startContainer(@NotNull DockerContainerProperties container) {
