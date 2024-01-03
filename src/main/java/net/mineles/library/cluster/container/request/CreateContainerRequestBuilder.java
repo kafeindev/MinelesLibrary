@@ -17,9 +17,9 @@ public final class CreateContainerRequestBuilder {
 
     private String name;
 
-    private String hostName;
+    //private String hostName;
 
-    private List<String> command;
+//    private List<String> command;
 
     private List<EnvironmentVariableBinding> environmentVariables = new ArrayList<>();
 
@@ -42,17 +42,19 @@ public final class CreateContainerRequestBuilder {
         return this;
     }
 
-    public CreateContainerRequestBuilder hostName(String hostName) {
+/*    public CreateContainerRequestBuilder hostName(String hostName) {
         Preconditions.checkArgument(hostName == null || hostName.length() <= 255, "Container host name must be less than 255 characters");
 
         this.hostName = hostName;
         return this;
-    }
+    }*/
 
+/*
     public CreateContainerRequestBuilder command(List<String> command) {
         this.command = command;
         return this;
     }
+*/
 
     public CreateContainerRequestBuilder environmentVariables(List<EnvironmentVariableBinding> environmentVariables) {
         this.environmentVariables = environmentVariables;
@@ -81,9 +83,9 @@ public final class CreateContainerRequestBuilder {
 
     public CreateContainerRequest build() {
         return new CreateContainerRequest(name,
-                hostName,
+                //hostName,
                 image,
-                command,
+//                command,
                 environmentVariables,
                 ports,
                 volumes,

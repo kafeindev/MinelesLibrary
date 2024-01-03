@@ -1,5 +1,7 @@
 package net.mineles.library.configuration;
 
+import net.mineles.library.cluster.container.ContainerResourceLimit;
+import net.mineles.library.cluster.container.request.CreateContainerRequest;
 import net.mineles.library.components.CuboidComponent;
 import net.mineles.library.components.ItemComponent;
 import net.mineles.library.components.LocationComponent;
@@ -27,6 +29,8 @@ public final class ConfigManager extends AbstractManager<String, Config> {
                 .serializers(builder -> {
                     builder.register(RedisCredentials.class, RedisCredentialsAdapter.INSTANCE);
                     builder.register(DockerConfig.class, DockerConfigAdapter.INSTANCE);
+                    builder.register(CreateContainerRequest.class, CreateContainerRequestAdapter.INSTANCE);
+                    builder.register(ContainerResourceLimit.class, ContainerResourceLimitAdapter.INSTANCE);
                     builder.register(LocationComponent.class, LocationComponentAdapter.INSTANCE);
                     builder.register(CuboidComponent.class, CuboidComponentAdapter.INSTANCE);
                     builder.register(ItemComponent.class, ItemComponentAdapter.INSTANCE);

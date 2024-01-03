@@ -11,9 +11,9 @@ import java.util.List;
 
 public record CreateContainerRequest(
         String name,
-        String hostName,
+        //String hostName,
         RemoteImageTag image,
-        List<String> command,
+        //List<String> command,
         List<EnvironmentVariableBinding> environmentVariables,
         List<PortBinding> ports,
         List<FolderBinding> volumes,
