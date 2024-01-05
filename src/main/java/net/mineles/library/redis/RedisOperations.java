@@ -6,6 +6,7 @@ import net.mineles.library.redis.message.Message;
 import net.mineles.library.redis.message.MessageListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Map;
@@ -40,9 +41,6 @@ public final class RedisOperations {
     public <T> void publish(@NotNull String channel,
                             @Nullable String key,
                             @NotNull T message) {
-        RedisSubscription subscription = this.subscriptions.get(channel);
-        checkNotNull(subscription, "Cannot publish message to channel " + channel + " as it is not subscribed to");
-
         Decoder<T> decoder = this.client.getDecoder(message.getClass());
         checkNotNull(decoder, "Decoder for " + message.getClass().getName() + " is not registered");
 
@@ -69,40 +67,44 @@ public final class RedisOperations {
         return this.subscriptions.containsKey(channel);
     }
 
-    public void subscribe(@NotNull ExecutorService executorService,
-                          @NotNull String channel) {
+    public RedisSubscription subscribe(@NotNull ExecutorService executorService,
+                                       @NotNull String channel) {
         RedisSubscription subscription = new RedisSubscription(this, channel);
         CompletableFuture.runAsync(subscription, executorService);
 
         this.subscriptions.put(channel, subscription);
+        return subscription;
     }
 
-    public void subscribe(@NotNull ExecutorService executorService,
-                          @NotNull String channel,
-                          @NotNull MessageListener mainListener) {
+    public RedisSubscription subscribe(@NotNull ExecutorService executorService,
+                                       @NotNull String channel,
+                                       @NotNull MessageListener mainListener) {
         RedisSubscription subscription = new RedisSubscription(this, channel, mainListener);
         CompletableFuture.runAsync(subscription, executorService);
 
         this.subscriptions.put(channel, subscription);
+        return subscription;
     }
 
-    public void subscribe(@NotNull ExecutorService executorService,
-                          @NotNull String channel,
-                          @NotNull Map<String, MessageListener> listeners) {
+    public RedisSubscription subscribe(@NotNull ExecutorService executorService,
+                                       @NotNull String channel,
+                                       @NotNull Map<String, MessageListener> listeners) {
         RedisSubscription subscription = new RedisSubscription(this, channel, listeners);
         CompletableFuture.runAsync(subscription, executorService);
 
         this.subscriptions.put(channel, subscription);
+        return subscription;
     }
 
-    public void subscribe(@NotNull ExecutorService executorService,
-                          @NotNull String channel,
-                          @NotNull MessageListener mainListener,
-                          @NotNull Map<String, MessageListener> listeners) {
+    public RedisSubscription subscribe(@NotNull ExecutorService executorService,
+                                       @NotNull String channel,
+                                       @NotNull MessageListener mainListener,
+                                       @NotNull Map<String, MessageListener> listeners) {
         RedisSubscription subscription = new RedisSubscription(this, channel, mainListener, listeners);
         CompletableFuture.runAsync(subscription, executorService);
 
         this.subscriptions.put(channel, subscription);
+        return subscription;
     }
 
     public void unsubscribe(@NotNull String channel) {

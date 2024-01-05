@@ -91,13 +91,20 @@ public final class RedisClient {
         this.operations.publish(channel, key, message);
     }
 
-    public void subscribe(@NotNull String channel) {
-        this.operations.subscribe(this.executorService, channel);
+    public RedisSubscription subscribe(@NotNull String channel) {
+        return this.operations.subscribe(this.executorService, channel);
     }
 
-    public void subscribe(@NotNull String channel,
-                          @NotNull Map<String, MessageListener> listeners) {
-        this.operations.subscribe(this.executorService, channel, listeners);
+    public RedisSubscription subscribe(@NotNull String channel, @NotNull MessageListener messageListener) {
+        RedisSubscription subscription = this.operations.subscribe(this.executorService, channel);
+        subscription.setMainListener(messageListener);
+
+        return subscription;
+    }
+
+    public RedisSubscription subscribe(@NotNull String channel,
+                                       @NotNull Map<String, MessageListener> listeners) {
+        return this.operations.subscribe(this.executorService, channel, listeners);
     }
 
     public void unsubscribe(@NotNull String channel) {
