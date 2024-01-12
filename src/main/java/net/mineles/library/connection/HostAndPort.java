@@ -1,4 +1,4 @@
-package net.mineles.library.cluster.connection;
+package net.mineles.library.connection;
 
 import java.net.InetSocketAddress;
 
@@ -30,5 +30,10 @@ public final class HostAndPort {
 
     public InetSocketAddress asSocketAddress() {
         return new InetSocketAddress(this.host, this.port);
+    }
+
+    @Override
+    public String toString() {
+        return this.host + ":" + this.port;
     }
 }
