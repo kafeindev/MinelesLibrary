@@ -1,15 +1,14 @@
 package net.mineles.library.configuration.serializers;
 
 import com.github.dockerjava.api.model.RestartPolicy;
-import net.mineles.library.cluster.binding.env.EnvironmentVariableBinding;
-import net.mineles.library.cluster.binding.folder.FolderBinding;
-import net.mineles.library.cluster.binding.port.PortBinding;
-import net.mineles.library.cluster.container.ContainerResourceLimit;
-import net.mineles.library.cluster.container.request.CreateContainerRequest;
-import net.mineles.library.cluster.container.request.CreateContainerRequestBuilder;
-import net.mineles.library.cluster.image.RemoteImageTag;
-import org.apache.commons.compress.utils.Lists;
-import org.apache.commons.lang.RandomStringUtils;
+import com.google.common.collect.Lists;
+import net.mineles.library.docker.binding.env.EnvironmentVariableBinding;
+import net.mineles.library.docker.binding.folder.FolderBinding;
+import net.mineles.library.docker.binding.port.PortBinding;
+import net.mineles.library.docker.container.ContainerResourceLimit;
+import net.mineles.library.docker.container.ContainerTemplate;
+import net.mineles.library.docker.container.ContainerTemplateBuilder;
+import net.mineles.library.docker.image.RemoteImageTag;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -17,20 +16,21 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.UUID;
 
-public final class CreateContainerRequestAdapter implements TypeSerializer<CreateContainerRequest> {
-    public static final CreateContainerRequestAdapter INSTANCE = new CreateContainerRequestAdapter();
+public final class ContainerTemplateAdapter implements TypeSerializer<ContainerTemplate> {
+    public static final ContainerTemplateAdapter INSTANCE = new ContainerTemplateAdapter();
 
-    private CreateContainerRequestAdapter() {}
+    private ContainerTemplateAdapter() {}
 
     @Override
-    public CreateContainerRequest deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public ContainerTemplate deserialize(Type type, ConfigurationNode node) throws SerializationException {
         if (!node.isMap()) {
             throw new SerializationException("Expected a map");
         }
 
         RemoteImageTag imageTag = RemoteImageTag.parse(node.node("image").getString());
-        String name = node.node("name").getString() + "-" + RandomStringUtils.random(8);
+        String name = node.node("name").getString() + "-" + UUID.randomUUID().toString().substring(0, 8);
         //String hostName = node.node("host-name").getString();
         //List<String> commands = node.node("commands").getList(String.class);
 
@@ -47,7 +47,7 @@ public final class CreateContainerRequestAdapter implements TypeSerializer<Creat
         RestartPolicy restartPolicy = RestartPolicy.parse(node.node("restart-policy").getString("no"));
         ContainerResourceLimit resourceLimit = node.node("resource-limit").get(ContainerResourceLimit.class);
 
-        return new CreateContainerRequestBuilder(imageTag)
+        return new ContainerTemplateBuilder(imageTag)
                 .name(name)
                 //.hostName(hostName)
                 //.command(commands)
@@ -60,7 +60,7 @@ public final class CreateContainerRequestAdapter implements TypeSerializer<Creat
     }
 
     @Override
-    public void serialize(Type type, @Nullable CreateContainerRequest obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(Type type, @Nullable ContainerTemplate obj, ConfigurationNode node) throws SerializationException {
         throw new SerializationException("Cannot serialize");
     }
 }

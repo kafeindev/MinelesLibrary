@@ -1,12 +1,13 @@
 package net.mineles.library.configuration;
 
-import net.mineles.library.cluster.container.ContainerResourceLimit;
-import net.mineles.library.cluster.container.request.CreateContainerRequest;
+import net.mineles.library.docker.container.ContainerResourceLimit;
+import net.mineles.library.docker.container.ContainerTemplate;
 import net.mineles.library.components.CuboidComponent;
 import net.mineles.library.components.ItemComponent;
 import net.mineles.library.components.LocationComponent;
 import net.mineles.library.configuration.serializers.*;
-import net.mineles.library.cluster.config.DockerConfig;
+import net.mineles.library.docker.config.DockerConfig;
+import net.mineles.library.docker.container.ContainerTemplateCollection;
 import net.mineles.library.manager.AbstractManager;
 import net.mineles.library.redis.RedisCredentials;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,8 @@ public final class ConfigManager extends AbstractManager<String, Config> {
                 .serializers(builder -> {
                     builder.register(RedisCredentials.class, RedisCredentialsAdapter.INSTANCE);
                     builder.register(DockerConfig.class, DockerConfigAdapter.INSTANCE);
-                    builder.register(CreateContainerRequest.class, CreateContainerRequestAdapter.INSTANCE);
+                    builder.register(ContainerTemplate.class, ContainerTemplateAdapter.INSTANCE);
+                    builder.register(ContainerTemplateCollection.class, ContainerTemplateCollectionAdapter.INSTANCE);
                     builder.register(ContainerResourceLimit.class, ContainerResourceLimitAdapter.INSTANCE);
                     builder.register(LocationComponent.class, LocationComponentAdapter.INSTANCE);
                     builder.register(CuboidComponent.class, CuboidComponentAdapter.INSTANCE);
