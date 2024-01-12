@@ -44,7 +44,7 @@ public final class RedisOperations {
         Decoder<T> decoder = this.client.getDecoder(message.getClass());
         checkNotNull(decoder, "Decoder for " + message.getClass().getName() + " is not registered");
 
-        publish(channel, key, decoder.encode(message));
+        publish(channel, key, decoder.encode(message, this.client));
     }
 
     public <T> void publish(@NotNull String channel,
