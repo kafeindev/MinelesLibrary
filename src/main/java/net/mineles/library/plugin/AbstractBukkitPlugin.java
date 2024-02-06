@@ -30,6 +30,7 @@ import com.google.common.collect.ImmutableSet;
 import net.mineles.library.command.Command;
 import net.mineles.library.command.CommandManager;
 import net.mineles.library.configuration.ConfigManager;
+import net.mineles.library.connection.HostAndPort;
 import net.mineles.library.listener.InventoryListener;
 import net.mineles.library.listener.ListenerRegistry;
 import net.mineles.library.menu.Menu;
@@ -39,13 +40,15 @@ import net.mineles.library.plugin.scheduler.concurrent.ConcurrentTaskScheduler;
 import net.mineles.library.plugin.scheduler.concurrent.forkjoin.ForkJoinPoolBuilder;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public abstract class AbstractBukkitPlugin implements BukkitPlugin {
+public abstract class AbstractBukkitPlugin extends AbstractMinelesPlugin
+        implements BukkitPlugin {
     private final Plugin plugin;
 
     private ConcurrentTaskScheduler taskScheduler;
@@ -76,6 +79,8 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
         this.configManager = new ConfigManager(getDataPath());
         loadConfigs();
 
+        super.enable();
+
         getLogger().info("Loading menus...");
         this.menuManager = new MenuManager();
         loadMenus();
@@ -97,8 +102,6 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
                 .addAll(getListeners())
                 .build());
 
-        getServer().getMessenger().registerOutgoingPluginChannel(this.plugin, "BungeeCord");
-
         this.metadataStore = new MetadataStore();
     }
 
@@ -109,6 +112,7 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
         this.taskScheduler.shutdownExecutor();
 
         onDisable();
+        super.disable();
 
         this.taskScheduler.shutdownWorkerPool();
     }
@@ -116,10 +120,8 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     public abstract void onDisable();
 
     @Override
-    public void loadMenus() {
-        this.menuManager.stopViewing();
-        this.menuManager.clear();
-        this.menuManager.register(getMenus());
+    public void stopServer() {
+        getServer().shutdown();
     }
 
     protected void registerCommands() {
@@ -131,6 +133,29 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     protected abstract @NotNull Set<Menu> getMenus();
 
     protected abstract @NotNull Set<Class<?>> getListeners();
+
+    @Override
+    public void dispatchCommand(String command) {
+        BukkitScheduler scheduler = getServer().getScheduler();
+        scheduler.runTask(this.plugin, () -> getServer().dispatchCommand(getServer().getConsoleSender(), command));
+    }
+
+    @Override
+    public void loadMenus() {
+        this.menuManager.stopViewing();
+        this.menuManager.clear();
+        this.menuManager.register(getMenus());
+    }
+
+    @Override
+    public void log(String message) {
+        getLogger().info(message);
+    }
+
+    @Override
+    public String getPluginName() {
+        return this.plugin.getName();
+    }
 
     @Override
     public Plugin getPlugin() {
@@ -150,6 +175,11 @@ public abstract class AbstractBukkitPlugin implements BukkitPlugin {
     @Override
     public Server getServer() {
         return this.plugin.getServer();
+    }
+
+    @Override
+    public HostAndPort getServerAddress() {
+        return HostAndPort.localhost(getServer().getPort());
     }
 
     private void setupTaskScheduler() {

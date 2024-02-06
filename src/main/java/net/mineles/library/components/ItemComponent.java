@@ -24,15 +24,17 @@
 
 package net.mineles.library.components;
 
-import com.cryptomorin.xseries.XEnchantment;
-import com.cryptomorin.xseries.XMaterial;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import de.tr7zw.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.mineles.library.compatibility.Compatibility;
 import net.mineles.library.compatibility.ItemsAdderCompatibility;
+import net.mineles.library.libs.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.serialize.SerializationException;
+import net.mineles.library.libs.nbtapi.nbtapi.NBTItem;
+import net.mineles.library.libs.xseries.XEnchantment;
+import net.mineles.library.libs.xseries.XMaterial;
 import net.mineles.library.utils.text.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -45,8 +47,6 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;

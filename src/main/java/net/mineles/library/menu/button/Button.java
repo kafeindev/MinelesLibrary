@@ -1,6 +1,6 @@
 package net.mineles.library.menu.button;
 
-import com.cryptomorin.xseries.XSound;
+import net.mineles.library.libs.xseries.XSound;
 import net.mineles.library.menu.action.RegisteredClickAction;
 import net.mineles.library.menu.misc.ClickResult;
 import net.mineles.library.menu.misc.contexts.ClickContext;
@@ -8,7 +8,7 @@ import net.mineles.library.menu.misc.contexts.OpenContext;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.ConfigurationNode;
 
 import java.util.Map;
 import java.util.Set;

@@ -1,7 +1,7 @@
 package net.mineles.library.docker.binding.port;
 
-import com.github.dockerjava.api.model.ContainerPort;
 import net.mineles.library.docker.binding.AbstractBinding;
+import net.mineles.library.libs.dockerjava.api.model.ContainerPort;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;

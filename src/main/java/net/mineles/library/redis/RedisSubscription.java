@@ -6,9 +6,9 @@ import net.mineles.library.redis.message.MessageListener;
 import net.mineles.library.utils.GsonProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPubSub;
-import redis.clients.jedis.exceptions.JedisConnectionException;
+import net.mineles.library.libs.jedis.Jedis;
+import net.mineles.library.libs.jedis.JedisPubSub;
+import net.mineles.library.libs.jedis.exceptions.JedisConnectionException;
 
 import java.util.Map;
 
@@ -45,14 +45,20 @@ public final class RedisSubscription extends JedisPubSub implements Runnable {
                       @NotNull MessageListener mainListener,
                       @NotNull Map<String, MessageListener> listeners) {
         this.operations = operations;
-        this.channel = channel;
         this.listeners = listeners;
-        this.mainListener = mainListener;
+
+        if (channel.split(":").length == 2) {
+            this.channel = channel.split(":")[0];
+            this.listeners.put(channel.split(":")[1], mainListener);
+        } else {
+            this.channel = channel;
+            this.mainListener = mainListener;
+        }
     }
 
     @Override
     public void run() {
-        while (!this.operations.getClient().isClosed() && !this.operations.getJedisPool().isClosed() && !Thread.interrupted()) {
+        while (!this.operations.getClient().isClosed() && !Thread.interrupted() && !this.operations.getJedisPool().isClosed()) {
             try (Jedis jedis = this.operations.getJedisPool().getResource()) {
                 jedis.subscribe(this, this.channel);
             } catch (JedisConnectionException e) {
@@ -85,12 +91,16 @@ public final class RedisSubscription extends JedisPubSub implements Runnable {
         if (parsed.has("key")) {
             String key = parsed.get("key").getAsString();
             MessageListener listener = getListener(key);
-            checkNotNull(listener, "Listener for key " + key + " is not registered");
+            if (listener == null) {
+                return;
+            }
 
             listener.onMessage(this.operations.getClient(), parsed);
         } else {
             MessageListener listener = getMainListener();
-            checkNotNull(listener, "Main listener is not registered");
+            if (listener == null) {
+                return;
+            }
 
             listener.onMessage(this.operations.getClient(), parsed);
         }
@@ -110,6 +120,10 @@ public final class RedisSubscription extends JedisPubSub implements Runnable {
 
     public boolean isRegistered(@NotNull String key) {
         return this.listeners.containsKey(key);
+    }
+
+    public void registerListeners(@NotNull Map<String, MessageListener> listeners) {
+        this.listeners.putAll(listeners);
     }
 
     public void registerListener(@NotNull String key, @NotNull MessageListener listener) {

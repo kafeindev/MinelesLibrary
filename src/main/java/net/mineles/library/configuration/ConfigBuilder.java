@@ -3,12 +3,12 @@ package net.mineles.library.configuration;
 import net.mineles.library.utils.file.FileCreator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.ConfigurationOptions;
-import org.spongepowered.configurate.gson.GsonConfigurationLoader;
-import org.spongepowered.configurate.loader.ConfigurationLoader;
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
+import net.mineles.library.libs.configurate.ConfigurateException;
+import net.mineles.library.libs.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.ConfigurationOptions;
+import net.mineles.library.libs.configurate.gson.GsonConfigurationLoader;
+import net.mineles.library.libs.configurate.loader.ConfigurationLoader;
+import net.mineles.library.libs.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package net.mineles.library.configuration;
 
+import net.mineles.library.libs.configurate.ConfigurationNode;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
 
 import java.nio.file.Path;
 import java.util.Objects;

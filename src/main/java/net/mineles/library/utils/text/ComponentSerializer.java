@@ -26,9 +26,10 @@ package net.mineles.library.utils.text;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import de.themoep.minedown.MineDown;
+import net.mineles.library.libs.minedown.MineDown;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.OfflinePlayer;
@@ -40,7 +41,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class ComponentSerializer {
-    private static final BungeeComponentSerializer SERIALIZER = BungeeComponentSerializer.get();
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%(.*?)%|\\{(.*?)\\}|:(.*?):");
 
     public static Component deserialize(@NotNull String message) {
@@ -52,7 +52,7 @@ public final class ComponentSerializer {
         message = PlaceholderParser.applyPlaceholders(message, placeholders);
 
         BaseComponent[] baseComponent = new MineDown(message).toComponent();
-        return SERIALIZER.deserialize(baseComponent);
+        return BungeeComponentSerializer.get().deserialize(baseComponent);
     }
 
     public static Component deserialize(@NotNull OfflinePlayer player, @NotNull String message) {
@@ -72,6 +72,16 @@ public final class ComponentSerializer {
                 .build();
 
         return deserialize(message, newPlaceholders);
+    }
+
+    public static Component deserializeForVelocity(@NotNull String message) {
+        return deserializeForVelocity(message, Maps.newHashMap());
+    }
+
+    public static Component deserializeForVelocity(@NotNull String message, @NotNull Map<String, String> placeholders) {
+        //message = LegacyTextConverter.convert(message);
+        message = PlaceholderParser.applyPlaceholders(message, placeholders);
+        return MiniMessage.miniMessage().deserialize(message);
     }
 
 /*

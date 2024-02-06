@@ -1,14 +1,16 @@
 package net.mineles.library.docker.client;
 
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.async.ResultCallback;
-import com.github.dockerjava.api.command.*;
-import com.github.dockerjava.api.model.*;
-import com.github.dockerjava.core.DefaultDockerClientConfig;
-import com.github.dockerjava.core.DockerClientConfig;
-import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
-import com.github.dockerjava.transport.DockerHttpClient;
+import net.mineles.library.libs.dockerjava.api.DockerClient;
+import net.mineles.library.libs.dockerjava.api.async.ResultCallback;
+import net.mineles.library.libs.dockerjava.api.command.*;
+import net.mineles.library.libs.dockerjava.api.model.*;
+import net.mineles.library.libs.dockerjava.api.model.Container;
+import net.mineles.library.libs.dockerjava.core.DefaultDockerClientConfig;
+import net.mineles.library.libs.dockerjava.core.DockerClientConfig;
+import net.mineles.library.libs.dockerjava.core.DockerClientImpl;
+import net.mineles.library.libs.dockerjava.core.InvocationBuilder;
+import net.mineles.library.libs.dockerjava.httpclient5.ApacheDockerHttpClient;
+import net.mineles.library.libs.dockerjava.transport.DockerHttpClient;
 import net.mineles.library.docker.binding.AbstractBinding;
 import net.mineles.library.docker.config.DockerConfig;
 import net.mineles.library.docker.container.ContainerTemplateCollection;
@@ -25,13 +27,15 @@ import net.mineles.library.docker.image.request.BuildImageRequestOptions;
 import net.mineles.library.docker.network.request.CreateNetworkRequest;
 import net.mineles.library.docker.volume.CreateVolumeRequest;
 import net.mineles.library.docker.volume.DockerVolume;
+import net.mineles.library.libs.reactor.core.publisher.Flux;
+import net.mineles.library.libs.reactor.core.publisher.Mono;
 import org.jetbrains.annotations.NotNull;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class DockerTemplate {
     private final DockerClient dockerClient;
@@ -146,6 +150,34 @@ public class DockerTemplate {
         return Mono.fromRunnable(() -> this.dockerClient.removeContainerCmd(name).exec());
     }
 
+    public Mono<String> createCommand(@NotNull String containerId, @NotNull String... commands) {
+        return Mono.fromRunnable(() -> this.dockerClient.execCreateCmd(containerId).withCmd(commands).exec());
+    }
+
+    public Mono<String> createCommand(@NotNull String containerId, @NotNull List<String> commands) {
+        return createCommand(containerId, commands.toArray(new String[0]));
+    }
+
+    public Mono<String> createCommand(@NotNull String containerId, @NotNull String command) {
+        return createCommand(containerId, command.split(" "));
+    }
+
+    public Mono<String> startCommand(@NotNull String commandId, ResultCallback<Frame> callback) {
+        return Mono.fromRunnable(() -> this.dockerClient.execStartCmd(commandId).exec(callback));
+    }
+
+    public Mono<Void> createAndStartCommand(@NotNull String containerId, @NotNull ResultCallback<Frame> callback, @NotNull String... commands) {
+        return createCommand(containerId, commands).flatMap(commandId -> startCommand(commandId, callback)).then();
+    }
+
+    public Mono<Void> createAndStartCommand(@NotNull String containerId, @NotNull ResultCallback<Frame> callback, @NotNull List<String> commands) {
+        return createAndStartCommand(containerId, callback, commands.toArray(new String[0]));
+    }
+
+    public Mono<Void> createAndStartCommand(@NotNull String containerId, @NotNull ResultCallback<Frame> callback, @NotNull String command) {
+        return createAndStartCommand(containerId, callback, command.split(" "));
+    }
+
     public ContainerTemplateCollection getContainerTemplates() {
         return this.containerTemplates;
     }
@@ -167,15 +199,17 @@ public class DockerTemplate {
      */
     public Mono<String> createContainer(@NotNull ContainerTemplate request) {
         CreateContainerCmd createContainerCmd = dockerClient.createContainerCmd(request.image().getFullName())
-                .withName(request.name())
-                .withEnv(request.environmentVariables().stream().map(AbstractBinding::getFullBinding).toList());
-                //.withExposedPorts(request.ports().stream().map(binding -> ExposedPort.parse(binding.getFullBinding())).toList());
+                .withName(request.generateNameForNewContainer())
+                .withEnv(request.environmentVariables().stream().map(AbstractBinding::getFullBinding).toList())
+                .withCmd(request.command());
+        //.withExposedPorts(request.ports().stream().map(binding -> ExposedPort.parse(binding.getFullBinding())).toList());
 
         if (createContainerCmd.getHostConfig() == null) {
             throw new DockerContainerException(request.name(), "Host config is null");
         }
 
         createContainerCmd.getHostConfig()
+                .withNetworkMode(request.network())
                 .withBinds(request.volumes().stream()
                         .map(binding -> new Bind(binding.getKey(), new Volume(binding.getValue()))).toList())
                 .withPortBindings(request.ports().stream().map(binding -> PortBinding.parse(binding.getFullBinding())).toList())
@@ -185,11 +219,6 @@ public class DockerTemplate {
                 .withMemory(request.resourceLimit().memory());
 
         return Mono.fromCallable(() -> createContainerCmd.exec().getId());
-    }
-
-    public Mono<String> createAndStartContainer(@NotNull String name) {
-        Mono<String> containerId = createContainer(name);
-        return containerId.flatMap(id -> startContainer(id).thenReturn(id));
     }
 
     public Flux<Container> listContainers(@NotNull ContainerListOptions... options) {
@@ -206,6 +235,10 @@ public class DockerTemplate {
         return listContainers(options).map(DockerContainerProperties::fromContainer);
     }
 
+    public Flux<Container> find(@NotNull Predicate<Container> predicate) {
+        return listContainers(ContainerListOptions.ALL).filter(predicate);
+
+    }
     public Flux<DockerContainerProperties> findByImage(@NotNull String image) {
         return listContainerProperties(ContainerListOptions.ALL).filter(container -> container.image().equals(image));
     }
@@ -264,6 +297,43 @@ public class DockerTemplate {
         }
 
         return Mono.fromRunnable(removeContainerCmd::exec);
+    }
+
+    public Mono<Void> removeContainers(@NotNull String image, @NotNull ContainerRemoveOptions... options) {
+        Flux<Container> containers = listContainers(ContainerListOptions.ALL).filter(container -> container.getImage().equals(image));
+        return removeContainers(containers, options);
+    }
+
+    public Mono<Void> removeContainers(@NotNull Flux<Container> containers, @NotNull ContainerRemoveOptions... options) {
+        return containers.flatMap(container -> removeContainer(container.getId(), options)).then();
+    }
+
+    public Mono<Void> removeContainers(@NotNull ContainerRemoveOptions... options) {
+        Flux<Container> containers = listContainers();
+        return removeContainers(containers, options);
+    }
+
+    public Mono<Void> removeContainers(@NotNull ContainerTemplate template, @NotNull ContainerRemoveOptions... options) {
+        Flux<Container> containers = listContainers().filter(container -> container.getImage().equals(template.image().getFullName()));
+        return removeContainers(containers, options);
+    }
+
+    public Mono<Void> removeContainersFromTemplateCollection(@NotNull ContainerRemoveOptions... options) {
+        Flux<Container> containers = listContainers().filter(container -> this.containerTemplates.getTemplateByImage(container.getImage()) != null);
+        return removeContainers(containers, options);
+    }
+
+    public Mono<Statistics> getStatsFromContainer(@NotNull String id) {
+        return getStatsFromContainer(id, new InvocationBuilder.AsyncResultCallback<>());
+    }
+
+    public Mono<Statistics> getStatsFromContainer(@NotNull String id, InvocationBuilder.AsyncResultCallback<Statistics> callback) {
+        return Mono.fromCallable(() -> {
+            dockerClient.statsCmd(id).exec(callback);
+            Statistics statistics = callback.awaitResult();
+            callback.close();
+            return statistics;
+        });
     }
 
     public Mono<Boolean> isHealthy(@NotNull DockerContainerProperties container) {

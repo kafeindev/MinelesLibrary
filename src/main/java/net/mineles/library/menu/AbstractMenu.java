@@ -1,6 +1,6 @@
 package net.mineles.library.menu;
 
-import com.cryptomorin.xseries.XSound;
+import net.mineles.library.libs.xseries.XSound;
 import com.google.common.collect.Sets;
 import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.menu.action.ClickAction;
@@ -19,7 +19,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.ConfigurationNode;
 
 import java.util.*;
 

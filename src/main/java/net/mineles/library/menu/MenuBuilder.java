@@ -1,12 +1,12 @@
 package net.mineles.library.menu;
 
-import com.cryptomorin.xseries.XSound;
+import net.mineles.library.libs.xseries.XSound;
 import com.google.common.collect.Sets;
 import net.mineles.library.menu.button.Button;
 import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.ConfigurationNode;
 
 import java.util.Set;
 

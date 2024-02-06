@@ -2,9 +2,9 @@ package net.mineles.library.configuration.serializers;
 
 import net.mineles.library.components.CuboidComponent;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
-import org.spongepowered.configurate.serialize.TypeSerializer;
+import net.mineles.library.libs.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.serialize.SerializationException;
+import net.mineles.library.libs.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 

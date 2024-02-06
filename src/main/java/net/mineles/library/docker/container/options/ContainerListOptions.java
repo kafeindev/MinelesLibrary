@@ -1,6 +1,6 @@
 package net.mineles.library.docker.container.options;
 
-import com.github.dockerjava.api.command.ListContainersCmd;
+import net.mineles.library.libs.dockerjava.api.command.ListContainersCmd;
 
 import java.util.Collections;
 import java.util.function.UnaryOperator;

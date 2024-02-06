@@ -1,11 +1,11 @@
 package net.mineles.library.docker.container;
 
-import com.github.dockerjava.api.model.RestartPolicy;
 import com.google.common.base.Preconditions;
 import net.mineles.library.docker.binding.env.EnvironmentVariableBinding;
 import net.mineles.library.docker.binding.folder.FolderBinding;
 import net.mineles.library.docker.binding.port.PortBinding;
 import net.mineles.library.docker.image.RemoteImageTag;
+import net.mineles.library.libs.dockerjava.api.model.RestartPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +16,9 @@ public final class ContainerTemplateBuilder {
 
     private String name;
 
-    //private String hostName;
+    private String network;
 
-//    private List<String> command;
+    private List<String> command = new ArrayList<>();
 
     private List<EnvironmentVariableBinding> environmentVariables = new ArrayList<>();
 
@@ -41,19 +41,15 @@ public final class ContainerTemplateBuilder {
         return this;
     }
 
-/*    public CreateContainerRequestBuilder hostName(String hostName) {
-        Preconditions.checkArgument(hostName == null || hostName.length() <= 255, "Container host name must be less than 255 characters");
-
-        this.hostName = hostName;
+    public ContainerTemplateBuilder network(String network) {
+        this.network = network;
         return this;
-    }*/
+    }
 
-/*
-    public CreateContainerRequestBuilder command(List<String> command) {
+    public ContainerTemplateBuilder command(List<String> command) {
         this.command = command;
         return this;
     }
-*/
 
     public ContainerTemplateBuilder environmentVariables(List<EnvironmentVariableBinding> environmentVariables) {
         this.environmentVariables = environmentVariables;
@@ -82,9 +78,9 @@ public final class ContainerTemplateBuilder {
 
     public ContainerTemplate build() {
         return new ContainerTemplate(name,
-                //hostName,
                 image,
-//                command,
+                network,
+                command,
                 environmentVariables,
                 ports,
                 volumes,

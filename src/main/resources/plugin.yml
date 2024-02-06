@@ -1,9 +1,7 @@
 name: MinelesLibrary
 version: '${version}'
 author: Mineles
-load: STARTUP
 main: net.mineles.library.loader.MinelesLibraryBukkitLoader
 api-version: '1.13'
-softdepend:  [ProtocolLib, Vault, PlaceholderAPI, ItemsAdder, ModelEngine, AuthMe]
-libraries:
-  - net.kyori:adventure-platform-bungeecord:4.3.1
+depend: [MinelesLibraryExternal]
+softdepend:  [ProtocolLib, Vault, PlaceholderAPI, ItemsAdder, ModelEngine]

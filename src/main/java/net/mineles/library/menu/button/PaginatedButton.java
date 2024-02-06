@@ -158,6 +158,7 @@ final class PaginatedButton extends AbstractButton implements Button {
                     if (this.itemModifier != null) {
                         this.itemModifier.accept(context, itemComponent, entry);
                     }
+                    itemComponent.setNbt("mineles-button", button.getName());
 
                     itemStacks.put(button.getSlots()[i], itemComponent.getHandle());
                 }

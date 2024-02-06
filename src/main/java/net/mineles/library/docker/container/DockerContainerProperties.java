@@ -1,7 +1,7 @@
 package net.mineles.library.docker.container;
 
-import com.github.dockerjava.api.model.Container;
 import net.mineles.library.docker.binding.port.PortBinding;
+import net.mineles.library.libs.dockerjava.api.model.Container;
 
 import java.util.Arrays;
 import java.util.List;

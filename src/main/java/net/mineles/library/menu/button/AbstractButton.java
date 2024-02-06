@@ -1,6 +1,6 @@
 package net.mineles.library.menu.button;
 
-import com.cryptomorin.xseries.XSound;
+import net.mineles.library.libs.xseries.XSound;
 import com.google.common.collect.Sets;
 import net.mineles.library.menu.action.RegisteredClickAction;
 import net.mineles.library.menu.misc.ClickResult;
@@ -10,8 +10,8 @@ import net.mineles.library.utils.ArrayUtils;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
+import net.mineles.library.libs.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.serialize.SerializationException;
 
 import java.util.Arrays;
 import java.util.List;

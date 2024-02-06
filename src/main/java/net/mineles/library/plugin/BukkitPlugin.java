@@ -37,13 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
-public interface BukkitPlugin {
-    void load();
-
-    void enable();
-
-    void disable();
-
+public interface BukkitPlugin extends MinelesPlugin {
     void startTasks();
 
     void loadConfigs();

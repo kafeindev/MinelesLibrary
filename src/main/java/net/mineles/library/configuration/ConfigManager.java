@@ -11,8 +11,8 @@ import net.mineles.library.docker.container.ContainerTemplateCollection;
 import net.mineles.library.manager.AbstractManager;
 import net.mineles.library.redis.RedisCredentials;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.ConfigurationOptions;
+import net.mineles.library.libs.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.ConfigurationOptions;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;

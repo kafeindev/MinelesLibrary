@@ -24,11 +24,11 @@
 
 package net.mineles.library.components;
 
-import com.cryptomorin.xseries.XSound;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
+import net.mineles.library.libs.xseries.XSound;
 import net.mineles.library.metadata.Metadata;
 import net.mineles.library.metadata.store.MetadataMap;
 import net.mineles.library.plugin.BukkitPlugin;

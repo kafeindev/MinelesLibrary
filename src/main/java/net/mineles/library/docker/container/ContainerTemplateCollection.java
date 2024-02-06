@@ -28,6 +28,15 @@ public final class ContainerTemplateCollection {
         return null;
     }
 
+    public ContainerTemplate getTemplateByImage(String image) {
+        for (ContainerTemplate template : this.templates) {
+            if (template.image().getFullName().equals(image)) {
+                return template;
+            }
+        }
+        return null;
+    }
+
     public void register(ContainerTemplate template) {
         this.templates.add(template);
     }

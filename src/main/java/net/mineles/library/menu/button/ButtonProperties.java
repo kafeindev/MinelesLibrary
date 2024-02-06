@@ -1,10 +1,10 @@
 package net.mineles.library.menu.button;
 
-import com.cryptomorin.xseries.XSound;
+import net.mineles.library.libs.xseries.XSound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
+import net.mineles.library.libs.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.serialize.SerializationException;
 
 public final class ButtonProperties {
     private final @Nullable ConfigurationNode node;

@@ -106,6 +106,7 @@ final class DefaultButton extends AbstractButton {
                 if (this.itemModifier != null) {
                     this.itemModifier.accept(context, itemComponent);
                 }
+                itemComponent.setNbt("mineles-button", button.getName());
 
                 Map<Integer, ItemStack> itemStacks = Maps.newHashMap();
                 for (int slot : button.getSlots()) {

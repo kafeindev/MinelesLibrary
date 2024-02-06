@@ -1,5 +1,6 @@
 package net.mineles.library.redis;
 
+import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import net.mineles.library.redis.codec.Decoder;
 import net.mineles.library.redis.codec.DecoderCollection;
@@ -7,7 +8,7 @@ import net.mineles.library.redis.message.Message;
 import net.mineles.library.redis.message.MessageListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import redis.clients.jedis.JedisPool;
+import net.mineles.library.libs.jedis.JedisPool;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -18,7 +19,7 @@ public final class RedisClient {
     private final RedisCache cache;
     private final RedisOperations operations;
     private final DecoderCollection decoders;
-    private final ExecutorService executorService;
+    private final String executorName;
 
     private JedisPool jedisPool;
     private boolean closed;
@@ -28,10 +29,7 @@ public final class RedisClient {
         this.cache = new RedisCache(this);
         this.operations = new RedisOperations(this);
         this.decoders = new DecoderCollection();
-        this.executorService = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
-                .setNameFormat(executorName + "-redis-%d")
-                .setDaemon(true)
-                .build());
+        this.executorName = executorName;
     }
 
     public RedisCredentials getCredentials() {
@@ -64,14 +62,23 @@ public final class RedisClient {
         return this.operations;
     }
 
-    public <T> void publish(@NotNull String channel,
-                            @NotNull Message message) {
+    public void publish(@NotNull String channel,
+                        @NotNull Message message) {
+        if (channel.split(":").length == 2) {
+            message.setKey(channel.split(":")[1]);
+            channel = channel.split(":")[0];
+        }
+
         this.operations.publish(channel, message);
     }
 
     public <T> void publish(@NotNull String channel,
                             @NotNull T message) {
-        this.operations.publish(channel, null, message);
+        if (channel.split(":").length == 2) {
+            this.operations.publish(channel.split(":")[0], channel.split(":")[1], message);
+        } else {
+            this.operations.publish(channel, null, message);
+        }
     }
 
     public <T> void publish(@NotNull String channel,
@@ -80,9 +87,13 @@ public final class RedisClient {
         this.operations.publish(channel, key, message);
     }
 
-    public <T> void publish(@NotNull String channel,
-                            @NotNull String message) {
-        this.operations.publish(channel, null, message);
+    public void publish(@NotNull String channel,
+                        @NotNull String message) {
+        if (channel.split(":").length == 2) {
+            this.operations.publish(channel.split(":")[0], channel.split(":")[1], message);
+        } else {
+            this.operations.publish(channel, null, message);
+        }
     }
 
     public void publish(@NotNull String channel,
@@ -92,26 +103,60 @@ public final class RedisClient {
     }
 
     public RedisSubscription subscribe(@NotNull String channel) {
-        return this.operations.subscribe(this.executorService, channel);
+        ExecutorService executorService = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
+                .setNameFormat(this.executorName + "-redis-%d")
+                .setDaemon(true)
+                .build());
+
+        if (channel.split(":").length == 2) {
+            channel = channel.split(":")[0];
+        }
+        return this.operations.subscribe(executorService, channel);
     }
 
     public RedisSubscription subscribe(@NotNull String channel, @NotNull MessageListener messageListener) {
-        RedisSubscription subscription = this.operations.subscribe(this.executorService, channel);
-        subscription.setMainListener(messageListener);
+        ExecutorService executorService = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
+                .setNameFormat(this.executorName + "-redis-%d")
+                .setDaemon(true)
+                .build());
 
-        return subscription;
+        if (channel.split(":").length == 2) {
+            Map<String, MessageListener> listeners = Maps.newConcurrentMap();
+            listeners.put(channel.split(":")[1], messageListener);
+
+            return subscribe(channel.split(":")[0], listeners);
+        } else {
+            RedisSubscription subscription = this.operations.subscribe(executorService, channel);
+            subscription.setMainListener(messageListener);
+
+            return subscription;
+        }
     }
 
     public RedisSubscription subscribe(@NotNull String channel,
                                        @NotNull Map<String, MessageListener> listeners) {
-        return this.operations.subscribe(this.executorService, channel, listeners);
+        ExecutorService executorService = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
+                .setNameFormat(this.executorName + "-redis-%d")
+                .setDaemon(true)
+                .build());
+
+        if (channel.split(":").length == 2) {
+            channel = channel.split(":")[0];
+        }
+        return this.operations.subscribe(executorService, channel, listeners);
     }
 
     public void unsubscribe(@NotNull String channel) {
+        if (channel.split(":").length == 2) {
+            channel = channel.split(":")[0];
+        }
         this.operations.unsubscribe(channel);
     }
 
     public boolean isSubscribed(@NotNull String channel) {
+        if (channel.split(":").length == 2) {
+            channel = channel.split(":")[0];
+        }
         return this.operations.isSubscribed(channel);
     }
 

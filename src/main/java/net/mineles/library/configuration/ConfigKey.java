@@ -1,5 +1,9 @@
 package net.mineles.library.configuration;
 
+import net.mineles.library.utils.ArrayUtils;
+import org.jetbrains.annotations.Nullable;
+import net.mineles.library.libs.configurate.ConfigurationNode;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -32,6 +36,26 @@ public final class ConfigKey<T> {
 
     public T getValue() {
         return this.value;
+    }
+
+    public static @Nullable String getValueFromEnv(String[] path) {
+        return System.getenv(String.join("_", path).toUpperCase());
+    }
+
+    public static @Nullable String getValueFromEnv(ConfigurationNode node) {
+        Object[] path = node.path().array();
+
+        String[] stringPath = new String[path.length];
+        for (int i = 0; i < path.length; i++) {
+            stringPath[i] = path[i].toString();
+        }
+
+        return getValueFromEnv(stringPath);
+    }
+
+    public static @Nullable String getValueFromEnv(ConfigurationNode node, String defaultValue) {
+        String value = getValueFromEnv(node);
+        return value == null ? defaultValue : value;
     }
 
     @Override

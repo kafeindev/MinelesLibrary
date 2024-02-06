@@ -1,6 +1,6 @@
 package net.mineles.library.docker.container.options;
 
-import com.github.dockerjava.api.command.RemoveContainerCmd;
+import net.mineles.library.libs.dockerjava.api.command.RemoveContainerCmd;
 
 import java.util.function.UnaryOperator;
 

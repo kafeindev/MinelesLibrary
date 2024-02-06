@@ -2,8 +2,10 @@ package net.mineles.library.redis;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
-import redis.clients.jedis.HostAndPort;
+import net.mineles.library.libs.configurate.ConfigurationNode;
+import net.mineles.library.libs.jedis.HostAndPort;
+
+import static net.mineles.library.configuration.ConfigKey.getValueFromEnv;
 
 public record RedisCredentials(@NotNull HostAndPort hostAndPort,
                                @Nullable String username,
@@ -13,9 +15,9 @@ public record RedisCredentials(@NotNull HostAndPort hostAndPort,
     public static RedisCredentials fromNode(@NotNull ConfigurationNode node) {
         return new RedisCredentials(
                 HostAndPort.from(node.node("host").getString()),
-                node.node("username").getString(),
-                node.node("password").getString(),
-                node.node("use-ssl").getBoolean()
+                getValueFromEnv(node.node("username"), node.node("username").getString()),
+                getValueFromEnv(node.node("password"), node.node("password").getString()),
+                node.node("use-ssl").getBoolean(false)
         );
     }
 

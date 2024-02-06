@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.mineles.library.redis.codec.Decoder;
 import org.jetbrains.annotations.NotNull;
-import redis.clients.jedis.Jedis;
+import net.mineles.library.libs.jedis.Jedis;
 
 import java.time.Duration;
 import java.util.List;
@@ -54,6 +54,13 @@ public final class RedisCache {
     public Set<String> keys(@NotNull String pattern) {
         try (Jedis jedis = this.client.getJedisPool().getResource()) {
             return jedis.keys(pattern);
+        }
+    }
+
+    public boolean sismember(@NotNull String key,
+                             @NotNull String member) {
+        try (Jedis jedis = this.client.getJedisPool().getResource()) {
+            return jedis.sismember(key, member);
         }
     }
 
@@ -155,6 +162,12 @@ public final class RedisCache {
     public long hlen(@NotNull String key) {
         try (Jedis jedis = this.client.getJedisPool().getResource()) {
             return jedis.hlen(key);
+        }
+    }
+
+    public Set<String> hkeys(@NotNull String key) {
+        try (Jedis jedis = this.client.getJedisPool().getResource()) {
+            return jedis.hkeys(key);
         }
     }
 

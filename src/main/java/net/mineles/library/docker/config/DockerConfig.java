@@ -1,8 +1,10 @@
 package net.mineles.library.docker.config;
 
-import org.spongepowered.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.ConfigurationNode;
 
 import java.time.Duration;
+
+import static net.mineles.library.configuration.ConfigKey.getValueFromEnv;
 
 public record DockerConfig(
         String dockerHost,
@@ -16,8 +18,8 @@ public record DockerConfig(
     public static DockerConfig fromNode(ConfigurationNode node) {
         return new DockerConfigBuilder()
                 .dockerHost(node.node("host").getString())
-                .registryUsername(node.node("user-name").getString())
-                .registryPassword(node.node("password").getString())
+                .registryUsername(getValueFromEnv(node.node("user-name"), node.node("user-name").getString()))
+                .registryPassword(getValueFromEnv(node.node("password"), node.node("password").getString()))
                 .registryEmail(node.node("mail").getString())
                 .registryUrl(node.node("url").getString())
                 .build();

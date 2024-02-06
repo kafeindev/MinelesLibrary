@@ -1,11 +1,11 @@
 package net.mineles.library.redis;
 
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import net.mineles.library.libs.commons.pool2.impl.GenericObjectPoolConfig;
 import org.jetbrains.annotations.NotNull;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Protocol;
+import net.mineles.library.libs.jedis.Jedis;
+import net.mineles.library.libs.jedis.JedisPool;
+import net.mineles.library.libs.jedis.JedisPoolConfig;
+import net.mineles.library.libs.jedis.Protocol;
 
 final class RedisConnector {
 

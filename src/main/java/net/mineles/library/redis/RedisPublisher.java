@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import net.mineles.library.utils.GsonProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import redis.clients.jedis.Jedis;
+import net.mineles.library.libs.jedis.Jedis;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

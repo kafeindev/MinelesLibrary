@@ -5,8 +5,8 @@ import org.jetbrains.annotations.Nullable;
 
 public final class Message {
     private final @NotNull String channel;
-    private final @Nullable String key;
     private final @NotNull String payload;
+    private String key;
 
     public Message(@NotNull String channel,
                    @Nullable String key,
@@ -35,6 +35,10 @@ public final class Message {
 
     public @Nullable String getKey() {
         return this.key;
+    }
+
+    public void setKey(@Nullable String key) {
+        this.key = key;
     }
 
     public @NotNull String getPayload() {

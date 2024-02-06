@@ -8,13 +8,7 @@ import org.slf4j.Logger;
 
 import java.nio.file.Path;
 
-public interface VelocityPlugin {
-    void load();
-
-    void enable();
-
-    void disable();
-
+public interface VelocityPlugin extends MinelesPlugin {
     void startTasks();
 
     void loadConfigs();

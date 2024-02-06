@@ -1,15 +1,18 @@
 package net.mineles.library.configuration;
 
+import net.mineles.library.utils.ArrayUtils;
 import net.mineles.library.utils.reflect.Fields;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
+import org.jetbrains.annotations.Nullable;
+import net.mineles.library.libs.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.serialize.SerializationException;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
 
 final class KeyInjector {
-    KeyInjector() {}
+    KeyInjector() {
+    }
 
     void inject(@NotNull Class<?> clazz, @NotNull Config config) {
         inject(clazz, config.getNode());
@@ -40,6 +43,13 @@ final class KeyInjector {
             }
 
             Object value = Collection.class.isAssignableFrom(type) ? child.raw() : child.get(type);
+            if (String.class.isAssignableFrom(type) && (value == null || ((String) value).isEmpty())) {
+                String env = ConfigKey.getValueFromEnv(key.getPath());
+                if (env != null) {
+                    value = env;
+                }
+            }
+
             Fields.set(field, key, value, "value");
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Failed to inject config key: " + field.getName(), e);

@@ -1,12 +1,12 @@
 package net.mineles.library.menu;
 
-import com.cryptomorin.xseries.XSound;
+import net.mineles.library.libs.xseries.XSound;
 import net.mineles.library.configuration.Config;
 import net.mineles.library.configuration.ConfigBuilder;
 import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
+import net.mineles.library.libs.configurate.ConfigurationNode;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

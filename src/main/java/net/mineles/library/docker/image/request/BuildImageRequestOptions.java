@@ -1,6 +1,6 @@
 package net.mineles.library.docker.image.request;
 
-import com.github.dockerjava.api.command.BuildImageCmd;
+import net.mineles.library.libs.dockerjava.api.command.BuildImageCmd;
 
 import java.util.function.UnaryOperator;
 

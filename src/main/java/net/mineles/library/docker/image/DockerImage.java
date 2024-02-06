@@ -1,6 +1,6 @@
 package net.mineles.library.docker.image;
 
-import com.github.dockerjava.api.model.Image;
+import net.mineles.library.libs.dockerjava.api.model.Image;
 
 public record DockerImage(
         String id,
