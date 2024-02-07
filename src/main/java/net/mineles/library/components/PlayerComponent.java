@@ -32,6 +32,7 @@ import net.mineles.library.libs.xseries.XSound;
 import net.mineles.library.metadata.Metadata;
 import net.mineles.library.metadata.store.MetadataMap;
 import net.mineles.library.plugin.BukkitPlugin;
+import net.mineles.library.server.query.Sorts;
 import net.mineles.library.utils.text.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -166,11 +167,7 @@ public final class PlayerComponent {
 
     public void switchServer(@NotNull String targetServer) {
         sync(bukkitPlayer -> {
-            ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
-            dataOutput.writeUTF("Connect");
-            dataOutput.writeUTF(targetServer);
-
-            bukkitPlayer.sendPluginMessage(this.plugin.getPlugin(), "BungeeCord", dataOutput.toByteArray());
+            plugin.getServerManager().redirectPlayer(getName(), targetServer, Sorts.players());
         });
     }
 
