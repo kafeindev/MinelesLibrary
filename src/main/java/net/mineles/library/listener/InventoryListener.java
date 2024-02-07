@@ -2,6 +2,7 @@ package net.mineles.library.listener;
 
 import net.mineles.library.components.PlayerComponent;
 import net.mineles.library.libs.nbtapi.nbtapi.NBTItem;
+import net.mineles.library.menu.Menu;
 import net.mineles.library.menu.misc.ClickResult;
 import net.mineles.library.menu.misc.contexts.ClickContext;
 import net.mineles.library.plugin.BukkitPlugin;
@@ -61,51 +62,56 @@ public final class InventoryListener implements Listener {
             return;
         }
 
-        this.plugin.getMenuManager().findByViewer(humanEntity.getUniqueId()).ifPresentOrElse(menu -> {
-                    PlayerComponent player = PlayerComponent.from(this.plugin, (Player) humanEntity);
+        Menu menu =this.plugin.getMenuManager().findByViewer(humanEntity.getUniqueId()).orElse(null);
+        if (menu != null) {
+            PlayerComponent player = PlayerComponent.from(this.plugin, (Player) humanEntity);
 
-                    ClickContext clickContext = ClickContext.from(this.plugin, menu, player, event);
-                    ClickResult result = menu.click(clickContext);
+            ClickContext clickContext = ClickContext.from(this.plugin, menu, player, event);
+            ClickResult result;
+            try {
+                result = menu.click(clickContext);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+                result = ClickResult.CANCELLED;
+            }
 
-                    switch (result) {
-                        case CANCELLED -> {
-                            event.setCancelled(true);
-                            event.setResult(Event.Result.DENY);
-                        }
-                        case CURSORED -> {
-                            event.setCancelled(false);
-                            event.setResult(Event.Result.ALLOW);
-                        }
-                        case REFRESH -> {
-                            event.setCancelled(true);
-                            event.setResult(Event.Result.DENY);
-                            menu.refresh(humanEntity.getUniqueId());
-                        }
-                        case NEXT_PAGE -> {
-                            event.setCancelled(true);
-                            event.setResult(Event.Result.DENY);
-                            menu.nextPage(humanEntity.getUniqueId());
-                        }
-                        case PREVIOUS_PAGE -> {
-                            event.setCancelled(true);
-                            event.setResult(Event.Result.DENY);
-                            menu.previousPage(humanEntity.getUniqueId());
-                        }
-                        case CLOSE -> {
-                            event.setCancelled(true);
-                            event.setResult(Event.Result.DENY);
-                            menu.close(humanEntity.getUniqueId());
-                        }
-                    }
-                },
-                () -> {
-                    ItemStack itemStack = event.getCurrentItem();
-                    if (isButton(itemStack)) {
-                        event.setCancelled(true);
-                        event.setResult(Event.Result.DENY);
-                    }
+            switch (result) {
+                case CANCELLED -> {
+                    event.setCancelled(true);
+                    event.setResult(Event.Result.DENY);
                 }
-        );
+                case CURSORED -> {
+                    event.setCancelled(false);
+                    event.setResult(Event.Result.ALLOW);
+                }
+                case REFRESH -> {
+                    event.setCancelled(true);
+                    event.setResult(Event.Result.DENY);
+                    menu.refresh(humanEntity.getUniqueId());
+                }
+                case NEXT_PAGE -> {
+                    event.setCancelled(true);
+                    event.setResult(Event.Result.DENY);
+                    menu.nextPage(humanEntity.getUniqueId());
+                }
+                case PREVIOUS_PAGE -> {
+                    event.setCancelled(true);
+                    event.setResult(Event.Result.DENY);
+                    menu.previousPage(humanEntity.getUniqueId());
+                }
+                case CLOSE -> {
+                    event.setCancelled(true);
+                    event.setResult(Event.Result.DENY);
+                    menu.close(humanEntity.getUniqueId());
+                }
+            }
+        } else {
+            ItemStack itemStack = event.getCurrentItem();
+            if (isButton(itemStack)) {
+                event.setCancelled(true);
+                event.setResult(Event.Result.DENY);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -115,17 +121,20 @@ public final class InventoryListener implements Listener {
             return;
         }
 
-        this.plugin.getMenuManager().findByViewer(humanEntity.getUniqueId()).ifPresentOrElse(menu -> event.setCancelled(true),
-                () -> {
-                    ItemStack itemStack = event.getOldCursor();
-                    if (isButton(itemStack)) {
-                        event.setCancelled(true);
-                        event.setResult(Event.Result.DENY);
-                    } else if (event.getNewItems().values().stream().anyMatch(this::isButton)) {
-                        event.setCancelled(true);
-                        event.setResult(Event.Result.DENY);
-                    }
-                });
+        Menu menu = this.plugin.getMenuManager().findByViewer(humanEntity.getUniqueId()).orElse(null);
+        if (menu != null) {
+            event.setCancelled(true);
+            event.setResult(Event.Result.DENY);
+        } else {
+            ItemStack itemStack = event.getOldCursor();
+            if (isButton(itemStack)) {
+                event.setCancelled(true);
+                event.setResult(Event.Result.DENY);
+            } else if (event.getNewItems().values().stream().anyMatch(this::isButton)) {
+                event.setCancelled(true);
+                event.setResult(Event.Result.DENY);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
