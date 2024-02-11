@@ -56,7 +56,7 @@ public final class ServerManager {
 
         JsonObject object = new JsonObject();
         object.addProperty("player", playerName);
-        object.addProperty("name", server.getName());
+        object.addProperty("server", server.getName());
         this.redisClient.publish(ServerKeys.PLAYERS_SWITCH_SERVER_REQUEST, object.toString());
     }
 
