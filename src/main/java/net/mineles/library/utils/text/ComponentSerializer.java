@@ -35,6 +35,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -55,8 +56,28 @@ public final class ComponentSerializer {
         return BungeeComponentSerializer.get().deserialize(baseComponent);
     }
 
+    public static Component deserialize(@NotNull String... messages) {
+        return deserialize(List.of(messages), Maps.newHashMap());
+    }
+
+    public static Component deserialize(@NotNull List<String> messages) {
+        return deserialize(messages, Maps.newHashMap());
+    }
+
+    public static Component deserialize(@NotNull List<String> messages, @NotNull Map<String, String> placeholders) {
+        Component component = Component.empty();
+        for (String message : messages) {
+            component = component.append(deserialize(message, placeholders));
+        }
+        return component;
+    }
+
     public static Component deserialize(@NotNull OfflinePlayer player, @NotNull String message) {
         return deserialize(player, message, Maps.newHashMap());
+    }
+
+    public static Component deserialize(@NotNull OfflinePlayer player, @NotNull String... messages) {
+        return deserialize(player, List.of(messages), Maps.newHashMap());
     }
 
     public static Component deserialize(@NotNull OfflinePlayer player, @NotNull String message, @NotNull Map<String, String> placeholders) {
@@ -74,6 +95,18 @@ public final class ComponentSerializer {
         return deserialize(message, newPlaceholders);
     }
 
+    public static Component deserialize(@NotNull OfflinePlayer player, @NotNull List<String> messages) {
+        return deserialize(player, messages, Maps.newHashMap());
+    }
+
+    public static Component deserialize(@NotNull OfflinePlayer player, @NotNull List<String> messages, @NotNull Map<String, String> placeholders) {
+        Component component = Component.empty();
+        for (String message : messages) {
+            component = component.append(deserialize(player, message, placeholders));
+        }
+        return component;
+    }
+
     public static Component deserializeForVelocity(@NotNull String message) {
         return deserializeForVelocity(message, Maps.newHashMap());
     }
@@ -82,6 +115,22 @@ public final class ComponentSerializer {
         //message = LegacyTextConverter.convert(message);
         message = PlaceholderParser.applyPlaceholders(message, placeholders);
         return MiniMessage.miniMessage().deserialize(message);
+    }
+
+    public static Component deserializeForVelocity(@NotNull String... messages) {
+        return deserializeForVelocity(List.of(messages), Maps.newHashMap());
+    }
+
+    public static Component deserializeForVelocity(@NotNull List<String> messages) {
+        return deserializeForVelocity(messages, Maps.newHashMap());
+    }
+
+    public static Component deserializeForVelocity(@NotNull List<String> messages, @NotNull Map<String, String> placeholders) {
+        Component component = Component.empty();
+        for (String message : messages) {
+            component = component.append(deserializeForVelocity(message, placeholders));
+        }
+        return component;
     }
 
 /*
