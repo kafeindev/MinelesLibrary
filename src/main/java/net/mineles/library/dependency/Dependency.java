@@ -200,6 +200,11 @@ public enum Dependency {
             "docker-java-transport-httpclient5",
             "3.3.2"
     ),
+    ZSTD_JNI(
+            "com{}github{}luben",
+            "zstd-jni",
+            "1.4.1-1"
+    ),
     MINEDOWN(
             "de{}themoep",
             "minedown",
@@ -287,6 +292,7 @@ public enum Dependency {
         DOCKER_JAVA_TRANSPORT("com{}github{}dockerjava{}transport", "net{}mineles{}library{}libs{}dockerjava{}transport"),
         DOCKER_JAVA("com{}github{}dockerjava{}core", "net{}mineles{}library{}libs{}dockerjava{}core"),
         DOCKER_JAVA_TRANSPORT_HTTPCLIENT5("com{}github{}dockerjava{}httpclient5", "net{}mineles{}library{}libs{}dockerjava{}httpclient5"),
+        //ZSTD_JNI("com{}github{}luben{}zstd", "net{}mineles{}library{}libs{}zstd"),
         MINEDOWN("de{}themoep{}minedown", "net{}mineles{}library{}libs{}minedown"),
         XSERIES("com{}cryptomorin{}xseries", "net{}mineles{}library{}libs{}xseries"),
         NBTAPI("de{}tr7zw", "net{}mineles{}library{}libs{}nbtapi");
