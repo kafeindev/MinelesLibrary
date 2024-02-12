@@ -4,9 +4,9 @@ import net.mineles.library.serializer.Serializer;
 import net.mineles.library.serializer.SerializerCollection;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractStorage<R extends Repository, S> implements Storage<R, S> {
-    private final RepositoryMap<R> repositoryMap;
-    private final SerializerCollection<S> serializerCollection;
+public abstract class AbstractStorage<R extends Repository<?>, S> implements Storage<R, S> {
+    protected final RepositoryMap<R> repositoryMap;
+    protected final SerializerCollection<S> serializerCollection;
 
     public AbstractStorage() {
         this.repositoryMap = new RepositoryMap<R>();
@@ -25,17 +25,17 @@ public abstract class AbstractStorage<R extends Repository, S> implements Storag
 
     @Override
     public @Nullable R getRepository(String name) {
-        return this.repositoryMap.getRepository(name);
+        return this.repositoryMap.get(name);
     }
 
     @Override
     public void registerRepository(R repository) {
-        this.repositoryMap.registerRepository(repository);
+        this.repositoryMap.register(repository);
     }
 
     @Override
     public void unregisterRepository(R repository) {
-        this.repositoryMap.unregisterRepository(repository);
+        this.repositoryMap.unregister(repository);
     }
 
     @Override

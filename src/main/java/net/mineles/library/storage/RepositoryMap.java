@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
-public final class RepositoryMap<T extends Repository> {
+public final class RepositoryMap<T extends Repository<?>> {
     private final Map<String, T> repositories;
 
     public RepositoryMap() {
@@ -15,19 +15,26 @@ public final class RepositoryMap<T extends Repository> {
         this.repositories = repositories;
     }
 
-    public Map<String, T> getRepositories() {
+    public Map<String, T> getMap() {
         return this.repositories;
     }
 
-    public T getRepository(String name) {
+    public T get(String name) {
         return this.repositories.get(name);
     }
 
-    public void registerRepository(T repository) {
-        this.repositories.put(repository.getName(), repository);
+    @SuppressWarnings("unchecked")
+    public <E extends Repository<V>, V> E get(Class<V> clazz) {
+        return (E) getMap().values().stream()
+                .filter(repository -> repository.getProperties().valueClass().equals(clazz))
+                .findFirst().orElse(null);
     }
 
-    public void unregisterRepository(T repository) {
-        this.repositories.remove(repository.getName());
+    public void register(T repository) {
+        this.repositories.put(repository.getProperties().name(), repository);
+    }
+
+    public void unregister(T repository) {
+        this.repositories.remove(repository.getProperties().name());
     }
 }

@@ -4,14 +4,14 @@ import net.mineles.library.libs.mongodb.client.MongoClient;
 import net.mineles.library.storage.AbstractStorage;
 import org.bson.Document;
 
-public final class MongoDb extends AbstractStorage<MongoDbRepository, Document> {
+public final class MongoDbStorage extends AbstractStorage<MongoDbRepository<?>, Document> {
     private final MongoClient client;
 
-    public MongoDb(String url) {
+    public MongoDbStorage(String url) {
         this(MongoDbConnector.connect(url));
     }
 
-    public MongoDb(MongoClient client) {
+    public MongoDbStorage(MongoClient client) {
         super();
         this.client = client;
     }

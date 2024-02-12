@@ -4,7 +4,7 @@ import net.mineles.library.serializer.Serializer;
 import net.mineles.library.serializer.SerializerCollection;
 import org.jetbrains.annotations.Nullable;
 
-public interface Storage<R extends Repository, S> {
+public interface Storage<R extends Repository<?>, S> {
     void initialize();
 
     void shutdown();
